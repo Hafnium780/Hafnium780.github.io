@@ -115,9 +115,9 @@ select{
   <p id="frequency0">00.00</p>
   <p id="frequency1">00.00</p>
   <p id="frequency2">00.00</p>
-  <p id="frequency3">00.00</p>
+  <!-- <p id="frequency3">00.00</p>
   <p id="frequency4">00.00</p>
-  <p id="frequency5">00.00</p>
+  <p id="frequency5">00.00</p> -->
     <div id='selector-bar'>
 	<div id='tonic-select'><span class='label'>Tonic: </span>
 		<select id='tonic-note'>
@@ -416,11 +416,6 @@ function updateData(){
   sorted.sort();
   
   //if enough frequencies in sorted array, take the mean of the interquartile
-  meanFreq[1] = sorted[0].toFixed(2);
-  if (sorted.length > 0) meanFreq[2] = sorted[1].toFixed(2); else meanFreq[2] = '00.00';
-  if (sorted.length > 1) meanFreq[3] = sorted[2].toFixed(2); else meanFreq[3] = '00.00';
-  if (sorted.length > 2) meanFreq[4] = sorted[3].toFixed(2); else meanFreq[4] = '00.00';
-  if (sorted.length > 3) meanFreq[5] = sorted[4].toFixed(2); else meanFreq[5] = '00.00';
   if(sorted.length>3){
 	  var quartile = Math.round(sorted.length/3);
 	  var sum = 0;
@@ -430,6 +425,20 @@ function updateData(){
 		  num++;
 	  }
 	  meanFreq[0] = (sum/num).toFixed(2);
+	  sum = 0;
+	  num = 0;
+	  for(var i=0;i<quartile;i++){
+		  sum+= sorted[i];
+		  num++;
+	  }
+	  meanFreq[1] = (sum/num).toFixed(2);
+	  sum = 0;
+	  num = 0;
+	  for(var i=quartile+1;i<sorted.length;i++){
+		  sum+= sorted[i];
+		  num++;
+	  }
+	  meanFreq[2] = (sum/num).toFixed(2);
   }else{
 	  meanFreq[0] = '00.00';
   }
@@ -443,9 +452,9 @@ function updateData(){
   
   document.getElementById('frequency1').innerHTML = meanFreq[1];
   document.getElementById('frequency2').innerHTML = meanFreq[2];
-  document.getElementById('frequency3').innerHTML = meanFreq[3];
-  document.getElementById('frequency4').innerHTML = meanFreq[4];
-  document.getElementById('frequency5').innerHTML = meanFreq[5];
+//   document.getElementById('frequency3').innerHTML = meanFreq[3];
+//   document.getElementById('frequency4').innerHTML = meanFreq[4];
+//   document.getElementById('frequency5').innerHTML = meanFreq[5];
   if(Date.now() - silenceStart > 1000){
 	  if(!saved){
 	  savedFreq = meanFreq;
@@ -457,7 +466,7 @@ function updateData(){
 	  }
   }else{
 	  saved = false;
-	  document.getElementById('frequency0').innerHTML = meanFreq;
+	  document.getElementById('frequency0').innerHTML = meanFreq[0];
   }
   
   /*document.getElementById('silence').innerHTML = Date.now() - silenceStart;
