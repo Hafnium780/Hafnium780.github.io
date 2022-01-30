@@ -115,9 +115,7 @@ select{
   <p id="frequency0">00.00</p>
   <p id="frequency1">00.00</p>
   <p id="frequency2">00.00</p>
-  <!-- <p id="frequency3">00.00</p>
-  <p id="frequency4">00.00</p>
-  <p id="frequency5">00.00</p> -->
+  <p id="aaa">00.00</p>
     <div id='selector-bar'>
 	<div id='tonic-select'><span class='label'>Tonic: </span>
 		<select id='tonic-note'>
@@ -154,6 +152,8 @@ select{
 		  <div class='cent'>00 cents</div>
 		  <div class='cent1'>00 cents</div>
 		  <div class='cent2'>00 cents</div>
+		  <div class='cent3'>00 cents</div>
+		  <div class='frequency3'>00.00</div>
 		</div>
 		<div id='note-2' class='note-result'>
 		  <div id='note-2-display' class='note-display'>
@@ -165,6 +165,8 @@ select{
 		  <div class='cent'>00 cents</div>
 		  <div class='cent1'>00 cents</div>
 		  <div class='cent2'>00 cents</div>
+		  <div class='cent3'>00 cents</div>
+		  <div class='frequency3'>00.00</div>
 		</div>
 		<div id='note-3' class='note-result'>
 		  <div id='note-3-display' class='note-display'>
@@ -176,6 +178,8 @@ select{
 		  <div class='cent'>00 cents</div>
 		  <div class='cent1'>00 cents</div>
 		  <div class='cent2'>00 cents</div>
+		  <div class='cent3'>00 cents</div>
+		  <div class='frequency3'>00.00</div>
 		</div>
 		<div id='note-4' class='note-result'>
 		  <div id='note-4-display' class='note-display'>
@@ -187,6 +191,8 @@ select{
 		  <div class='cent'>00 cents</div>
 		  <div class='cent1'>00 cents</div>
 		  <div class='cent2'>00 cents</div>
+		  <div class='cent3'>00 cents</div>
+		  <div class='frequency3'>00.00</div>
 		</div>
 		<div id='note-5' class='note-result'>
 		  <div id='note-5-display' class='note-display'>
@@ -198,6 +204,8 @@ select{
 		  <div class='cent'>00 cents</div>
 		  <div class='cent1'>00 cents</div>
 		  <div class='cent2'>00 cents</div>
+		  <div class='cent3'>00 cents</div>
+		  <div class='frequency3'>00.00</div>
 		</div>
 		<div id='note-6' class='note-result'>
 		  <div id='note-6-display' class='note-display'>
@@ -209,6 +217,8 @@ select{
 		  <div class='cent'>00 cents</div>
 		  <div class='cent1'>00 cents</div>
 		  <div class='cent2'>00 cents</div>
+		  <div class='cent3'>00 cents</div>
+		  <div class='frequency3'>00.00</div>
 		</div>
 		<div id='note-7' class='note-result'>
 		  <div id='note-7-display' class='note-display'>
@@ -220,6 +230,8 @@ select{
 		  <div class='cent'>00 cents</div>
 		  <div class='cent1'>00 cents</div>
 		  <div class='cent2'>00 cents</div>
+		  <div class='cent3'>00 cents</div>
+		  <div class='frequency3'>00.00</div>
 		</div>
 		<div id='note-8' class='note-result'>
 		  <div id='note-8-display' class='note-display'>
@@ -231,6 +243,8 @@ select{
 		  <div class='cent'>00 cents</div>
 		  <div class='cent1'>00 cents</div>
 		  <div class='cent2'>00 cents</div>
+		  <div class='cent3'>00 cents</div>
+		  <div class='frequency3'>00.00</div>
 		</div>
 	  </div>
   <div id='instructions'>
@@ -447,6 +461,7 @@ function updateData(){
   //sort this new array by frequency
   sorted.sort();
   
+  document.getElementById('aaa').innerHTML = sorted.length;
   //if enough frequencies in sorted array, take the mean of the interquartile
   if(sorted.length>3){
 	  var quartile = Math.round(sorted.length/3);
@@ -514,17 +529,28 @@ function updateData(){
 	  var cents = Math.round(Math.log(displayedFreq/targetFreq)*100/Math.log(Math.pow(2,1/12)));
 	  var cents1 = Math.round(Math.log(displayedFreq1/targetFreq)*100/Math.log(Math.pow(2,1/12)));
 	  var cents2 = Math.round(Math.log(displayedFreq2/targetFreq)*100/Math.log(Math.pow(2,1/12)));
-	//   if (Math.abs(cents) <= 100) {
-	// 	cents = Math.round(cents / 100000000);
-	// 	displayedFreq = Math.pow(2, cents/1200)*targetFreq;
-	// 	document.getElementById('frequency').innerHTML = displayedFreq.toFixed(2);
-	//   }
+	  num = 0;
+	  sum = 0;
+	  for (var i = 0; i < sorted.length; i++) {
+		  if (Math.abs(sorted[i] - targetFreq) < 5) {
+			  sum+=sorted[i];
+			  num++;
+		  }
+	  }
+	  var cents3 = 100000000;
+	  var displayedFreq3 = 10000000;
+	  if (num > sorted.length/4) {
+		cents3 = Math.round(Math.log(sum/num/targetFreq)*100/Math.log(Math.pow(2,1/12)));
+		displayedFreq3 = sum/num;
+	  }
   selectedNote.childNodes[3].innerHTML = document.getElementById('frequency0').innerHTML;
   selectedNote.childNodes[5].innerHTML = document.getElementById('frequency1').innerHTML;
   selectedNote.childNodes[7].innerHTML = document.getElementById('frequency2').innerHTML;
   selectedNote.childNodes[9].innerHTML = cents +' cents';
   selectedNote.childNodes[11].innerHTML = cents1 +' cents';
   selectedNote.childNodes[13].innerHTML = cents2 +' cents';
+  selectedNote.childNodes[15].innerHTML = cents3 +' cents';
+  selectedNote.childNodes[17].innerHTML = displayedFreq3.toFixed(2);
   }
 }
 
