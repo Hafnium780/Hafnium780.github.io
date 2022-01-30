@@ -461,7 +461,6 @@ function updateData(){
   //sort this new array by frequency
   sorted.sort();
   
-  document.getElementById('aaa').innerHTML = sorted.length;
   //if enough frequencies in sorted array, take the mean of the interquartile
   if(sorted.length>3){
 	  var quartile = Math.round(sorted.length/3);
@@ -539,10 +538,10 @@ function updateData(){
 	  }
 	  var cents3 = 100000000;
 	  var displayedFreq3 = 10000000;
-	  if (num > sorted.length/4) {
-		cents3 = Math.round(Math.log(sum/num/targetFreq)*100/Math.log(Math.pow(2,1/12)));
-		displayedFreq3 = sum/num;
-	  }
+  	  document.getElementById('aaa').innerHTML = num/sorted.length;
+	  cents3 = Math.round(Math.log(sum/num/targetFreq)*100/Math.log(Math.pow(2,1/12)));
+	  displayedFreq3 = sum/num;
+	
   selectedNote.childNodes[3].innerHTML = document.getElementById('frequency0').innerHTML;
   selectedNote.childNodes[5].innerHTML = document.getElementById('frequency1').innerHTML;
   selectedNote.childNodes[7].innerHTML = document.getElementById('frequency2').innerHTML;
