@@ -112,7 +112,12 @@ select{
 </head>
 <body>
 <h1>Sounds of Music Pitch Test HACKED</h1>
-  <p id="frequency">00.00</p>
+  <p id="frequency0">00.00</p>
+  <p id="frequency1">00.00</p>
+  <p id="frequency2">00.00</p>
+  <p id="frequency3">00.00</p>
+  <p id="frequency4">00.00</p>
+  <p id="frequency5">00.00</p>
     <div id='selector-bar'>
 	<div id='tonic-select'><span class='label'>Tonic: </span>
 		<select id='tonic-note'>
@@ -367,7 +372,7 @@ var dataArray = new Uint8Array(bufferLength);
 
 var detected = [];
 var sorted = [];
-var meanFreq = '00.00';
+var meanFreq = ['00.00','00.00','00.00','00.00','00.00','00.00'];
 var silenceStart = Date.now();
 var savedFreq = null;
 var saved = false;
@@ -411,6 +416,11 @@ function updateData(){
   sorted.sort();
   
   //if enough frequencies in sorted array, take the mean of the interquartile
+  meanFreq[1] = sorted[0].toFixed(2);
+  if (sorted.length > 0) meanFreq[2] = sorted[1].toFixed(2); else meanFreq[2] = '00.00';
+  if (sorted.length > 1) meanFreq[3] = sorted[2].toFixed(2); else meanFreq[3] = '00.00';
+  if (sorted.length > 2) meanFreq[4] = sorted[3].toFixed(2); else meanFreq[4] = '00.00';
+  if (sorted.length > 3) meanFreq[5] = sorted[4].toFixed(2); else meanFreq[5] = '00.00';
   if(sorted.length>3){
 	  var quartile = Math.round(sorted.length/3);
 	  var sum = 0;
@@ -419,9 +429,9 @@ function updateData(){
 		  sum+= sorted[i];
 		  num++;
 	  }
-	  meanFreq = (sum/num).toFixed(2);
+	  meanFreq[0] = (sum/num).toFixed(2);
   }else{
-	  meanFreq = '00.00';
+	  meanFreq[0] = '00.00';
   }
   
   if(newSelectedNote){
@@ -431,18 +441,23 @@ function updateData(){
 	  silenceStart = Date.now();
   }
   
+  document.getElementById('frequency1').innerHTML = meanFreq[1];
+  document.getElementById('frequency2').innerHTML = meanFreq[2];
+  document.getElementById('frequency3').innerHTML = meanFreq[3];
+  document.getElementById('frequency4').innerHTML = meanFreq[4];
+  document.getElementById('frequency5').innerHTML = meanFreq[5];
   if(Date.now() - silenceStart > 1000){
 	  if(!saved){
 	  savedFreq = meanFreq;
 	  saved = true;
-	  document.getElementById('frequency').innerHTML = savedFreq;
+	  document.getElementById('frequency0').innerHTML = savedFreq;
 	  detected.length = 0;
 	  }else{
-		  document.getElementById('frequency').innerHTML = savedFreq;
+		  document.getElementById('frequency0').innerHTML = savedFreq;
 	  }
   }else{
 	  saved = false;
-	  document.getElementById('frequency').innerHTML = meanFreq;
+	  document.getElementById('frequency0').innerHTML = meanFreq;
   }
   
   /*document.getElementById('silence').innerHTML = Date.now() - silenceStart;
@@ -451,7 +466,7 @@ function updateData(){
   */
   
   if(selectedNote){
-	  var displayedFreq = Number(document.getElementById('frequency').innerHTML);
+	  var displayedFreq = Number(document.getElementById('frequency0').innerHTML);
 	  var targetFreq = freqList[selectedNoteDegree-1];
 	  var cents = Math.round(Math.log(displayedFreq/targetFreq)*100/Math.log(Math.pow(2,1/12)));
 	//   if (Math.abs(cents) <= 100) {
@@ -459,7 +474,7 @@ function updateData(){
 	// 	displayedFreq = Math.pow(2, cents/1200)*targetFreq;
 	// 	document.getElementById('frequency').innerHTML = displayedFreq.toFixed(2);
 	//   }
-  selectedNote.childNodes[3].innerHTML = document.getElementById('frequency').innerHTML;
+  selectedNote.childNodes[3].innerHTML = document.getElementById('frequency0').innerHTML;
   if(cents !==-Infinity){
 	selectedNote.childNodes[5].innerHTML = cents +' cents';
   }else{
