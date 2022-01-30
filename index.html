@@ -149,56 +149,88 @@ select{
 			<div class='note-name-div'><p id='note-1-name' class='note-name-p'>--</p></div>			
 		  <span id='note-1-target-freq' class='target-freq'>--</span></div>
 		  <div class='frequency'>000.00 Hz</div>
+		  <div class='frequency1'>000.00 Hz</div>
+		  <div class='frequency2'>000.00 Hz</div>
 		  <div class='cent'>00 cents</div>
+		  <div class='cent1'>00 cents</div>
+		  <div class='cent2'>00 cents</div>
 		</div>
 		<div id='note-2' class='note-result'>
 		  <div id='note-2-display' class='note-display'>
 			<div class='note-name-div'><p id='note-2-name' class='note-name-p'>--</p></div>
 		  <span id='note-2-target-freq'class='target-freq'>--</span></div>
 		  <div class='frequency'>000.00 Hz</div>
+		  <div class='frequency1'>000.00 Hz</div>
+		  <div class='frequency2'>000.00 Hz</div>
 		  <div class='cent'>00 cents</div>
+		  <div class='cent1'>00 cents</div>
+		  <div class='cent2'>00 cents</div>
 		</div>
 		<div id='note-3' class='note-result'>
 		  <div id='note-3-display' class='note-display'>
 			<div class='note-name-div'><p id='note-3-name' class='note-name-p'>--</p></div>
 		  <span id='note-3-target-freq'class='target-freq'>--</span></div>
 		  <div class='frequency'>000.00 Hz</div>
+		  <div class='frequency1'>000.00 Hz</div>
+		  <div class='frequency2'>000.00 Hz</div>
 		  <div class='cent'>00 cents</div>
+		  <div class='cent1'>00 cents</div>
+		  <div class='cent2'>00 cents</div>
 		</div>
 		<div id='note-4' class='note-result'>
 		  <div id='note-4-display' class='note-display'>
 			<div class='note-name-div'><p id='note-4-name' class='note-name-p'>--</p></div>
 		  <span id='note-4-target-freq'class='target-freq'>--</span></div>
 		  <div class='frequency'>000.00 Hz</div>
+		  <div class='frequency1'>000.00 Hz</div>
+		  <div class='frequency2'>000.00 Hz</div>
 		  <div class='cent'>00 cents</div>
+		  <div class='cent1'>00 cents</div>
+		  <div class='cent2'>00 cents</div>
 		</div>
 		<div id='note-5' class='note-result'>
 		  <div id='note-5-display' class='note-display'>
 			<div class='note-name-div'><p id='note-5-name' class='note-name-p'>--</p></div>
 		  <span id='note-5-target-freq'class='target-freq'>--</span></div>
 		  <div class='frequency'>000.00 Hz</div>
+		  <div class='frequency1'>000.00 Hz</div>
+		  <div class='frequency2'>000.00 Hz</div>
 		  <div class='cent'>00 cents</div>
+		  <div class='cent1'>00 cents</div>
+		  <div class='cent2'>00 cents</div>
 		</div>
 		<div id='note-6' class='note-result'>
 		  <div id='note-6-display' class='note-display'>
 			<div class='note-name-div'><p id='note-6-name' class='note-name-p'>--</p></div>
 		  <span id='note-6-target-freq'class='target-freq'>--</span></div>
 		  <div class='frequency'>000.00 Hz</div>
+		  <div class='frequency1'>000.00 Hz</div>
+		  <div class='frequency2'>000.00 Hz</div>
 		  <div class='cent'>00 cents</div>
+		  <div class='cent1'>00 cents</div>
+		  <div class='cent2'>00 cents</div>
 		</div>
 		<div id='note-7' class='note-result'>
 		  <div id='note-7-display' class='note-display'>
 			<div class='note-name-div'><p id='note-7-name' class='note-name-p'>--</p></div>
 		  <span id='note-7-target-freq'class='target-freq'>--</span></div>
 		  <div class='frequency'>000.00 Hz</div>
-		  <div class='cent'>00.0 cents</div>
+		  <div class='frequency1'>000.00 Hz</div>
+		  <div class='frequency2'>000.00 Hz</div>
+		  <div class='cent'>00 cents</div>
+		  <div class='cent1'>00 cents</div>
+		  <div class='cent2'>00 cents</div>
 		</div>
 		<div id='note-8' class='note-result'>
 		  <div id='note-8-display' class='note-display'>
 			<div class='note-name-div'><p id='note-8-name' class='note-name-p'>--</p></div>
 		  <span id='note-8-target-freq'class='target-freq'>--</span></div>
 		  <div class='frequency'>000.00 Hz</div>
+		  <div class='frequency1'>000.00 Hz</div>
+		  <div class='frequency2'>000.00 Hz</div>
 		  <div class='cent'>00 cents</div>
+		  <div class='cent1'>00 cents</div>
+		  <div class='cent2'>00 cents</div>
 		</div>
 	  </div>
   <div id='instructions'>
@@ -434,7 +466,7 @@ function updateData(){
 	  meanFreq[1] = (sum/num).toFixed(2);
 	  sum = 0;
 	  num = 0;
-	  for(var i=quartile+1;i<sorted.length;i++){
+	  for(var i=sorted.length - quartile + 1;i<sorted.length;i++){
 		  sum+= sorted[i];
 		  num++;
 	  }
@@ -457,7 +489,7 @@ function updateData(){
 //   document.getElementById('frequency5').innerHTML = meanFreq[5];
   if(Date.now() - silenceStart > 1000){
 	  if(!saved){
-	  savedFreq = meanFreq;
+	  savedFreq = meanFreq[0];
 	  saved = true;
 	  document.getElementById('frequency0').innerHTML = savedFreq;
 	  detected.length = 0;
@@ -476,19 +508,23 @@ function updateData(){
   
   if(selectedNote){
 	  var displayedFreq = Number(document.getElementById('frequency0').innerHTML);
+	  var displayedFreq1 = Number(document.getElementById('frequency1').innerHTML);
+	  var displayedFreq2 = Number(document.getElementById('frequency2').innerHTML);
 	  var targetFreq = freqList[selectedNoteDegree-1];
 	  var cents = Math.round(Math.log(displayedFreq/targetFreq)*100/Math.log(Math.pow(2,1/12)));
+	  var cents1 = Math.round(Math.log(displayedFreq1/targetFreq)*100/Math.log(Math.pow(2,1/12)));
+	  var cents2 = Math.round(Math.log(displayedFreq2/targetFreq)*100/Math.log(Math.pow(2,1/12)));
 	//   if (Math.abs(cents) <= 100) {
 	// 	cents = Math.round(cents / 100000000);
 	// 	displayedFreq = Math.pow(2, cents/1200)*targetFreq;
 	// 	document.getElementById('frequency').innerHTML = displayedFreq.toFixed(2);
 	//   }
   selectedNote.childNodes[3].innerHTML = document.getElementById('frequency0').innerHTML;
-  if(cents !==-Infinity){
-	selectedNote.childNodes[5].innerHTML = cents +' cents';
-  }else{
-	  selectedNote.childNodes[5].innerHTML = '00 cents';
-  }
+  selectedNote.childNodes[5].innerHTML = document.getElementById('frequency1').innerHTML;
+  selectedNote.childNodes[7].innerHTML = document.getElementById('frequency2').innerHTML;
+  selectedNote.childNodes[9].innerHTML = cents +' cents';
+  selectedNote.childNodes[11].innerHTML = cents1 +' cents';
+  selectedNote.childNodes[13].innerHTML = cents2 +' cents';
   }
 }
 
