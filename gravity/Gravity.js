@@ -19,6 +19,7 @@ function setup() {
   paused = createCheckbox("Pause (Space)", false);
   collide = createCheckbox("Detect Collisions", false);
   rsquared = createCheckbox("Gravity is proportional to 1/r^2", true);
+  label = createDiv('&nbsp;&nbsp;g&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size of planet');
   GSlider = createSlider(1, 100, 20);
   massSlider = createSlider(1, 400, 3);
   moving = createCheckbox("Placed Object Will Move", true);
