@@ -13,6 +13,7 @@ let rsquared;
 let GSlider;
 let affectsOthers;
 let bounceOnWalls;
+let label;
 
 function setup() {
   createCanvas(1600, 1200);
