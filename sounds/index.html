@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+Copyright (c) 2021 by gmck (http://jsbin.com/xoxetuh/5/edit)
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+<meta name="robots" content="noindex">
+  <meta name="viewport" content="width=device-width">
+  <title>Science Olympiad | Sounds of Music | Pitch Tester</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<style id="jsbin-css">
+div {
+  border: 1px solid gray;
+  padding: 5px;
+  margin: 5px;
+  text-align: center;
+}
+body{
+	text-align: center;
+}
+#frequency{
+	text-align: center;
+	font-size:30px;
+}
+select{
+	height: 32px;
+	padding: 5px;
+	font-size: 18px;
+}
+.note-display{
+	background-color: SlateGray;    
+}
+.note-name-div{
+	margin: 0px;
+	height: 40px;
+	background-color: SlateGray;
+	border: none;
+}
+.note-name-p{
+	position: relative;
+	top: -20px;
+	display: inline-block;
+	color: white;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 24px;
+}
+.target-freq{
+	font-family: Arial, Helvetica, sans-serif;
+	color: LightGray;
+}
+.note-result{
+  display: inline-block;
+  width: 90px;
+  background-color: lightgray;
+  border:none;
+  cursor: pointer;
+}
+
+#note-1{
+  background-color: lightskyblue;
+}
+#note-2{
+  background-color: lightskyblue;
+}
+#note-3{
+  background-color: lightskyblue;
+}
+#note-4{
+  background-color: lightskyblue;
+}
+#note-5{
+  background-color: lightskyblue;
+}
+#note-6{
+  background-color: lightskyblue;
+}
+#note-7{
+  background-color: lightskyblue;
+}
+#note-8{
+  background-color: lightskyblue;
+}
+#note-bonus{
+  background-color: lightgreen;
+}
+#selector-bar{
+  background-color: lightgray;
+  border: 0px;
+}
+#tonic-select{
+  display: inline-block;
+  background-color: lightgray;
+  border: 0px;
+}
+#bonus-select{
+  display: inline-block;
+  background-color: lightgray;
+  border: 0px;
+}
+#instructions{
+  border: 0px;
+}
+</style>
+</head>
+<body>
+<h1>Sounds of Music Pitch Test HACKED</h1>
+  <p id="frequency0">00.00</p>
+  <p id="frequency1">00.00</p>
+  <p id="frequency2">00.00</p>
+  <p id="aaa">00.00</p>
+    <div id='selector-bar'>
+	<div id='tonic-select'><span class='label'>Tonic: </span>
+		<select id='tonic-note'>
+		  <option value="" data-semitones=''></option>
+		  <option value="C" data-semitones='-9'>C</option>
+		  <option value="C#" data-semitones='-8'>C#</option>
+		  <option value="D" data-semitones='-7'>D</option>
+		  <option value="Eb" data-semitones='-6'>Eb</option>
+		  <option value="E" data-semitones='-5'>E</option>
+		  <option value="F" data-semitones='-4'>F</option>
+		  <option value="F#" data-semitones='-3'>F#</option>
+		  <option value="G" data-semitones='-2'>G</option>
+		  <option value="Ab" data-semitones='-1'>Ab</option>
+		  <option value="A" data-semitones='0'>A</option>
+		  <option value="Bb" data-semitones='1'>Bb</option>
+		  <option value="B" data-semitones='2'>B</option>
+		</select>
+		<select id='tonic-degree'>
+		  <option value="2">2</option>
+		  <option value="3" selected=true>3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+		</select>
+	  </div>
+  	</div>
+	  <div id='note-results' > 
+		<div id='note-1' class='note-result'>
+		  <div id='note-1-display' class='note-display'>
+			<div class='note-name-div'><p id='note-1-name' class='note-name-p'>--</p></div>			
+		  <span id='note-1-target-freq' class='target-freq'>--</span></div>
+		  <div class='frequency'>000.00 Hz</div>
+		  <div class='frequency1'>000.00 Hz</div>
+		  <div class='frequency2'>000.00 Hz</div>
+		  <div class='cent'>00 cents</div>
+		  <div class='cent1'>00 cents</div>
+		  <div class='cent2'>00 cents</div>
+		  <div class='cent3'>00 cents</div>
+		  <div class='frequency3'>00.00</div>
+		</div>
+		<div id='note-2' class='note-result'>
+		  <div id='note-2-display' class='note-display'>
+			<div class='note-name-div'><p id='note-2-name' class='note-name-p'>--</p></div>
+		  <span id='note-2-target-freq'class='target-freq'>--</span></div>
+		  <div class='frequency'>000.00 Hz</div>
+		  <div class='frequency1'>000.00 Hz</div>
+		  <div class='frequency2'>000.00 Hz</div>
+		  <div class='cent'>00 cents</div>
+		  <div class='cent1'>00 cents</div>
+		  <div class='cent2'>00 cents</div>
+		  <div class='cent3'>00 cents</div>
+		  <div class='frequency3'>00.00</div>
+		</div>
+		<div id='note-3' class='note-result'>
+		  <div id='note-3-display' class='note-display'>
+			<div class='note-name-div'><p id='note-3-name' class='note-name-p'>--</p></div>
+		  <span id='note-3-target-freq'class='target-freq'>--</span></div>
+		  <div class='frequency'>000.00 Hz</div>
+		  <div class='frequency1'>000.00 Hz</div>
+		  <div class='frequency2'>000.00 Hz</div>
+		  <div class='cent'>00 cents</div>
+		  <div class='cent1'>00 cents</div>
+		  <div class='cent2'>00 cents</div>
+		  <div class='cent3'>00 cents</div>
+		  <div class='frequency3'>00.00</div>
+		</div>
+		<div id='note-4' class='note-result'>
+		  <div id='note-4-display' class='note-display'>
+			<div class='note-name-div'><p id='note-4-name' class='note-name-p'>--</p></div>
+		  <span id='note-4-target-freq'class='target-freq'>--</span></div>
+		  <div class='frequency'>000.00 Hz</div>
+		  <div class='frequency1'>000.00 Hz</div>
+		  <div class='frequency2'>000.00 Hz</div>
+		  <div class='cent'>00 cents</div>
+		  <div class='cent1'>00 cents</div>
+		  <div class='cent2'>00 cents</div>
+		  <div class='cent3'>00 cents</div>
+		  <div class='frequency3'>00.00</div>
+		</div>
+		<div id='note-5' class='note-result'>
+		  <div id='note-5-display' class='note-display'>
+			<div class='note-name-div'><p id='note-5-name' class='note-name-p'>--</p></div>
+		  <span id='note-5-target-freq'class='target-freq'>--</span></div>
+		  <div class='frequency'>000.00 Hz</div>
+		  <div class='frequency1'>000.00 Hz</div>
+		  <div class='frequency2'>000.00 Hz</div>
+		  <div class='cent'>00 cents</div>
+		  <div class='cent1'>00 cents</div>
+		  <div class='cent2'>00 cents</div>
+		  <div class='cent3'>00 cents</div>
+		  <div class='frequency3'>00.00</div>
+		</div>
+		<div id='note-6' class='note-result'>
+		  <div id='note-6-display' class='note-display'>
+			<div class='note-name-div'><p id='note-6-name' class='note-name-p'>--</p></div>
+		  <span id='note-6-target-freq'class='target-freq'>--</span></div>
+		  <div class='frequency'>000.00 Hz</div>
+		  <div class='frequency1'>000.00 Hz</div>
+		  <div class='frequency2'>000.00 Hz</div>
+		  <div class='cent'>00 cents</div>
+		  <div class='cent1'>00 cents</div>
+		  <div class='cent2'>00 cents</div>
+		  <div class='cent3'>00 cents</div>
+		  <div class='frequency3'>00.00</div>
+		</div>
+		<div id='note-7' class='note-result'>
+		  <div id='note-7-display' class='note-display'>
+			<div class='note-name-div'><p id='note-7-name' class='note-name-p'>--</p></div>
+		  <span id='note-7-target-freq'class='target-freq'>--</span></div>
+		  <div class='frequency'>000.00 Hz</div>
+		  <div class='frequency1'>000.00 Hz</div>
+		  <div class='frequency2'>000.00 Hz</div>
+		  <div class='cent'>00 cents</div>
+		  <div class='cent1'>00 cents</div>
+		  <div class='cent2'>00 cents</div>
+		  <div class='cent3'>00 cents</div>
+		  <div class='frequency3'>00.00</div>
+		</div>
+		<div id='note-8' class='note-result'>
+		  <div id='note-8-display' class='note-display'>
+			<div class='note-name-div'><p id='note-8-name' class='note-name-p'>--</p></div>
+		  <span id='note-8-target-freq'class='target-freq'>--</span></div>
+		  <div class='frequency'>000.00 Hz</div>
+		  <div class='frequency1'>000.00 Hz</div>
+		  <div class='frequency2'>000.00 Hz</div>
+		  <div class='cent'>00 cents</div>
+		  <div class='cent1'>00 cents</div>
+		  <div class='cent2'>00 cents</div>
+		  <div class='cent3'>00 cents</div>
+		  <div class='frequency3'>00.00</div>
+		</div>
+	  </div>
+  <div id='instructions'>
+    <p>Tested in Chrome and Firefox (PC) and Safari (iPad). Connect a good quality USB microphone for best results.</p>
+    <p>1. Choose the lowest note of the 8 note scale (the "Tonic") from the dropdown.</p>
+    <p>2. Select the first note. It will turn orange to show it is selected.</p>
+    <p>3. Play the corresponding note of the musical instrument into the microphone. For percussive instruments 5 or 6 strikes may be necessary. </p>
+    <p>4. Once the app has registered the pitch, select the next note in the scale and repeat for each note.</p>
+    <p>5. Notes selections can be toggled off by clicking a second time.</p>
+    <p>6. Record the results in your scoresheet.</p>
+  </div>
+<script id="jsbin-javascript">
+
+var selectedNote = null;
+var selectedNoteDegree = null;
+var newSelectedNote = false;
+var scales = {};
+var freqList = [0,0,0,0,0,0,0,0,0];
+
+scales['C']={notes:['C','D','E','F','G','A','B','C'],degrees:[0,0,0,0,0,0,0,1]};
+scales['C#']={notes:['C#','D#','E#','F#','G#','A#','B#','C#'],degrees:[0,0,0,0,0,0,0,1]};
+scales['D']={notes:['D','E','F#','G','A','B','C#','D'],degrees:[0,0,0,0,0,0,1,1]};
+scales['Eb']={notes:['Eb','F','G','Ab','Bb','C','D','Eb'],degrees:[0,0,0,0,0,1,1,1]};
+scales['E']={notes:['E','F#','G#','A','B','C#','D#','E'],degrees:[0,0,0,0,0,1,1,1]};
+scales['F']={notes:['F','G','A','Bb','C','D','E','F'],degrees:[0,0,0,0,1,1,1,1]};
+scales['F#']={notes:['F#','G#','A#','B','C#','D#','E#','F#'],degrees:[0,0,0,0,1,1,1,1]};
+scales['G']={notes:['G','A','B','C','D','E','F#','G'],degrees:[0,0,0,1,1,1,1,1]};
+scales['Ab']={notes:['Ab','Bb','C','Db','Eb','F','G','Ab'],degrees:[0,0,1,1,1,1,1,1]};
+scales['A']={notes:['A','B','C#','D','E','F#','G#','A'],degrees:[0,0,1,1,1,1,1,1]}
+scales['Bb']={notes:['Bb','C','D','Eb','F','G','A','Bb'],degrees:[0,1,1,1,1,1,1,1]};
+scales['B']={notes:['B','C#','D#','E','F#','G#','A#','B'],degrees:[0,1,1,1,1,1,1,1]};
+
+var notes = ['C','C#','D','Eb','E','F','F#','G','Ab','A','Bb','B'];
+
+$(document).ready(function(){
+  $("#tonic-select").click(deselectNotes);
+  $("#tonic-degree, #tonic-note").change(updateNotes);
+  $(".note-result").each(function(index){
+    $(this).click(function(){
+      toggleNote(this,index+1);
+    });
+  });
+
+  // jQuery methods go here...
+
+});
+
+// Hacks to deal with different function names in different browsers
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame    ||
+    function(callback, element){
+    window.setTimeout(callback, 1000 / 60);
+  };
+})();
+window.AudioContext = (function(){
+  return  window.webkitAudioContext || window.AudioContext || window.mozAudioContext;
+})();
+
+function updateNotes(){
+  var tonicNote = $('#tonic-note').val();
+  var tonicDegree = $('#tonic-degree').val();
+  for(var i=0;i<8;i++){
+	var selector = '#note-'+String(i+1)+'-name';
+    document.querySelector(selector).innerHTML=scales[tonicNote].notes[i]+String(Number(tonicDegree) + Number(scales[tonicNote].degrees[i]));
+  }
+ /*   for(var i=0;i<4;i++){
+	var selector = '#note-'+String(i+5)+'-name';
+    document.querySelector(selector).innerHTML=scales[tonicNote].notes[i+4]+String(Number(tonicDegree) + Number(scales[tonicNote].degrees[i+4]));
+  }*/
+	var resultDivs = document.querySelectorAll('.note-result');
+	for (var i=0;i<resultDivs.length;i++){
+		resultDivs[i].childNodes[3].innerHTML = '00.00';
+		resultDivs[i].childNodes[5].innerHTML = '00 cents';
+	}
+	updateFrequencies();
+}
+
+function updateFrequencies(){
+	var tonicNote = document.querySelector('#tonic-note').value;
+	var tonicDegree = Number(document.querySelector('#tonic-degree').value);
+	var noteList = ['C','C#','D','Eb','E','F','F#','G','Ab','A','Bb','B'];
+	var whichNote = 0;
+	while(tonicNote!==noteList[0]){
+		noteList.push(noteList.shift())
+		whichNote++;
+	}
+	var semi = whichNote-9;
+	
+	document.querySelector('#note-1-target-freq').innerHTML=calcFreqR(110,semi,tonicDegree);
+	document.querySelector('#note-2-target-freq').innerHTML=calcFreqR(110,(semi+2),tonicDegree);
+	document.querySelector('#note-3-target-freq').innerHTML=calcFreqR(110,semi+4,tonicDegree);
+	document.querySelector('#note-4-target-freq').innerHTML=calcFreqR(110,semi+5,tonicDegree);
+	document.querySelector('#note-5-target-freq').innerHTML=calcFreqR(110,semi+7,tonicDegree);
+	document.querySelector('#note-6-target-freq').innerHTML=calcFreqR(110,semi+9,tonicDegree);
+	document.querySelector('#note-7-target-freq').innerHTML=calcFreqR(110,semi+11,tonicDegree);
+	document.querySelector('#note-8-target-freq').innerHTML=calcFreqR(110,semi+12,tonicDegree);
+	freqList[0]= calcFreq(110,semi,tonicDegree);
+	freqList[1]= calcFreq(110,semi+2,tonicDegree);
+	freqList[2]= calcFreq(110,semi+4,tonicDegree);
+	freqList[3]= calcFreq(110,semi+5,tonicDegree);
+	freqList[4]= calcFreq(110,semi+7,tonicDegree);
+	freqList[5]= calcFreq(110,semi+9,tonicDegree);
+	freqList[6]= calcFreq(110,semi+11,tonicDegree);
+	freqList[7]= calcFreq(110,semi+12,tonicDegree);
+	
+	if(calcFreq(110,semi,tonicDegree)<87){
+		alert('This scale begins below F2. Some notes may not be scored.');
+	}
+	if(calcFreq(110,semi,tonicDegree)>525){
+		alert('This scale begins above C5. Some notes may not be scored.');
+	}
+    
+}
+
+
+function calcFreqR(start,semi,degree){
+    var freq = start*Math.pow(2,(semi/12 + degree-2));
+    if (freq<87|freq>1050){
+      return "N/S";
+    }else{
+	return (start*Math.pow(2,(semi/12 + degree-2))).toFixed(2);
+    }
+}
+
+function calcFreq(start,semi,degree){
+	return start*Math.pow(2,(semi/12 + degree-2));
+}
+
+function toggleNote(div,note){
+  if(div.style.backgroundColor==='orange'){
+    deselectNotes();
+  }else if(div.childNodes[1].childNodes[3].innerHTML==="N/S"){
+    deselectNotes();    
+  }else{
+    selectNote(div,note);
+  }
+}
+
+function selectNote(div,note){
+	selectedNote = div;
+	selectedNoteDegree = note;
+	newSelectedNote = true;
+	context.resume();
+	$('.note-result').removeAttr('style');
+	div.style.backgroundColor = 'orange';
+}
+
+function deselectNotes(){
+	selectedNote = null;
+	selectedNoteDegree = null;
+	newSelectedNote = true;
+	$('.note-result').removeAttr('style');
+}
+
+var context = new AudioContext();
+
+context.createAnalys = (function(){
+  return  context.createAnalyser || context.webkitcreateAnalyser;
+})();
+
+
+var analyser = context.createAnalys();
+
+
+analyser.fftSize = 4096;
+var bufferLength = analyser.fftSize;
+var dataArray = new Uint8Array(bufferLength);
+
+
+var detected = [];
+var sorted = [];
+var meanFreq = ['00.00','00.00','00.00','00.00','00.00','00.00'];
+var silenceStart = Date.now();
+var savedFreq = null;
+var saved = false;
+var displayFreq = null;
+var threshold = 0.1;
+
+
+
+analyser.smoothingTimeConstant = 0.0;
+
+navigator.mediaDevices.getUserMedia({audio: true})
+  .then((stream) => {
+    var source = context.createMediaStreamSource(stream);
+    source.connect(analyser);
+});
+
+updateData()
+
+function updateData(){
+  window.requestAnimFrame(updateData);
+  analyser.getByteTimeDomainData(dataArray);
+  sorted.length = 0;
+
+  //insert frequency data into array for averaging
+  if(pitchDetect(dataArray,threshold,context.sampleRate)!==Infinity){
+	  detected.push({time: Date.now(), frequency: pitchDetect(dataArray,threshold,context.sampleRate)});
+	  silenceStart = Date.now();
+  }
+  
+  //populate new array of all frequencies that are less than 3 seconds old
+  for(var i=0;i<detected.length;i++){
+	  if(Date.now() - detected[i].time > 3000){
+		  detected.shift();
+		  i--;
+	  }else{
+		  sorted.push(detected[i].frequency);
+	  }
+  }
+  
+  //sort this new array by frequency
+  sorted.sort();
+  
+  //if enough frequencies in sorted array, take the mean of the interquartile
+  if(sorted.length>3){
+	  var quartile = Math.round(sorted.length/3);
+	  var sum = 0;
+	  var num = 0;
+	  for(var i=quartile;i<(sorted.length-quartile);i++){
+		  sum+= sorted[i];
+		  num++;
+	  }
+	  meanFreq[0] = (sum/num).toFixed(2);
+	  sum = 0;
+	  num = 0;
+	  for(var i=0;i<quartile;i++){
+		  sum+= sorted[i];
+		  num++;
+	  }
+	  meanFreq[1] = (sum/num).toFixed(2);
+	  sum = 0;
+	  num = 0;
+	  for(var i=sorted.length - quartile + 1;i<sorted.length;i++){
+		  sum+= sorted[i];
+		  num++;
+	  }
+	  meanFreq[2] = (sum/num).toFixed(2);
+  }else{
+	  meanFreq[0] = '00.00';
+  }
+  
+  if(newSelectedNote){
+	  detected.length = 0;
+	  newSelectedNote = false;
+	  saved = false;
+	  silenceStart = Date.now();
+  }
+  
+  document.getElementById('frequency1').innerHTML = meanFreq[1];
+  document.getElementById('frequency2').innerHTML = meanFreq[2];
+//   document.getElementById('frequency3').innerHTML = meanFreq[3];
+//   document.getElementById('frequency4').innerHTML = meanFreq[4];
+//   document.getElementById('frequency5').innerHTML = meanFreq[5];
+  if(Date.now() - silenceStart > 1000){
+	  if(!saved){
+	  savedFreq = meanFreq[0];
+	  saved = true;
+	  document.getElementById('frequency0').innerHTML = savedFreq;
+	  detected.length = 0;
+	  }else{
+		  document.getElementById('frequency0').innerHTML = savedFreq;
+	  }
+  }else{
+	  saved = false;
+	  document.getElementById('frequency0').innerHTML = meanFreq[0];
+  }
+  
+  /*document.getElementById('silence').innerHTML = Date.now() - silenceStart;
+  document.getElementById('sorted').innerHTML = sorted.length;
+  document.getElementById('raw-frequency').innerHTML = pitchDetect(dataArray,threshold,context.sampleRate);
+  */
+  
+  if(selectedNote){
+	  var displayedFreq = Number(document.getElementById('frequency0').innerHTML);
+	  var displayedFreq1 = Number(document.getElementById('frequency1').innerHTML);
+	  var displayedFreq2 = Number(document.getElementById('frequency2').innerHTML);
+	  var targetFreq = freqList[selectedNoteDegree-1];
+	  var cents = Math.round(Math.log(displayedFreq/targetFreq)*100/Math.log(Math.pow(2,1/12)));
+	  var cents1 = Math.round(Math.log(displayedFreq1/targetFreq)*100/Math.log(Math.pow(2,1/12)));
+	  var cents2 = Math.round(Math.log(displayedFreq2/targetFreq)*100/Math.log(Math.pow(2,1/12)));
+	  num = 0;
+	  sum = 0;
+	  for (var i = 0; i < sorted.length; i++) {
+		  if (Math.abs(sorted[i] - targetFreq) < 5) {
+			  sum+=sorted[i];
+			  num++;
+		  }
+	  }
+	  var cents3 = 100000000;
+	  var displayedFreq3 = 10000000;
+  	  document.getElementById('aaa').innerHTML = num/sorted.length;
+	  cents3 = Math.round(Math.log(sum/num/targetFreq)*100/Math.log(Math.pow(2,1/12)));
+	  displayedFreq3 = sum/num;
+	
+  selectedNote.childNodes[3].innerHTML = document.getElementById('frequency0').innerHTML;
+  selectedNote.childNodes[5].innerHTML = document.getElementById('frequency1').innerHTML;
+  selectedNote.childNodes[7].innerHTML = document.getElementById('frequency2').innerHTML;
+  selectedNote.childNodes[9].innerHTML = cents +' cents';
+  selectedNote.childNodes[11].innerHTML = cents1 +' cents';
+  selectedNote.childNodes[13].innerHTML = cents2 +' cents';
+  selectedNote.childNodes[15].innerHTML = cents3 +' cents';
+  selectedNote.childNodes[17].innerHTML = displayedFreq3.toFixed(2);
+  }
+}
+
+
+function differenceFunction(tau,array,window){
+  var sum=0;
+  for(var i=0;i<window;i++){
+    sum+=Math.pow(array[i]-array[i+tau],2);
+  }
+  return sum;
+}
+
+function pitchDetect(bufferArray,threshold,sampleRate){
+  
+  var windowSize = Math.round(bufferArray.length/2)-10;
+  var dOf = [];
+  var dPrimeOf = [];
+  var minima = [];
+  var period = 0;
+  var cumulative = 0;
+  var periodicity=0;
+  dPrimeOf[0]=1;  
+  
+  for(var tau=1;tau<bufferArray.length-windowSize;tau++){
+ 
+    dOf[tau]=differenceFunction(tau,bufferArray,windowSize);
+    cumulative += dOf[tau];
+    dPrimeOf[tau]=dOf[tau]*tau/cumulative;
+	
+    if(tau>2 && dPrimeOf[tau-1]<dPrimeOf[tau-2] && dPrimeOf[tau-1]<dPrimeOf[tau] && dPrimeOf[tau-1]<threshold){
+      minima.push(tau-1);
+    }	
+    
+    for (var m=0;m<minima.length-1;m++){
+      var mult = minima[m]/minima[0];
+      var p = Math.abs((Math.round(mult)- mult)/mult);
+      if(p > periodicity){
+        periodicity = p;
+      }
+     
+      if(periodicity<0.08){
+        var lastMin = minima[minima.length-1];
+        var interpolated = quadraticInterpolate(lastMin-1,dOf[lastMin-1],lastMin,dOf[lastMin],lastMin+1,dOf[lastMin+1])
+        period = interpolated/Math.round(lastMin/minima[0]);
+      }
+      
+    }
+  }
+  return sampleRate/period;
+}
+
+function quadraticInterpolate(x1,y1,x2,y2,x3,y3){
+  var denom = x1*x1*(x2-x3)-x2*x2*(x1-x3)+x3*x3*(x1-x2);
+  var a = (y1*(x2-x3)-y2*(x1-x3)+y3*(x1-x2))/denom;
+  var b = (x1*x1*(y2-y3)-x2*x2*(y1-y3)+x3*x3*(y1-y2))/denom;
+  var vert_X = -(b/(2*a));
+  
+  return vert_X;
+
+
+}
+</script>
+</body>
+</html>
