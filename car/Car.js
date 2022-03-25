@@ -81,7 +81,7 @@ class Car {
   think(scene) {
     scene.push(this.vel.mag());
     scene.push(0);
-    scene.push(this.heading);
+    scene.push(0);
     
     let output = this.brain.predict(scene);
     this.turn((output[1]-output[0]) * 2);
