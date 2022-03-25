@@ -79,8 +79,8 @@ class Car {
   }
   
   think(scene) {
-    scene.push(this.vel.x);
-    scene.push(this.vel.y);
+    scene.push(this.vel.mag());
+    scene.push(0);
     scene.push(this.heading);
     
     let output = this.brain.predict(scene);
