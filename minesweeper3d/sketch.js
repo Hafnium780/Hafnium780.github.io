@@ -155,7 +155,6 @@ function draw() {
 
 function lose() {
   lost = true;
-  
   for (let i = 0; i < xs; i++) {
     for (let j = 0; j < ys; j++) {
       for (let k = 0; k < zs; k++) {
