@@ -6,7 +6,7 @@ let yscl = 30;
 let t = {};
 let lost = false;
 let al = 255;
-let layernum;
+let layernum, inst;
 
 const mx = [-1, 0, 1, 1, 1, 0, -1, -1, 
             -1, 0, 1, 1, 1, 0, -1, -1, 0,
@@ -59,7 +59,7 @@ function reset() {
   }
   layernum = createDiv('Layer: 1/' + zs);
   inst = createDiv('The middle row of each cell shows the current layer, the ones below and above correspond to the layers below and above. You only interact with the cells in the current layer. <br> <b>Left click </b>to mark as a flag <br> <b>Shift + left click </b>to reveal <br> <b>Left click </b>a revealed square to chord <br> Use the <b>up and down arrow keys </b>to move through the layers <br> Press <b>space </b>to restart <br> Cells with no neighboring mines are automatically chorded');
-}
+ }
 
 
 let l = false;
