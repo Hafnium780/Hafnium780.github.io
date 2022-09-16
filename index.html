@@ -1,19 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>hi</title>
-  </head>
-  <body>
-    <p>
-      a <br>
-      <a href="car">car</a> <br>
-      <a href="circle">circle</a> <br>
-      <a href="gravity">gravity</a> <br>
-      <a href="perlin">perlin</a> <br>
-      <a href="sounds">sounds</a> <br>
-      <a href="raycasting">raycasting</a> <br>
-      <a href="minesweeper3d">3d minesweeper</a> <br>
-      <a href="graph-algorithms">graph algorithms</a> <br>
-    </p>
+
+<head>
+  <title>hi</title>
+  <style>a {position:absolute; text-decoration: none; color: blue; font-family: monospace; font-size: 20px;}</style>
+</head>
+
+<body>
+  wow so many choices!
+  <a class="link" href="car">car</a> <br>
+  <a class="link" href="circle">circle</a> <br>
+  <a class="link" href="gravity">gravity</a> <br>
+  <a class="link" href="perlin">perlin</a> <br>
+  <a class="link" href="sounds">sounds</a> <br>
+  <a class="link" href="raycasting">raycasting</a> <br>
+  <a class="link" href="minesweeper3d">3d minesweeper</a> <br>
+  <a class="link" href="https://multiplayer-platformer.glitch.me/">multiplayer platformer</a> <br>
+  <a class="link" href="graph-algorithms">graph algorithms</a> <br>
+  <script defer>
+    let links = document.getElementsByClassName("link");
+    for (const l of links) {
+      l.style.top = (Math.random() * (window.innerHeight - 200)) + "px";
+      l.style.left = (Math.random() * (window.innerWidth - 200)) + "px";
+    }
+  </script>
 </body>
+
 </html>
