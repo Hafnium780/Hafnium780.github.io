@@ -4,15 +4,16 @@
 <head>
   <title>hi</title>
   <style>
-  body {overflow:hidden; background-color:lightsalmon;}
+  body {overflow:hidden; background-color: red; transition: background-color linear 1s; }
   a {position:absolute; text-decoration: none; color: white; font-family: monospace; font-size: 20px; padding:3px}
+  #text {transition: color linear 1s, left ease 0.5s, top ease 0.5s; position: absolute; padding: 0px; margin: 0px; }
   #links {background-color:lightsteelblue; position:absolute; top:100px; bottom:0px; left:0px; right:0px; margin:0px; padding:0px;}
   .link {background-color: brown; border:3px solid black; border-radius: 5px;}
   </style>
 </head>
 
 <body>
-  wow so many choices!
+  <p id="text">wow so many choices!</p>
   <div id="links">
     <a class="link" href="car">car</a> <br>
     <a class="link" href="circle">circle</a> <br>
@@ -23,7 +24,6 @@
     <a class="link" href="minesweeper3d">3d minesweeper</a> <br>
     <a class="link" href="https://multiplayer-platformer.glitch.me/">multiplayer platformer</a> <br>
     <a class="link" href="graph-algorithms">graph algorithms</a> <br>
-    <a class="link" href="golf">golf</a> <br>
   </div>
   <script defer>
     let links = document.getElementsByClassName("link");
@@ -31,6 +31,33 @@
       l.style.top = (Math.random() * (window.innerHeight - l.offsetHeight - 200) + 100) + "px";
       l.style.left = (Math.random() * (window.innerWidth - l.offsetWidth)) + "px";
     }
+
+    let colors = ["red", "orange", "yellow", "green", "blue"];
+
+    let i = 0;
+    setInterval(() => {
+      i = (i + 1) % colors.length;
+      document.body.style.backgroundColor = colors[i];
+      document.getElementById("text").style.color = colors[(i + 3) % colors.length];
+    }, 1000);
+
+    let x = 0, y = 0, textWidth = document.getElementById("text").offsetWidth, textHeight = document.getElementById("text").offsetHeight;
+    let dx = 1, dy = 1;
+    setInterval(() => {
+      x += dx * Math.random() * 200;
+      y += dy * Math.random() * 20;
+      if (x < 0 || x > window.innerWidth - textWidth - 10) {
+        dx = -dx;
+        x = x < 0 ? 0 : window.innerWidth - textWidth - 10;
+      }
+      if (y < 0 || y > 100 - textHeight) {
+        dy = -dy;
+        y = y < 0 ? 0 : 100 - textHeight;
+      }
+      document.getElementById("text").style.left = x + "px";
+      document.getElementById("text").style.top = y + "px";
+    }, 500);
+
   </script>
 </body>
 
