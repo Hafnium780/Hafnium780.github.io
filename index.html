@@ -6,9 +6,9 @@
   <style>
   body {overflow:hidden; background-color: red; transition: background-color linear 1s; }
   a {position:absolute; text-decoration: none; color: white; font-family: monospace; font-size: 20px; padding:3px}
-  #text {transition: color linear 1s, left ease 0.5s, top ease 0.5s; position: absolute; padding: 0px; margin: 0px; }
+  #text {transition: color linear 0.5s, left ease 0.25s, top ease 0.25s; color: black; top: 0px; left: 0px; position: absolute; padding: 0px; margin: 0px; }
   #links {background-color:lightsteelblue; position:absolute; top:100px; bottom:0px; left:0px; right:0px; margin:0px; padding:0px;}
-  .link {background-color: brown; border:3px solid black; border-radius: 5px;}
+  .link {transition: left ease 1s, top ease 1s; left: -1000px; top: 0px; background-color: brown; border:3px solid black; border-radius: 5px; position: absolute; white-space: nowrap;}
   </style>
 </head>
 
@@ -27,18 +27,31 @@
   </div>
   <script defer>
     let links = document.getElementsByClassName("link");
-    for (const l of links) {
-      l.style.top = (Math.random() * (window.innerHeight - l.offsetHeight - 200) + 100) + "px";
-      l.style.left = (Math.random() * (window.innerWidth - l.offsetWidth)) + "px";
+
+    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+    document.onmousemove = updateMouse;
+    function updateMouse(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
     }
 
-    let colors = ["red", "orange", "yellow", "green", "blue"];
+    function random(min, max) {
+      return (Math.random() * (max - min) + min);
+    }
 
-    let i = 0;
+    function randomizeLinks() {
+      for (const l of links) {
+        l.style.top = (random(mouseY - 150 < 100 ? 100 : mouseY - 150, mouseY + 150 > window.innerHeight - l.offsetHeight ? window.innerHeight - l.offsetHeight : mouseY + 150) - 100) + "px";
+        l.style.left = (random(mouseX - 250 < l.offsetWidth / 2 ? l.offsetWidth / 2 : mouseX - 250, mouseX + 250 > window.innerWidth - l.offsetWidth / 2 ? window.innerWidth - l.offsetWidth / 2 : mouseX + 250) - l.offsetWidth / 2) + "px";
+      }
+    }
+
+    setInterval(randomizeLinks, 3000);
+    randomizeLinks();
+
     setInterval(() => {
-      i = (i + 1) % colors.length;
-      document.body.style.backgroundColor = colors[i];
-      document.getElementById("text").style.color = colors[(i + 3) % colors.length];
+      document.body.style.backgroundColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+      document.getElementById("text").style.color = "#" + Math.floor(Math.random() * 16777215).toString(16);
     }, 1000);
 
     let x = 0, y = 0, textWidth = document.getElementById("text").offsetWidth, textHeight = document.getElementById("text").offsetHeight;
