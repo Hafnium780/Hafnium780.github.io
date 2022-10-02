@@ -8,7 +8,7 @@
   a {position:absolute; text-decoration: none; color: white; font-family: monospace; font-size: 20px; padding:3px}
   #text {transition: color linear 0.5s, left ease 0.25s, top ease 0.25s; color: black; top: 0px; left: 0px; position: absolute; padding: 0px; margin: 0px; }
   #links {background-color:lightsteelblue; position:absolute; top:100px; bottom:0px; left:0px; right:0px; margin:0px; padding:0px;}
-  .link {transition: left ease 1s, top ease 1s; left: -1000px; top: 0px; background-color: brown; border:3px solid black; border-radius: 5px; position: absolute; white-space: nowrap;}
+  .link {transition: left ease 50ms, top ease 50ms; left: -1000px; top: 0px; background-color: brown; border:3px solid black; border-radius: 5px; position: absolute; white-space: nowrap;}
   </style>
 </head>
 
@@ -16,18 +16,25 @@
   <p id="text">wow so many choices!</p>
   <div id="links">
     <a class="link" href="car">car</a> <br>
+    <a class="link" href="golf">golf</a> <br>
     <a class="link" href="circle">circle</a> <br>
-    <a class="link" href="gravity">gravity</a> <br>
     <a class="link" href="perlin">perlin</a> <br>
     <a class="link" href="sounds">sounds</a> <br>
+    <a class="link" href="gravity">gravity</a> <br>
     <a class="link" href="raycasting">raycasting</a> <br>
     <a class="link" href="minesweeper3d">3d minesweeper</a> <br>
-    <a class="link" href="https://multiplayer-platformer.glitch.me/">multiplayer platformer</a> <br>
     <a class="link" href="graph-algorithms">graph algorithms</a> <br>
-    <a class="link" href="golf">golf</a> <br>
+    <a class="link" href="https://multiplayer-platformer.glitch.me/">multiplayer platformer</a> <br>
   </div>
   <script defer>
+    let width = window.innerWidth;
+    let height = window.innerHeight - 100;
+
     let links = document.getElementsByClassName("link");
+    let props = new Array(links.length);
+    for (let i = 0; i < links.length; i++) {
+      props[i] = {x: Math.random() * width, y: Math.random() * height, vx: (Math.random() - 0.5) * 10, vy: (Math.random() - 0.5) * 10, w: links[i].offsetWidth, h: links[i].offsetHeight, m: links[i].offsetWidth * links[i].offsetHeight}
+    }
 
     let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
     document.onmousemove = updateMouse;
@@ -40,15 +47,51 @@
       return (Math.random() * (max - min) + min);
     }
 
-    function randomizeLinks() {
-      for (const l of links) {
-        l.style.top = (random(mouseY - 150 < 100 ? 100 : mouseY - 150, mouseY + 150 > window.innerHeight - l.offsetHeight ? window.innerHeight - l.offsetHeight : mouseY + 150) - 100) + "px";
-        l.style.left = (random(mouseX - 250 < l.offsetWidth / 2 ? l.offsetWidth / 2 : mouseX - 250, mouseX + 250 > window.innerWidth - l.offsetWidth / 2 ? window.innerWidth - l.offsetWidth / 2 : mouseX + 250) - l.offsetWidth / 2) + "px";
+    function moveLinks() {
+      for (const p of props) {
+        for (const q of props) {
+          if (p === q) continue;
+          let dy = p.y + p.h / 2 - q.y - q.h / 2;
+          let dx = p.x + p.w / 2 - q.x - q.w / 2;
+          let d2 = dy*dy + dx*dx;
+          if (d2 < 100000) {
+            let ang = Math.atan2(dy, dx);
+            let f = 10000000/(d2)/p.m;
+            p.vx += f * Math.cos(ang);
+            p.vy += f * Math.sin(ang);
+          }
+        }
+
+        p.y += p.vy;
+        if (p.y < 0) {
+          p.y = 0;
+          p.vy = -p.vy;
+        }
+        else if (p.y > height - p.h) {
+          p.y = height - p.h;
+          p.vy = -p.vy;
+        }
+      
+        p.x += p.vx;
+        if (p.x < 0) {
+          p.x = 0;
+          p.vx = -p.vx;
+        }
+        else if (p.x > width - p.w) {
+          p.x = width - p.w;
+          p.vx = -p.vx;
+        }
+      }
+      for (let i = 0; i < links.length; i++) {
+        links[i].style.top = props[i].y + "px";
+        links[i].style.left = props[i].x + "px";
+        // l.style.top = (random(mouseY - 150 < 100 ? 100 : mouseY - 150, mouseY + 150 > window.innerHeight - l.offsetHeight ? window.innerHeight - l.offsetHeight : mouseY + 150) - 100) + "px";
+        // l.style.left = (random(mouseX - 250 < l.offsetWidth / 2 ? l.offsetWidth / 2 : mouseX - 250, mouseX + 250 > window.innerWidth - l.offsetWidth / 2 ? window.innerWidth - l.offsetWidth / 2 : mouseX + 250) - l.offsetWidth / 2) + "px";
       }
     }
 
-    setInterval(randomizeLinks, 3000);
-    randomizeLinks();
+    setInterval(moveLinks, 50);
+    moveLinks();
 
     setInterval(() => {
       document.body.style.backgroundColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
