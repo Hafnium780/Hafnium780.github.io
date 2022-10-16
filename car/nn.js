@@ -1,4 +1,9 @@
-// Other techniques for learning
+// Daniel Shiffman
+// Nature of Code: Intelligence and Learning
+// https://github.com/shiffman/NOC-S17-2-Intelligence-Learning
+
+// Based on "Make Your Own Neural Network" by Tariq Rashid
+// https://github.com/makeyourownneuralnetwork/
 
 class ActivationFunction {
   constructor(func, dfunc) {
