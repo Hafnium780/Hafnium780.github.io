@@ -1,9 +1,4 @@
-// Daniel Shiffman
-// Nature of Code: Intelligence and Learning
-// https://github.com/shiffman/NOC-S17-2-Intelligence-Learning
-
-// Based on "Make Your Own Neural Network" by Tariq Rashid
-// https://github.com/makeyourownneuralnetwork/
+// Other techniques for learning
 
 class ActivationFunction {
   constructor(func, dfunc) {
@@ -166,19 +161,12 @@ class NeuralNetwork {
     return new NeuralNetwork(this);
   }
 
-  mutate(rate) {
-    function mutate(val) {
-      if (Math.random() < rate) {
-        // return 2 * Math.random() - 1;
-        return val + randomGaussian(0, 0.1);
-      } else {
-        return val;
-      }
-    }
-    this.weights_ih.map(mutate);
-    this.weights_ho.map(mutate);
-    this.bias_h.map(mutate);
-    this.bias_o.map(mutate);
+  // Accept an arbitrary function for mutation
+  mutate(func) {
+    this.weights_ih.map(func);
+    this.weights_ho.map(func);
+    this.bias_h.map(func);
+    this.bias_o.map(func);
   }
 
 
