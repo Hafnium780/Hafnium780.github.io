@@ -1,0 +1,85 @@
+#injected {
+  position: absolute;
+  width: 160px;
+  height: 200px;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0);
+}
+
+#injected * {
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  font-size: 12px;
+}
+
+#injected .option {
+  display: block;
+  text-align: left;
+  margin: 4px 0px 0px 2px;
+  left: 0px;
+}
+
+#injected .toggle {
+  cursor: pointer;
+  display: inline-block;
+  margin: 0px;
+}
+
+#injected .toggle-switch {
+  display: inline-block;
+  background-color: rgba(200, 200, 200, 0.8);
+  border-radius: 16px;
+  width: 43px;
+  height: 24px;
+  position: relative;
+  vertical-align: middle;
+  transition: background-color linear 0.25s;
+}
+#injected .toggle-switch:before,
+#injected .toggle-switch:after {
+  content: "";
+}
+#injected .toggle-switch:before {
+  display: block;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: left 0.25s;
+}
+#injected .toggle:hover .toggle-switch:before {
+  background: linear-gradient(to bottom, #fff 0%, #fff 100%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+#injected .toggle-checkbox:checked + .toggle-switch {
+  background: #56c080;
+}
+#injected .toggle-checkbox:checked + .toggle-switch:before {
+  left: 22px;
+}
+
+#injected .toggle-checkbox {
+  position: absolute;
+  visibility: hidden;
+}
+
+#injected .text-label {
+  margin-left: 5px;
+  position: relative;
+  top: 2px;
+  color: #eee;
+}
+
+#injected #length {
+  width: 43px;
+  padding-left: 2px;
+}
+
+#injected #interval {
+  background-color: #eee;
+}

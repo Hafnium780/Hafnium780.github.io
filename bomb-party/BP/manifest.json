@@ -1,0 +1,25 @@
+{
+  "name": "Bomb Party Bot",
+  "description": "bomb party.",
+  "version": "1.00000000",
+  "icons": {
+    "32": "bp.png"
+  },
+  "manifest_version": 3,
+  "permissions": ["activeTab", "scripting", "storage"],
+  "action": {
+    "default_icon": {
+      "32": "bp.png"
+    }
+  },
+  "content_scripts": [{
+    "all_frames": true,
+    "js": ["content-script.js"],
+    "css": ["inject.css"],
+    "matches": ["https://falcon.jklm.fun/*", "https://phoenix.jklm.fun/*"]
+  }],
+  "web_accessible_resources": [{
+    "resources": [ "dict.txt" ],
+    "matches": [ "https://falcon.jklm.fun/*", "https://phoenix.jklm.fun/*" ]
+  }]
+}
