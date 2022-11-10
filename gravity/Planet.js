@@ -31,6 +31,20 @@ class Planet {
   
   show() {
     if (this.enabled) {
+      stroke(255, 100, 100, 50);
+      fill(255, 100, 100, 50);
+      if (this.pos.x < 0 && this.pos.x <= this.pos.y && this.pos.x <= height - this.pos.y) {
+        rect(0, Math.max(Math.min(this.pos.y-5, height-4), 0), 10, 4);
+      }
+      else if (this.pos.y < 0 && this.pos.y <= this.pos.x && this.pos.y <= width - this.pos.x) {
+        rect(Math.max(Math.min(this.pos.x-2, width-4), 0), 0, 4, 10);
+      }
+      else if (this.pos.x > width && width - this.pos.x <= this.pos.y && this.pos.x - width >= this.pos.y - height) {
+        rect(width-10, Math.max(Math.min(this.pos.y-5, height-4), 0), 10, 4);
+      }
+      else if (this.pos.y > height && height - this.pos.y <= this.pos.x && this.pos.x - width <= this.pos.y - height) {
+        rect(Math.max(Math.min(this.pos.x-5, width-4), 0), height-10, 4, 10);
+      }
       stroke(255, 255);
       fill(255);
       if (this.mass < 0) {
