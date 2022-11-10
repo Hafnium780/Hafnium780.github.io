@@ -13,19 +13,19 @@ let rsquared;
 let GSlider;
 let affectsOthers;
 let bounceOnWalls;
-let label;
 
 function setup() {
-  createCanvas(1600, 1200);
+  createCanvas(800, 570);
   paused = createCheckbox("Pause (Space)", false);
   collide = createCheckbox("Detect Collisions", false);
-  rsquared = createCheckbox("Gravity is proportional to 1/r^2", true);
+  rsquared = createCheckbox("Gravity is proportional to 1/r", false);
   label = createDiv('&nbsp;&nbsp;g&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size of planet');
   GSlider = createSlider(1, 100, 20);
-  massSlider = createSlider(1, 400, 3);
+  massSlider = createSlider(1, 80, 3);
   moving = createCheckbox("Placed Object Will Move", true);
   affectsOthers = createCheckbox("Placed Object Will Attract Others", true);
   bounceOnWalls = createCheckbox("Bounce Off Walls", false);
+  destroy = createCheckbox("Destroy Out of Bounds", false);
   background(0);
 }
 
@@ -33,22 +33,18 @@ function mousePressed() {
   if (mouseX > width || mouseX < 0 || mouseY > height || mouseY < 0) {
     return;
   }
-  dragging = true;
-  startX = mouseX;
-  startY = mouseY;
-}
-
-function keyPressed() {
-  if (keyCode == 32) {
-    paused.elt.getElementsByTagName("input")[0].checked = (paused.elt.getElementsByTagName("input")[0].checked - 1) % 2;
-    return false;
+  if (mouseButton == "left") {
+    dragging = true;
+    startX = mouseX;
+    startY = mouseY;
   }
-  else if (keyCode == 68) {
-    let record = 200;
+  else if (mouseButton == "right") {
+    let record = Infinity;
     let recordInd = -1;
     for (let i = 0; i < allP.length; i++) {
-      if (pow(allP[i].pos.x - mouseX, 2) + pow(allP[i].pos.y - mouseY, 2) < record) {
-        record = pow(allP[i].pos.x - mouseX, 2) + pow(allP[i].pos.y - mouseY, 2);
+      let dist = pow(allP[i].pos.x - mouseX, 2) + pow(allP[i].pos.y - mouseY, 2);
+      if (dist < record && dist < allP[i].r*allP[i].r) {
+        record = dist;
         recordInd = i;
       }
     }
@@ -69,6 +65,13 @@ function keyPressed() {
   }
 }
 
+function keyPressed() {
+  if (keyCode == 32) {
+    paused.elt.getElementsByTagName("input")[0].checked = (paused.elt.getElementsByTagName("input")[0].checked - 1) % 2;
+    return false;
+  }
+}
+
 function mouseReleased() {
   if (!dragging) {
     return;
@@ -85,11 +88,12 @@ function mouseReleased() {
 
 function draw() {
   G = GSlider.value();
-  background(0, 10  );
+  background(0, 10);
   if (dragging) {
     stroke(255);
     line(startX, startY, mouseX, mouseY);
   }
+    
   if (!paused.checked()) {
     for (let i = 0; i < allP.length; i++) {
       for (let j = 0; j < p.length; j++) {
@@ -103,7 +107,7 @@ function draw() {
         let dy = p1.pos.y - p2.pos.y;
         
         let f = G * p1.mass * p2.mass;
-        if (rsquared.checked()) {
+        if (!rsquared.checked()) {
           f /= (pow(dx, 2) + pow(dy, 2));
         }
         else {
@@ -133,7 +137,7 @@ function draw() {
     }
     allP[i].show();
   }
-  if (bounceOnWalls) {
+  if (destroy.checked()) {
     for (let i = 0; i < allP.length; i++) {
       if (allP[i].pos.x - allP[i].r < 0 || allP[i].pos.x + allP[i].r > width || allP[i].pos.y - allP[i].r < 0 || allP[i].pos.y + allP[i].r > height) {
         let found = false;
