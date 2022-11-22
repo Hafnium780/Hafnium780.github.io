@@ -1,0 +1,56 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+}
+
+#list {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  margin: 3px;
+}
+
+#input {
+  margin: 3px;
+  display: flex;
+}
+
+#inputDescription {
+  flex-grow: 1;
+}
+
+#keyInput {
+  flex-grow: 0;
+  flex-basis: 200px;
+}
+
+#signatureInput {
+  flex-grow: 0;
+  flex-basis: 200px;
+}
+
+#loadGrades {
+  margin: 3px;
+  height: 20px;
+  width: calc(100% - 6px);
+}
+
+#div {
+  display: flex;
+  border-bottom: 1px solid black;
+  margin-bottom: 2px;
+  padding-bottom: 2px;
+}
+
+#courseName {
+  text-align: left;
+  flex-grow: 1;
+}
+
+#grade {
+  text-align: right;
+  flex-grow: 0;
+  font-family: "Courier New", Courier, monospace;
+}
