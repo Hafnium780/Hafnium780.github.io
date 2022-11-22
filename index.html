@@ -5,11 +5,53 @@
   <title>hi</title>
   <meta name="google-site-verification" content="nwiDYewgmTc1xCpZ5-JJ0Zt6LDAwp5bOurIgnaaJAAM" />
   <style>
-  body {overflow:hidden; background-color: red; transition: background-color linear 1s; }
-  a {position:absolute; text-decoration: none; color: white; font-family: monospace; font-size: 2.5vh; padding:3px}
-  #text {transition: color linear 0.5s, left ease 0.25s, top ease 0.25s; color: black; top: 0px; left: 0px; position: absolute; padding: 0px; margin: 0px; font-size: 2vh}
-  #links {background-color:lightsteelblue; position:absolute; top:100px; bottom:0px; left:0px; right:0px; margin:0px; padding:0px;}
-  .link {transition: left ease 50ms, top ease 50ms; left: -1000px; top: 0px; background-color: brown; border:3px solid black; border-radius: 5px; position: absolute; white-space: nowrap;}
+    body {
+      overflow: hidden;
+      background-color: red;
+      transition: background-color linear 1s;
+    }
+
+    a {
+      position: absolute;
+      text-decoration: none;
+      color: white;
+      font-family: monospace;
+      font-size: 2.5vh;
+      padding: 3px
+    }
+
+    #text {
+      transition: color linear 0.5s, left ease 0.25s, top ease 0.25s;
+      color: black;
+      top: 0px;
+      left: 0px;
+      position: absolute;
+      padding: 0px;
+      margin: 0px;
+      font-size: 2vh
+    }
+
+    #links {
+      background-color: lightsteelblue;
+      position: absolute;
+      top: 100px;
+      bottom: 0px;
+      left: 0px;
+      right: 0px;
+      margin: 0px;
+      padding: 0px;
+    }
+
+    .link {
+      transition: left ease 50ms, top ease 50ms;
+      left: -1000px;
+      top: 0px;
+      background-color: brown;
+      border: 3px solid black;
+      border-radius: 5px;
+      position: absolute;
+      white-space: nowrap;
+    }
   </style>
 </head>
 
@@ -27,6 +69,7 @@
     <a class="link" href="graph-algorithms">graph algorithms</a>
     <a class="link" href="https://multiplayer-platformer.glitch.me/">multiplayer platformer</a>
     <a class="link" href="https://github.com/Hafnium780/Hafnium780.github.io/tree/main/bomb-party">bomb party</a>
+    <a class="link" href="https://github.com/Hafnium780/Hafnium780.github.io/tree/main/schoology-grades">schoology grades</a>
   </div>
   <script defer>
     let width = window.innerWidth;
@@ -35,7 +78,7 @@
     let links = document.getElementsByClassName("link");
     let props = new Array(links.length);
     for (let i = 0; i < links.length; i++) {
-      props[i] = {x: Math.random() * width, y: Math.random() * height, vx: (Math.random() - 0.5) * 10, vy: (Math.random() - 0.5) * 10, w: links[i].offsetWidth, h: links[i].offsetHeight, m: links[i].offsetWidth * links[i].offsetHeight}
+      props[i] = { x: Math.random() * width, y: Math.random() * height, vx: (Math.random() - 0.5) * 10, vy: (Math.random() - 0.5) * 10, w: links[i].offsetWidth, h: links[i].offsetHeight, m: links[i].offsetWidth * links[i].offsetHeight }
     }
 
     let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
@@ -55,10 +98,10 @@
           if (p === q) continue;
           let dy = p.y + p.h / 2 - q.y - q.h / 2;
           let dx = p.x + p.w / 2 - q.x - q.w / 2;
-          let d2 = dy*dy + dx*dx;
+          let d2 = dy * dy + dx * dx;
           if (d2 < 100000) {
             let ang = Math.atan2(dy, dx);
-            let f = 10000000/(d2)/p.m;
+            let f = 10000000 / (d2) / p.m;
             p.vx += f * Math.cos(ang);
             p.vy += f * Math.sin(ang);
           }
@@ -73,7 +116,7 @@
           p.y = height - p.h;
           p.vy = -p.vy;
         }
-      
+
         p.x += p.vx;
         if (p.x < 0) {
           p.x = 0;
