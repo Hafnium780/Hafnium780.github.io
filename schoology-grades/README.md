@@ -3,7 +3,7 @@ Google extension to get Schoology grades
 **Very low security is used when handling API keys, you probably shouldn't use this if you don't know me**
 
 ## Installation
-1) Download **schoology-grades.zip**
+1) Download **schoology-grades-1.1.zip**
 2) Unzip into folder
 3) Go to **chrome://extensions**
 4) Enable developer mode in the top right
