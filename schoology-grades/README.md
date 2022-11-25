@@ -12,12 +12,12 @@ Google extension to get Schoology grades
 
 ## Setup
 1) Sign into the Schoology site you normally use (**xxxx.schoology.com**)
-2) Go to **xxxx.schoology.com/api** (if Schoology Plus is installed, you might have to temporarily disable it for the next step)
-3) Copy the consumer key, click on the extension icon and paste it in
-4) **Data is automatically saved, and is not displayed after closing the extension.**
-5) Complete the captcha on the Schoology page and click "Reveal Existing Secret"
-6) Copy the consumer secret, click on the extension icon and paste it in
+2) Go to **xxxx.schoology.com/api**
+3) Complete the captcha on the Schoology page and click "Reveal Existing Secret" (or "Allow Access" if Schoology Plus is installed)
+4) Click on the extension icon
+5) Enter the domain of your Schoology home page (**xxxx** in previous steps)
 
 ## Use
 1) Click on the extension icon
-2) Grades will be automatically loaded, and they can be refreshed by pressing the button
+2) Grades will be automatically loaded
+3) Click on any course to see grades of each assignment inside it
