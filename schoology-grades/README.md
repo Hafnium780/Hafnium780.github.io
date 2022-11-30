@@ -20,10 +20,11 @@ Coming soon
 1) Download **schoology-grades-firefox-1.1.zip**
 2) Unzip into a folder
 3) Open **about:config**, click "**Accept the Risk and Continue**"
-4) Search "manifest", click on the double arrow on the right of "**extensions.manifestV3.enabled**" to enable V3
-5) Go to **about:debugging**
-6) Click on "**Load Temporary Add-on...**"
-7) Navigate to the unzipped folder and select the **manifest.json** file
+4) Search "manifest", find the row labeled "**extensions.manifestV3.enabled**"
+5) If the value next to it is false, click on the double arrow on the right side to enable V3
+6) Go to **about:debugging**
+7) Click on "**Load Temporary Add-on...**"
+8) Navigate to the unzipped folder and select the **manifest.json** file
 
 ## Setup
 1) Sign into the Schoology site you normally use (**xxxx.schoology.com**)
