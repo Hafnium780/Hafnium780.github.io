@@ -2,7 +2,10 @@ Google extension to get Schoology grades
 <sup><sub>_Really only useful if a teacher hides the grade percentages_</sub></sup>  
 **Very low security is used when handling API keys, you probably shouldn't use this if you don't know me**
 
-## Installation
+## Google Chrome Installation
+https://chrome.google.com/webstore/detail/schoology-grades/pnigmpmnlcomncpbnnpckdigfmonbgnb
+
+## Manual Installation
 1) Download **schoology-grades-1.1.zip**
 2) Unzip into folder
 3) Go to **chrome://extensions**
