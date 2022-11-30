@@ -1,0 +1,22 @@
+{
+  "name": "Schoology Grades",
+  "description": "Show Schoology grades",
+  "version": "1.1001",
+  "manifest_version": 3,
+  "permissions": ["storage"],
+  "host_permissions": ["https://*.schoology.com/*"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.schoology.com/api"],
+      "js": ["getkey.js"]
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "schoology-grades@hafnium780.github.io"
+    }
+  }
+}
