@@ -6,7 +6,7 @@ Google extension to get Schoology grades
 https://chrome.google.com/webstore/detail/schoology-grades/pnigmpmnlcomncpbnnpckdigfmonbgnb
 
 ## Installation (Firefox)
-https://addons.mozilla.org/en-US/firefox/addon/schoology-grades/ (if Firefox 109 is not released yet, see [Manual Installation (Firefox)](#manual-installation-firefox)
+https://addons.mozilla.org/en-US/firefox/addon/schoology-grades/ (if Firefox 109 is not released yet, see [Manual Installation (Firefox)](#manual-installation-firefox))
 
 ## Manual Installation (Chrome)
 1) Download **schoology-grades-chrome-1.1.zip**
