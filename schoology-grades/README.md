@@ -6,7 +6,7 @@ Google extension to get Schoology grades
 https://chrome.google.com/webstore/detail/schoology-grades/pnigmpmnlcomncpbnnpckdigfmonbgnb
 
 ## Installation (Firefox)
-Coming soon
+https://addons.mozilla.org/en-US/firefox/addon/schoology-grades/ (if Firefox 109 is not released yet, see [Manual Installation (Firefox)](#manual-installation-firefox)
 
 ## Manual Installation (Chrome)
 1) Download **schoology-grades-chrome-1.1.zip**
@@ -17,14 +17,14 @@ Coming soon
 6) Pin the extension to the extension bar
 
 ## Manual Installation (Firefox)
-1) Download **schoology-grades-firefox-1.1.zip**
-2) Unzip into a folder
-3) Open **about:config**, click "**Accept the Risk and Continue**"
-4) Search "manifest", find the row labeled "**extensions.manifestV3.enabled**"
-5) If the value next to it is false, click on the double arrow on the right side to enable V3
-6) Go to **about:debugging**
-7) Click on "**Load Temporary Add-on...**"
-8) Navigate to the unzipped folder and select the **manifest.json** file
+1) Download **schoology-grades-firefox-1.1.xpi**
+2) Open **about:config**, click "**Accept the Risk and Continue**"
+3) Search "manifest", find the row labeled "**extensions.manifestV3.enabled**"
+4) If the value next to it is false, click on the double arrow on the right side to enable V3
+5) Go to **about:addons**
+6) Drag **schoology-grades-firefox-1.1.xpi** onto the page
+7) Click "Yes" to install, select the extension and click on permissions
+8) Enable **"Access your data for sites in the htt<span>p</span>s://schoology.com domain"**
 
 ## Setup
 1) Sign into the Schoology site you normally use (**xxxx.schoology.com**)
