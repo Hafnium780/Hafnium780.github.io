@@ -18,8 +18,8 @@
 
 			#main {
 				position: fixed;
-				height: 130vh;
-				width: 140vw;
+				height: 180vh;
+				width: 180vw;
 				left: 0px;
 				top: 0px;
 				translate: 0px 0px;
@@ -42,10 +42,12 @@
 				align-items: center;
 				font-size: 15px;
 				text-align: center;
+				background-size: cover;
 			}
 
 			a.node {
 				background-color: #aaaaaa;
+				color: white;
 			}
 
 			a.filled.node {
@@ -85,7 +87,7 @@
 	<body>
 		<!--
       <layer of tree>
-        name|description
+        name|description|image_url
         <layer of tree>
         ...
       </layer of tree>
@@ -99,14 +101,14 @@
 					p5.js|
 					<div>
 						Interactive|
-						<a href="golf"> golf| </a>
-						<a href="circle"> circle| </a>
-						<a href="gravity"> gravity| </a>
-						<a href="minesweeper3d"> 3d minesweeper| </a>
-						<a href="raycasting"> raycasting| </a>
+						<a href="golf"> golf||golf.png </a>
+						<a href="circle"> circle||circle.png </a>
+						<a href="gravity"> gravity||gravity.png </a>
+						<a href="minesweeper3d"> 3d minesweeper||3d-minesweeper.png </a>
+						<a href="raycasting"> raycasting||raycasting.png </a>
 					</div>
-					<a href="car"> car| </a>
-					<a href="perlin"> perlin| </a>
+					<a href="car"> car||car.png </a>
+					<a href="perlin"> perlin||perlin.png </a>
 				</div>
 			</div>
 			<div>
@@ -114,24 +116,26 @@
 				<a
 					href="https://github.com/Hafnium780/Hafnium780.github.io/tree/main/bomb-party"
 				>
-					bomb party|
+					bomb party||bomb-party.png
 				</a>
 				<a
 					href="https://github.com/Hafnium780/Hafnium780.github.io/tree/main/schoology-grades"
 				>
-					schoology grades|
+					schoology grades||schoology-grades.png
 				</a>
 			</div>
 			<div>
 				Large Projects|
 				<div>
 					React.js|
-					<a href="graph-algorithms"> graph algorithms| </a>
+					<a href="graph-algorithms">
+						graph algorithms||graph-algorithms.png
+					</a>
 				</div>
 				<div>
 					Node.js|
 					<a href="https://multiplayer-platformer.glitch.me/">
-						multiplayer platformer|
+						multiplayer platformer||multiplayer-platformer.png
 					</a>
 				</div>
 			</div>
@@ -147,14 +151,17 @@
 			const main = document.getElementById("main");
 
 			// Calculated constants
-			const leftTreeBound = Math.PI - angleFromBottom; // Angle between left side of tree and bottom
-			const rightTreeBound = angleFromBottom; // Angle between right side of tree and bottom
-			const treeAngle = Math.PI - 2 * angleFromBottom; // Angle available to use for tree
+			// const leftTreeBound = Math.PI - angleFromBottom; // Angle between left side of tree and bottom
+			const leftTreeBound = Math.PI * 2;
+			// const rightTreeBound = angleFromBottom; // Angle between right side of tree and bottom
+			const rightTreeBound = 0;
+			// const treeAngle = Math.PI - 2 * angleFromBottom; // Angle available to use for tree
+			const treeAngle = Math.PI * 2;
 			const treeRadius =
-				Math.min(main.offsetWidth / 2, main.offsetHeight) -
+				// Math.min(main.offsetWidth / 2, main.offsetHeight) -
+				Math.min(main.offsetWidth / 2, main.offsetHeight / 2) -
 				sideMargins * 2 -
 				nodeRadius / 2; // Radius of tree
-			console.log(main.offsetWidth / 2, main.offsetHeight);
 
 			const nodesToEdge = new Map();
 			const allNodes = [];
@@ -165,6 +172,7 @@
 				const tree = {
 					name: text[0], // name of node
 					description: text[1], // description of node
+					image: text[2],
 					depth: depth, // depth of node from root
 					maxDepth: depth, // maximum depth of subtree
 					size: 1, // size of subtree
@@ -217,7 +225,7 @@
 				// pos y goes down
 				return {
 					x: Math.cos(a) * r + main.offsetWidth / 2,
-					y: main.offsetHeight - sideMargins - Math.sin(a) * r,
+					y: main.offsetHeight / 2 - Math.sin(a) * r,
 				};
 			};
 
@@ -258,6 +266,11 @@
 				nodeDiv.style.width = nodeRadius * 2 + "px";
 				nodeDiv.style.height = nodeRadius * 2 + "px";
 				nodeDiv.innerText = node.name;
+				if (node.image)
+					nodeDiv.style.backgroundImage =
+						"linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(_images/" +
+						node.image +
+						")";
 				const pos = polarToScreen(
 					radial / 2 + treeRadius - radiusLeft,
 					(leftBound - rightBound) / 2 + rightBound
@@ -347,11 +360,12 @@
 				x -= parseFloat(style.left.substring(0, style.left.length - 2));
 				y -= parseFloat(style.top.substring(0, style.top.length - 2));
 				// cos(a)r = x - main.innerWidth/2;
-				// sin(a)r = main.innerHeight - sideMargins - y;
-				const angle = Math.atan2(
-					main.offsetHeight - sideMargins - y,
+				// sin(a)r = main.innerHeight/2 - y;
+				let angle = Math.atan2(
+					main.offsetHeight / 2 - y,
 					x - main.offsetWidth / 2
 				);
+				if (angle < 0) angle += Math.PI * 2;
 				const radius = (x - main.offsetWidth / 2) / Math.cos(angle);
 				for (const node of allNodes) {
 					if (
