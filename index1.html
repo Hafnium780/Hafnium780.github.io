@@ -139,7 +139,7 @@
 		<script defer>
 			// Defined constants
 			const angleFromBottom = Math.PI / 12; // Angle between either side of tree and bottom
-			const sideMargins = 40;
+			const sideMargins = 50;
 			const nodeRadius = 50;
 			const edgeWidth = 20;
 			const animationSpeed = 70;
@@ -151,7 +151,10 @@
 			const rightTreeBound = angleFromBottom; // Angle between right side of tree and bottom
 			const treeAngle = Math.PI - 2 * angleFromBottom; // Angle available to use for tree
 			const treeRadius =
-				Math.min(main.offsetWidth / 2, main.offsetHeight) - sideMargins * 2; // Radius of tree
+				Math.min(main.offsetWidth / 2, main.offsetHeight) -
+				sideMargins * 2 -
+				nodeRadius / 2; // Radius of tree
+			console.log(main.offsetWidth / 2, main.offsetHeight);
 
 			const nodesToEdge = new Map();
 			const allNodes = [];
