@@ -1,0 +1,55 @@
+HTTP/1.1 200 OK
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>gravity</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="style.css" />
+		<script src="ball.js" defer></script>
+		<script src="map.js" defer></script>
+		<script src="canvas.js" defer></script>
+		<script src="sidebar.js" defer></script>
+		<script src="mouse.js" defer></script>
+		<script src="keyboard.js" defer></script>
+		<script src="main.js" defer></script>
+	</head>
+
+	<body style="width: 100vw; height: 100vh" oncontextmenu="return false;">
+		<div id="board"></div>
+		<!-- <div id="slider"></div> -->
+		<div id="sidebar">
+			<div id="buildsidebar">
+				<div class="sidebarelement" id="createplanet">
+					<input
+						type="range"
+						min="1"
+						max="100"
+						value="50"
+						class="slider"
+						id="massslider"
+					/>
+					<p id="massinfo">Mass: 10</p>
+					<button class="sidebarbutton" id="createplanetbutton">
+						Create Planet
+					</button>
+				</div>
+			</div>
+			<div id="optionssidebar">
+				<div class="sidebarelement">
+					<p class="optionsgrouptext">Display</p>
+					<div class="optionsoption" id="optionspath">
+						<p class="optionscheckbox">( )</p>
+						<p class="optionstext">Trace Path</p>
+					</div>
+					<div class="optionsoption" id="optionsenergy">
+						<p class="optionscheckbox">( )</p>
+						<p class="optionstext">Escape Energy</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<button class="sidebartab" id="buildsidebartab">Build</button>
+		<button class="sidebartab" id="optionssidebartab">Options</button>
+	</body>
+</html>
