@@ -2,6 +2,7 @@ class Ray {
   constructor() {
     this.x2 = 0;
     this.y2 = 0;
+    this.text = 0;
   }
   
   cast(x, y, ang) {
@@ -10,8 +11,8 @@ class Ray {
     this.y = y;
     let x1 = x;
     let y1 = y;
-    let x2 = x + 1000*cos(this.a);
-    let y2 = y + 1000*sin(this.a);
+    let x2 = x + 1000*sin(this.a);
+    let y2 = y + 1000*cos(this.a);
     let record = 1000000;
     for (let i = 0; i < walls.length; i++) {
       let x3 = walls[i].x1;
@@ -29,6 +30,7 @@ class Ray {
           record = dst;
           this.x2 = p1;
           this.y2 = p2;
+          this.text = t;
           this.c = i;
         }
       }
