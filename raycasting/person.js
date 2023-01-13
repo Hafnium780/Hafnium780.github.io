@@ -5,22 +5,28 @@ class Person {
     this.a = a;
     this.fr = new Ray();
     this.br = new Ray();
+    camSin = sin(this.a);
+    camCos = cos(this.a);
   }
   
   move(x, a) {
     this.a += a;
-    this.x += x*cos(this.a);
-    this.y += x*sin(this.a);
+    if (a !== 0) {
+      camSin = sin(this.a);
+      camCos = cos(this.a);
+    }
+    this.x += x*sin(this.a);
+    this.y += x*cos(this.a);
     let pos = createVector(this.x, this.y);
     
     this.fr.cast(this.x, this.y, this.a);
     this.br.cast(this.x, this.y, this.a+180);
     
-    if (this.fr.dst < 10 || this.br.dst < 10) {
-      this.a -= a;
-      this.x -= x*cos(this.a);
-      this.y -= x*sin(this.a);
-    }
+    // if (this.fr.dst < 10 || this.br.dst < 10) {
+    //   this.a -= a;
+    //   this.x -= x*sin(this.a);
+    //   this.y -= x*cos(this.a);
+    // }
     
     // if (this.x > width) this.x = 0;
     // if (this.y > h) this.y = 0;
