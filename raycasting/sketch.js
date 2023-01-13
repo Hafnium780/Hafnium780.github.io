@@ -22,7 +22,6 @@ let wallH = 10;
 let camSin, camCos;
 
 function setup() {
-  wallImg = loadImage("wall.png");
   createCanvas(600, 500);
   angleMode(DEGREES);
   c = new Person(width/2, h/2, 180);
