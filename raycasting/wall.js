@@ -7,6 +7,6 @@ class Wall {
   }
   
   show() {
-    line(this.x1, h-this.y1, this.x2, h-this.y2);
+    line(this.x1, this.y1, this.x2, this.y2);
   }
 }
