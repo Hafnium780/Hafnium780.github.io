@@ -1,0 +1,122 @@
+* {
+	margin: 0px;
+	padding: 0px;
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+#board {
+	width: 100vw;
+	z-index: 0;
+}
+
+#slider {
+	width: 100vw;
+	height: 10px;
+	background-color: lightgray;
+	/* cursor: ns-resize; */
+}
+
+#sidebar {
+	width: 100vw;
+	background-color: gray;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	z-index: 10;
+	user-select: none;
+}
+
+.sidebarelement {
+	width: 100px;
+	height: 100px;
+	background-color: lightgray;
+	display: flex;
+	flex-direction: column;
+	border-radius: 2px;
+	border: 2px solid black;
+	padding: 2px;
+}
+
+.slider {
+	display: block;
+	margin: 3px auto;
+	-webkit-appearance: none;
+	appearance: none;
+	width: 90%;
+	height: 15px;
+	background: black;
+}
+
+.slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 15px;
+	height: 15px;
+	background-color: tomato;
+	cursor: pointer;
+}
+
+#massinfo {
+	width: 100%;
+	text-align: center;
+}
+
+.sidebarbutton {
+	display: block;
+	width: 90%;
+	margin: 3px auto;
+	flex: 1;
+	background-color: white;
+	cursor: pointer;
+}
+
+.sidebartab {
+	position: absolute;
+	border: 2px solid black;
+	border-radius: 3px;
+	background-color: #a0a0a0;
+	width: 60px;
+	height: 25px;
+	bottom: -2px;
+	z-index: 5;
+	cursor: pointer;
+}
+
+.sidebartab.selected {
+	background-color: gray;
+}
+
+.hidden {
+	display: none;
+}
+
+.optionsgrouptext {
+	text-align: center;
+	margin-bottom: 4px;
+}
+
+.optionsoption {
+	display: flex;
+	font-size: 12px;
+	align-items: left;
+	justify-content: center;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.optionstext {
+	flex-grow: 1;
+	margin-left: 3px;
+}
+
+.optionscheckbox {
+	flex-grow: 0;
+	font-family: monospace;
+}
