@@ -1,11 +1,10 @@
-from pynput.keyboard import Listener
+# from pynput.keyboard import Listener
 import ctypes
 import time
-import numpy
-import pytesseract
-import time
-import cv2
-from PIL import ImageGrab
+# import numpy
+# import pytesseract
+# import cv2
+# from PIL import ImageGrab
 
 # Construct trie from wordlist
 
@@ -80,7 +79,7 @@ def homeCursor():
 # time.sleep(3)
 
 # Grab board from TeamViewer
-pytesseract.pytesseract.tesseract_cmd = 'C:\Program Files\Tesseract-OCR\\tesseract.exe'
+# pytesseract.pytesseract.tesseract_cmd = 'C:\Program Files\Tesseract-OCR\\tesseract.exe'
 left = 1022
 right = 1210
 top = 560
