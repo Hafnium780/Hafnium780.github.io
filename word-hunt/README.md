@@ -1,4 +1,5 @@
 # Word Hunt Bot
+[Demo Video](https://youtu.be/rOtLNpUU4B8)
 ## Usage
 *Specific screen locations have been programmed for the iPhone 12 Pro, and may have to be changed if you want to use it for any other phone.*
 1) Download and install [Across Center](http://www.acrosscenter.com/)
@@ -12,6 +13,3 @@
 ## How It Works
 1) A list of words (Scrabble's valid word list) is used to construct a trie, which is used to only follow valid words as a DFS runs through all possible word combinations.
 2) Raw mouse data is sent to Across Center, which forwards it to the iPhone cursor.
-
-
-[Demo](https://youtu.be/rOtLNpUU4B8)
