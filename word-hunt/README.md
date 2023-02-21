@@ -12,3 +12,6 @@
 ## How It Works
 1) A list of words (Scrabble's valid word list) is used to construct a trie, which is used to only follow valid words as a DFS runs through all possible word combinations.
 2) Raw mouse data is sent to Across Center, which forwards it to the iPhone cursor.
+
+
+[Demo](https://youtu.be/rOtLNpUU4B8)
