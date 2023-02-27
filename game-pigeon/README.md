@@ -28,3 +28,14 @@
 ### How It Works
 1) A list of words (Scrabble's valid word list) is searched for possible anagrams
 2) Raw mouse data is sent to Across Center, which forwards it to the iPhone cursor
+
+## Word Bites
+Currently so impractical randomly placing blocks would probably result in higher points
+### How It (Kinda) Works
+1) The TeamViewer screenshare is scanned for all the tiles, and the user manually enters in the letters.
+2) A list of words (Scrabble's valid word list) is used to construct a trie, which is used to only follow valid words as a DFS runs through all possible word combinations.
+3) All tiles are moved to their own 2x2 squares in the top 6 rows.
+4) For each word, each tile is moved to the bottom 3 rows, forming the word. The tiles are then moved back to empty 2x2s.
+### Potential Optimizations
+- Do not move tiles back and forth if they are used in next word
+- Create word order such that the minimum number of letters at the end are changed, like DFSing through a tree
