@@ -39,3 +39,8 @@ Currently so impractical randomly placing blocks would probably result in higher
 ### Potential Optimizations
 - Do not move tiles back and forth if they are used in next word
 - Create word order such that the minimum number of letters at the end are changed, like DFSing through a tree
+
+## Basketball
+### How It Works
+1) The TeamViewer screenshare is scanned for the placed basketball
+2) The cursor is moved to the ball and drags it towards the basket
