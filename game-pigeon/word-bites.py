@@ -9,7 +9,7 @@ from PIL import ImageGrab
 
 def moveMouse(dx, dy):
     ctypes.windll.user32.mouse_event(1, dx, dy, 0, 0)
-    time.sleep(0.02)
+    time.sleep(0.0001)
 
 
 def mouseDown():
@@ -87,40 +87,43 @@ board = [[".", ".", ".", "A", "L", ".", ".", "."],
          [".", ".", ".", ".", "I", "N", ".", "M"],
          [".", "H", ".", ".", ".", ".", ".", "."],
          [".", ".", ".", ".", ".", ".", ".", "."],
-         ["K", ".", ".", "G", "E", ".", ".", "."],]
+         ["K", ".", ".", "G", "E", ".", ".", "."]]
 
-j = 0
-for x in range(977, 977+board_width*xstep, xstep):
-    i = 0
-    # print("-")
-    for y in range(474, 474+board_height*ystep, ystep):
-        boardImage = cv2.bitwise_not(cv2.cvtColor(numpy.array(ImageGrab.grab(
-            bbox=(x, y, x+width, y+height))), cv2.COLOR_BGR2GRAY))
+scan_board = True
 
-        # cv2.imshow('hi', boardImage)
-        # cv2.waitKey(400)
-        # cv2.destroyAllWindows()
-        dom = numpy.unravel_index(numpy.bincount(numpy.ravel_multi_index(
-            boardImage.reshape(-1, boardImage.shape[-1]).T, (256, 256, 256))).argmax(), (256, 256, 256))
-        # print(dom)
-        if dom[0] > 95:
-            board[i][j] = "."
-        else:
-            board[i][j] = "#"
-        i = i+1
-    j = j+1
+if scan_board:
+    j = 0
+    for x in range(977, 977+board_width*xstep, xstep):
+        i = 0
+        # print("-")
+        for y in range(474, 474+board_height*ystep, ystep):
+            boardImage = cv2.bitwise_not(cv2.cvtColor(numpy.array(ImageGrab.grab(
+                bbox=(x, y, x+width, y+height))), cv2.COLOR_BGR2GRAY))
 
-print("Input Letters: ")
-collapsed_board = input().upper()
-ind = 0
+            # cv2.imshow('hi', boardImage)
+            # cv2.waitKey(400)
+            # cv2.destroyAllWindows()
+            dom = numpy.unravel_index(numpy.bincount(numpy.ravel_multi_index(
+                boardImage.reshape(-1, boardImage.shape[-1]).T, (256, 256, 256))).argmax(), (256, 256, 256))
+            # print(dom)
+            if dom[0] > 95:
+                board[i][j] = "."
+            else:
+                board[i][j] = "#"
+            i = i+1
+        j = j+1
 
-for i in range(board_height):
-    for j in range(board_width):
-        if board[i][j] == "#":
-            board[i][j] = collapsed_board[ind]
-            ind = ind + 1
-        print(board[i][j], end="")
-    print("")
+    print("Input Letters: ")
+    collapsed_board = input().upper()
+    ind = 0
+
+    for i in range(board_height):
+        for j in range(board_width):
+            if board[i][j] == "#":
+                board[i][j] = collapsed_board[ind]
+                ind = ind + 1
+            print(board[i][j], end="")
+        print("")
 
 cells = []
 
@@ -141,13 +144,15 @@ for cell in cells:
 
 used = [False for _ in cells]
 found_words = []
+word_set = {}
 
 
 def dfs_horiz(index, cur_word, order):
     if len(cur_word) > board_width:
         return
-    if trie[index].is_word and len(cur_word) > 2:
+    if trie[index].is_word and len(cur_word) > 2 and (not cur_word in word_set):
         print(cur_word)
+        word_set[cur_word] = True
         found_words.append((order.copy(), cur_word))
     for i in range(len(cells)):
         if used[i]:
@@ -192,8 +197,8 @@ def dfs_horiz(index, cur_word, order):
 tmp_order = []
 dfs_horiz(0, "", tmp_order)
 
-found_words = sorted(found_words, key=lambda x: len(x[1]))
-found_words.reverse()
+# found_words = sorted(found_words, key=lambda x: len(x[1]))
+# found_words.reverse()
 print(found_words)
 time.sleep(3)
 homeCursor()
@@ -225,11 +230,12 @@ def moveCellTo(i, x, y):
     if cells[i].x == x and cells[i].y == y:
         return
     goto(cells[i].x, cells[i].y)
+    time.sleep(0.06)
     mouseDown()
     goto(x, y)
     cells[i].x = x
     cells[i].y = y
-    time.sleep(0.1)
+    time.sleep(0.06)
     mouseUp()
 
 
@@ -257,9 +263,15 @@ for i in range(len(cells)):
     storeCell(i)
 
 
-def follow_order(order):
+def follow_order(order, skip):
     x = 0
-    for cell in order:
+    for i in range(len(order)):
+        cell = order[i]
+        if i < skip:
+            x = x + 1
+            if cells[cell[0]].typ == 1:
+                x = x + 1
+            continue
         usedCells[cells[cell[0]].y//2][cells[cell[0]].x//2] = False
         if cells[cell[0]].typ == 0:
             moveCellTo(cell[0], x, 7)
@@ -275,13 +287,32 @@ def follow_order(order):
 
 
 initial_time = time.time()
-for order in found_words:
+last_skipped = 0
+jmp = False
+for j in range(len(found_words)):
+    if (not jmp) and len(found_words[j][1]) < board_width - 1:
+        continue
+    else:
+        jmp = True
+    order = found_words[j]
     if time.time() - initial_time > 60:
         break
-    follow_order(order[0])
-    print(order[1])
-    for i in range(len(cells)):
-        storeCell(i)
+    follow_order(order[0], last_skipped)
+    print(order[1], "*")
+    if j == len(found_words)-1:
+        break
+    cur_len = len(order[1])
+    last_skipped = len(order[0])
+    for i in reversed(range(len(order[0]))):
+        if order[1][:(cur_len)] == found_words[j+1][1][:(cur_len)]:
+            break
+        # print(order[1][:(cur_len+1)])
+        storeCell(order[0][i][0])
+        last_skipped = last_skipped - 1
+        cur_len = cur_len - 1
+        if cells[order[0][i][0]].typ == 1:
+            cur_len = cur_len - 1
+    # break
 
 
 # def on_click(x, y, m, b):
