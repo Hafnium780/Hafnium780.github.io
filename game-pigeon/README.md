@@ -30,7 +30,8 @@
 2) Raw mouse data is sent to Across Center, which forwards it to the iPhone cursor
 
 ## Word Bites
-Currently so impractical randomly placing blocks would probably result in higher points
+Somewhat impractical, just randomly placing blocks could result in higher points
+*Specific screen locations have been programmed for the iPhone 12 Pro, and may have to be changed if you want to use it for any other phone.*
 ### How It (Kinda) Works
 1) The TeamViewer screenshare is scanned for all the tiles, and the user manually enters in the letters.
 2) A list of words (Scrabble's valid word list) is used to construct a trie, which is used to only follow valid words as a DFS runs through all possible word combinations.
@@ -41,6 +42,7 @@ Currently so impractical randomly placing blocks would probably result in higher
 - Create word order such that the minimum number of letters at the end are changed, like DFSing through a tree
 
 ## Basketball
+*Specific screen locations have been programmed for the iPhone 12 Pro, and may have to be changed if you want to use it for any other phone.*
 ### How It Works
 1) The TeamViewer screenshare is scanned for the placed basketball
 2) The cursor is moved to the ball and drags it towards the basket
