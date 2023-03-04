@@ -44,3 +44,12 @@ Currently so impractical randomly placing blocks would probably result in higher
 ### How It Works
 1) The TeamViewer screenshare is scanned for the placed basketball
 2) The cursor is moved to the ball and drags it towards the basket
+
+## Mancala
+Mancala - Avalanche Mode
+### Usage
+1) Download and run `mancala.py`
+2) Enter the number of stones in each hole from top left to bottom left, then bottom right to top right. Do not enter the number of stones in each store
+3) 
+### How It Works
+1) Every possible path of pieces is simulated, and the best one is picked out.
