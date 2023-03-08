@@ -7,13 +7,14 @@ print(board)
 
 record = 0
 record_paths = []
+record_results = []
 insta_win = False
 win_path = []
 
 
 def simulate(board, path):
     print(board, path)
-    global record, record_paths, insta_win, win_path
+    global record, record_paths, record_results, insta_win, win_path
     for x in range(6):
         copy = board.copy()
         ind = x
@@ -44,15 +45,19 @@ def simulate(board, path):
         if record < copy[6]:
             record = copy[6]
             record_paths = [path.copy()]
+            record_results = [copy.copy()]
         elif record == copy[6]:
             record_paths.append(path.copy())
+            record_results.append(copy.copy())
         path.pop()
 
 
 simulate(board, [])
 print("Record: ", record)
-print("Possible Paths:")
-for path in record_paths:
-    print(path)
+for i in range(len(record_paths)):
+    print(f"Path {i}")
+    print(record_paths[i])
+    print("Board: ", record_results[i])
+    print("")
 # if insta_win:
 #     print("Instant Win: ", win_path)
