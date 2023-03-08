@@ -51,7 +51,11 @@ Somewhat impractical, just randomly placing blocks could result in higher points
 Mancala - Avalanche Mode
 ### Usage
 1) Download and run `mancala.py`
-2) Enter the number of stones in each hole from top left to bottom left, then bottom right to top right. Do not enter the number of stones in each store
-3) 
+2) Enter the number of stones in each hole from top left to bottom left, then bottom right to top right, seperated by newlines. Do not enter the number of stones in each store.
+3) Pick a path to follow. From left to right, click on the corresponding hole (0 is the top hole, 5 is the bottom hole)
 ### How It Works
 1) Every possible path of pieces is simulated, and the best one is picked out.
+### Notes
+From this, the optimal path for a normal Avalanche game is as follows:  
+`5, 2, 1, 4, 0, 0, 4, 4, 5, 0, 2, 3, 5, 1, 5, 5, 4, 1, 5, 0, 5, 2, 5, 4, 5, 3`  
+This gets a total of 43 stones.
