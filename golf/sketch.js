@@ -44,7 +44,7 @@ function setup() {
   }
   
   brush = createSlider(1, 10, 1);
-  brush.position(width, 60);
+  brush.position(width, 30);
   button = createButton('Increase/Decrease Height');
   button.position(0, height + 100);
   button.mousePressed(() => {mode = 0;});
