@@ -1,23 +1,29 @@
 print("Input Board:")
 board = [int(input()) for _ in range(6)] + [0] + [int(input())
                                                   for _ in range(6)]
-# print(board)
+print(board)
+# board = [0, 1, 4, 1, 2, 0, 0, 0, 1, 0, 0, 1, 0]
 
 
 record = 0
-record_path = []
+record_paths = []
+insta_win = False
+win_path = []
 
 
 def simulate(board, path):
     print(board, path)
-    global record, record_path
+    global record, record_paths, insta_win, win_path
     for x in range(6):
         copy = board.copy()
         ind = x
+        first_move = True
         if copy[x] == 0:
             continue
 
-        while copy[ind] > 1:
+        path.append(x)
+        while first_move or copy[ind] > 1:
+            first_move = False
             cur = copy[ind]
             copy[ind] = 0
             while cur > 0:
@@ -25,15 +31,28 @@ def simulate(board, path):
                 cur = cur - 1
                 copy[ind] = copy[ind] + 1
             if ind == 6:
-                path.append(x)
                 simulate(copy, path)
-                path.pop()
                 break
+        # win = True
+        # for i in range(6):
+        #     if copy[i] > 0:
+        #         win = False
+        # if win:
+        #     insta_win = True
+        #     record = copy[6]
+        #     win_path = path.copy()
         if record < copy[6]:
             record = copy[6]
-            record_path = path.copy()
+            record_paths = [path.copy()]
+        elif record == copy[6]:
+            record_paths.append(path.copy())
+        path.pop()
 
 
 simulate(board, [])
 print("Record: ", record)
-print("Path: ", record_path)
+print("Possible Paths:")
+for path in record_paths:
+    print(path)
+# if insta_win:
+#     print("Instant Win: ", win_path)
