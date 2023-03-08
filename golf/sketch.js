@@ -44,41 +44,41 @@ function setup() {
   }
   
   brush = createSlider(1, 10, 1);
-  brush.position(width, 30);
+  brush.position(width, 50);
   button = createButton('Increase/Decrease Height');
-  button.position(0, height + 30);
+  button.position(0, height + 50);
   button.mousePressed(() => {mode = 0;});
   button = createButton('Level Ground');
-  button.position(0, height + 130);
+  button.position(0, height + 80);
   button.mousePressed(() => {mode = 1;});
   button = createButton('Clear Map');
-  button.position(0, height + 190);
+  button.position(0, height + 140);
   button.mousePressed(() => {loadMap(0);});
   button = createButton('Load Map 1');
-  button.position(200, height + 100);
+  button.position(200, height + 50);
   button.mousePressed(loadSine);
   button = createButton('Load Map 2');
-  button.position(200, height + 130);
+  button.position(200, height + 80);
   button.mousePressed(() => {loadMap(1);});
   button = createButton('Load Map 3');
-  button.position(200, height + 160);
+  button.position(200, height + 110);
   button.mousePressed(() => {loadMap(2);});
   button = createButton('Save Map');
-  button.position(200, height + 190);
+  button.position(200, height + 140);
   button.mousePressed(saveMap);
   button = createButton('Simulate');
-  button.position(300, height + 100);
+  button.position(300, height + 50);
   button.mousePressed(simulate);
   button = createButton('Place Start');
-  button.position(300, height + 130);
+  button.position(300, height + 80);
   button.mousePressed(() => {mode = 2;});
   button = createButton('Place Goal');
-  button.position(300, height + 160);
+  button.position(300, height + 110);
   button.mousePressed(() => {mode = 3;});
   
   results = createCheckbox('Show Results', false);
   results.changed(resultsChanged);
-  results.position(400, height + 100);
+  results.position(400, height + 50);
 }
 
 
