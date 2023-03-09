@@ -8,9 +8,9 @@ let maxMouseA = 4000;
 let k = 300;
 let drag = 0.004;
 let dt = 0.01;
-let offset = 50, offsetWidth, offsetHeight, xCount, yCount;
+let offset = 200, offsetWidth, offsetHeight, xCount, yCount;
 function setup() {
-  createCanvas(300,300);
+  createCanvas(600,600);
   offsetWidth = width - offset*2;
   offsetHeight = height - offset*2;
   xCount = floor(offsetWidth / cellSize);
