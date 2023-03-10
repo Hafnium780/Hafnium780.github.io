@@ -1,6 +1,6 @@
-Google extension to get Schoology grades  
-<sup><sub>_Really only useful if a teacher hides the grade percentages_</sub></sup>  
-**Very low security is used when handling API keys, you probably shouldn't use this if you don't know me**
+Google extension to see Schoology course and assignment grades directly in the extension bar.
+
+Uses the Schoology API to obtain grades, loads and grabs the title of assignment pages if the API does not provide one.
 
 ## Installation (Chrome)
 https://chrome.google.com/webstore/detail/schoology-grades/pnigmpmnlcomncpbnnpckdigfmonbgnb
