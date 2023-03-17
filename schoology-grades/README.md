@@ -6,7 +6,7 @@ Uses the Schoology API to obtain grades, loads and grabs the title of assignment
 https://addons.mozilla.org/en-US/firefox/addon/schoology-grades/
 
 ## Manual Installation (Chrome)
-1) Download **schoology-grades-chrome-1.1.zip**
+1) Download **schoology-grades-chrome-1.2.zip**
 2) Unzip into a folder
 3) Go to **chrome://extensions**
 4) Enable developer mode in the top right
