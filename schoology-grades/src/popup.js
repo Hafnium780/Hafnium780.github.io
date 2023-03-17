@@ -17,16 +17,25 @@ const authHeader = () => {
 
 const list = document.getElementById("list");
 const title = document.getElementById("title");
-const reset = document.getElementById("reset");
+const copy = document.getElementById("copy");
 const back = document.getElementById("back");
 const domaininput = document.getElementById("domaininput");
 
 let assignmentNames = {};
 let showID;
 
-reset.addEventListener("click", () => {
-  chrome.storage.sync.set({ assignmentNames: {} });
-  assignmentNames = {};
+copy.addEventListener("click", () => {
+  copyText = "Assignment Name\tPoints\tMax points\n";
+  for (const assignment of assignments) {
+    copyText +=
+      assignment.assignmentName +
+      "\t" +
+      assignment.rawGrade.pts +
+      "\t" +
+      assignment.rawGrade.max +
+      "\n";
+  }
+  navigator.clipboard.writeText(copyText);
 });
 
 back.addEventListener("click", () => {
@@ -42,11 +51,11 @@ domaininput.addEventListener("change", () => {
 
 const setDomain = (d) => {
   domain = d;
-  chrome.storage.sync.set({ domain: d });
+  chrome.storage.local.set({ domain: d });
 };
 
 const getDomain = () => {
-  chrome.storage.sync.get("domain", (d) => {
+  chrome.storage.local.get("domain", (d) => {
     if (d["domain"] !== undefined) {
       domain = d["domain"];
       domaininput.value = domain;
@@ -57,7 +66,7 @@ const getDomain = () => {
 
 const getStoredAssignmentNames = () => {
   return new Promise((res) => {
-    chrome.storage.sync.get("assignmentNames", (a) => {
+    chrome.storage.local.get("assignmentNames", (a) => {
       assignmentNames = a["assignmentNames"] ?? {};
       res();
     });
@@ -65,7 +74,7 @@ const getStoredAssignmentNames = () => {
 };
 
 const storeAssignmentNames = () => {
-  chrome.storage.sync.set({ assignmentNames: assignmentNames });
+  chrome.storage.local.set({ assignmentNames: assignmentNames });
 };
 
 const setTitle = (s) => {
@@ -90,20 +99,20 @@ const schoologyHeaders = (fileType) => {
 };
 
 const setAuth = (key = "", signature = "") => {
-  if (key !== "") chrome.storage.sync.set({ key: key });
-  if (signature !== "") chrome.storage.sync.set({ signature: signature });
+  if (key !== "") chrome.storage.local.set({ key: key });
+  if (signature !== "") chrome.storage.local.set({ signature: signature });
 };
 
 const getAuth = () => {
   return Promise.all([
     new Promise((res) => {
-      chrome.storage.sync.get("key", (k) => {
+      chrome.storage.local.get("key", (k) => {
         key = k["key"];
         res();
       });
     }),
     new Promise((res) => {
-      chrome.storage.sync.get("signature", (s) => {
+      chrome.storage.local.get("signature", (s) => {
         signature = s["signature"];
         res();
       });
@@ -188,13 +197,16 @@ const sleep = async (t) => {
   });
 };
 
-const getAssignmentTitles = (as, id) => {
-  if (as.length === 0) return;
-  getAuth().then(() => {
-    getStoredAssignmentNames().then(async () => {
+const getAssignmentTitles = (as, s, id, force = false) => {
+  return new Promise((res, rej) => {
+    if (as.length === 0) {
+      res();
+      return;
+    }
+    getAuth().then(async () => {
       for (const a of as) {
         if (id !== showID) break;
-        if (assignmentNames[a.url]) {
+        if (assignmentNames[a.url] && !force) {
           assignments[a.assignmentI].assignmentName = assignmentNames[a.url];
           assignments[a.assignmentI].url = a.url;
         } else {
@@ -212,7 +224,7 @@ const getAssignmentTitles = (as, id) => {
                 assignmentNames[a.url] = tmp.value;
                 assignments[a.assignmentI].url = a.url;
                 storeAssignmentNames();
-                showAssignments(id);
+                showAssignments(s, id);
                 tmp.remove();
               }
             })
@@ -222,7 +234,8 @@ const getAssignmentTitles = (as, id) => {
         }
       }
       storeAssignmentNames();
-      showAssignments(id);
+      showAssignments(s, id);
+      res();
     });
   });
 };
@@ -246,7 +259,7 @@ let domain = undefined;
 const showGrades = (id) => {
   if (showID !== id) return;
   loading = false;
-  reset.style.display = "none";
+  copy.style.display = "none";
   back.style.display = "none";
   setTitle("Course Grades");
   list.innerHTML = "";
@@ -272,15 +285,61 @@ const showGrades = (id) => {
   }
 };
 
-const showAssignments = (id) => {
+const showAssignments = (s, id) => {
   if (showID !== id) return;
   // loading = false;
-  reset.style.display = "block";
+  copy.style.display = "block";
   back.style.display = "block";
   list.innerHTML = "";
-  for (const a of assignments) {
+  const categories = [];
+  if (!s.grading_category[s.grading_category.length - 1].created)
+    s.grading_category.push({
+      id: undefined,
+      title: "Other",
+      created: true,
+    });
+  let totalWeight = 0;
+  for (const gc of s.grading_category) {
+    if (gc.weight) totalWeight += gc.weight;
+  }
+  for (let i = 0; i < s.grading_category.length; i++) {
+    const gc = s.grading_category[i];
+    const weight =
+      totalWeight === 100
+        ? s.grading_category[i].weight
+          ? s.grading_category[i].weight / totalWeight
+          : 0
+        : undefined;
+    const div = document.createElement("div");
+    const title = document.createElement("div");
+    const titlediv = document.createElement("div");
+    const wdiv = document.createElement("div");
+    wdiv.id = "categoryweight";
+    wdiv.innerText = weight ? "Weight: " + weight * 100 + "%" : "";
+    title.id = "categorytitle";
+    titlediv.id = "categorytitlediv";
+    div.id = "categorydiv";
+    div.style.zIndex = i.toString();
+    title.innerText = gc.title;
+    list.appendChild(div);
+    div.appendChild(titlediv);
+    titlediv.appendChild(wdiv);
+    titlediv.appendChild(title);
+    categories.push({
+      id: gc.id,
+      title: gc.title,
+      div: div,
+      weight: weight,
+      totPts: 0,
+      maxPts: 0,
+    });
+  }
+
+  for (let i = 0; i < assignments.length; i++) {
+    const a = assignments[i];
     const div = document.createElement("div");
     const grade = document.createElement("div");
+    const reloadName = document.createElement("div");
     let assignmentName;
     if (a.url) {
       assignmentName = document.createElement("a");
@@ -292,33 +351,96 @@ const showAssignments = (id) => {
     div.id = "div";
     grade.id = "grade";
     assignmentName.id = "name";
+    reloadName.id = "reloadname";
+    reloadName.innerText = String.fromCodePoint(8635); // ↻
     grade.innerText = a.grade;
     assignmentName.innerText = a.assignmentName;
-    list.appendChild(div);
+    const cat = categories.find((e, i) => {
+      return e.id === a.category_id || i == categories.length - 1;
+    });
+    if (a.rawGrade.pts) {
+      cat.totPts += a.rawGrade.pts;
+      cat.maxPts += a.rawGrade.max;
+    }
+    cat.div.appendChild(div);
+    reloadName.addEventListener("click", () => {
+      assignmentName.innerText = "";
+      getAssignmentTitles([a], s, id, true);
+    });
+    div.appendChild(reloadName);
     div.appendChild(assignmentName);
     div.appendChild(grade);
+  }
+  if (categories[0].weight !== undefined) {
+    let totPer = 0;
+    let outOf = 1;
+    for (const gc of categories) {
+      if (gc.maxPts === 0) outOf -= gc.weight;
+    }
+    for (const gc of categories) {
+      if (gc.maxPts !== 0)
+        totPer += ((gc.weight / outOf) * gc.totPts) / gc.maxPts;
+    }
+  } else {
+    let totPts = 0,
+      maxPts = 0;
+    for (const gc of categories) {
+      totPts += gc.totPts;
+      maxPts += gc.maxPts;
+    }
+    console.log(totPts, maxPts, totPts / maxPts);
+  }
+  for (let i = 0; i < s.grading_category.length; i++) {
+    const points = document.createElement("div");
+    points.innerText =
+      (Number.isInteger(categories[i].totPts)
+        ? categories[i].totPts
+        : categories[i].totPts.toFixed(2)) +
+      "/" +
+      (Number.isInteger(categories[i].maxPts)
+        ? categories[i].maxPts
+        : categories[i].maxPts.toFixed(2));
+    points.id = "categorypoints";
+    categories[i].div.firstElementChild.appendChild(points);
   }
 };
 
 const loadAssignments = async (s) => {
   if (loading) return;
   setTitle(s.courseName);
+  await getStoredAssignmentNames();
   const thisID = Math.floor(Math.random() * 1000000);
   showID = thisID;
-  // let lastdate = Date.now();
   loading = true;
   assignments = [];
   for (const p of s.period) {
     p.assignment.sort((a, b) => b.timestamp - a.timestamp);
-
     for (const a of p.assignment) {
       a.assignmentI = assignments.length;
-      assignments.push({
-        grade: formatGrade(a),
-        assignmentName: "---",
-      });
+      a.web_url = a.web_url?.replace("https://app", "https://" + domain);
+      if (a.web_url && assignmentNames[a.web_url]) {
+        assignments.push({
+          grade: formatGrade(a),
+          assignmentName: assignmentNames[a.web_url],
+          url: a.web_url,
+          category_id: a.category_id,
+          assignmentI: a.assignmentI,
+          rawGrade: { pts: a.grade, max: a.max_points },
+        });
+        a.skip = true;
+      } else {
+        assignments.push({
+          grade: formatGrade(a),
+          assignmentName: "---",
+          category_id: a.category_id,
+          assignmentI: a.assignmentI,
+          rawGrade: { pts: a.grade, max: a.max_points },
+        });
+        a.skip = false;
+      }
     }
-    showAssignments(thisID);
+
+    showAssignments(s, thisID);
 
     const requests = [];
     for (let i = 0; i < p.assignment.length; i += 45) {
@@ -326,29 +448,36 @@ const loadAssignments = async (s) => {
     }
     for (const r of requests) {
       let request = `<?xml version="1.0" encoding="utf-8" ?><requests>`;
-      for (const a of r) request += `<request>` + a.location + `</request>`;
+      const actualI = [];
+      for (let i = 0; i < r.length; i++) {
+        if (r[i].skip != true) {
+          actualI.push(i);
+          request += `<request>` + r[i].location + `</request>`;
+        }
+      }
       request += `</requests>`;
+      if (actualI.length === 0) continue;
 
       const rereq = [];
       await multiGet(request)
         .then((v) => {
           for (let i = 0; i < v.response.length; i++) {
+            let ai = actualI[i];
             const res = v.response[i];
-            const url = r[i].web_url?.replace(
-              "https://app",
-              "https://" + domain
-            );
+            const url = r[ai].web_url;
             if (res.response_code === 403) {
-              rereq.push({ assignmentI: r[i].assignmentI, url: url });
+              rereq.push({ assignmentI: r[ai].assignmentI, url: url });
             } else {
-              assignments[r[i].assignmentI].assignmentName = res.body.title;
-              assignments[r[i].assignmentI].url = url;
-              showAssignments(thisID);
+              assignments[r[ai].assignmentI].assignmentName = res.body.title;
+              assignmentNames[url] = res.body.title;
+              assignments[r[ai].assignmentI].url = url;
+              showAssignments(s, thisID);
             }
           }
+          storeAssignmentNames();
         })
         .catch((e) => console.log(e));
-      getAssignmentTitles(rereq, thisID);
+      await getAssignmentTitles(rereq, s, thisID);
     }
   }
   loading = false;
@@ -436,5 +565,5 @@ const demoAssignments = () => {
     { assignmentName: "Free Points", grade: "100/100" },
   ];
   setTitle("A Class");
-  showAssignments(-1);
+  showAssignments(undefined, -1);
 };

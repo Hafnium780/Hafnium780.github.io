@@ -1,7 +1,7 @@
 * {
   margin: 0px;
   padding: 0px;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 #list {
@@ -9,9 +9,7 @@
   width: 400px;
   display: flex;
   flex-direction: column;
-  margin: 3px;
-  max-height: 400px;
-  overflow-y: scroll;
+  /* margin: 3px; */
 }
 
 #input {
@@ -41,6 +39,7 @@
 
 #div {
   display: flex;
+  min-width: 0;
   flex-shrink: 0;
   flex-grow: 0;
   border-bottom: 1px solid black;
@@ -54,6 +53,7 @@
   text-align: left;
   flex-grow: 1;
   margin-right: 3px;
+  margin-left: 3px;
 }
 
 a {
@@ -78,6 +78,18 @@ a {
   font-size: large;
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   height: 24px;
+}
+
+#reloadname {
+  width: 15px;
+  height: 15px;
+  background-color: gray;
+  flex: 0 0 15px;
+  left: 2px;
+  text-align: center;
+  color: white;
+  margin-left: 2px;
+  cursor: pointer;
 }
 
 #domain {
@@ -117,7 +129,7 @@ a {
   margin: 0px;
 }
 
-#reset {
+#copy {
   width: 94%;
   margin-left: 3%;
   margin-right: 3%;
@@ -134,4 +146,39 @@ a {
   background-color: white;
   border-color: gray;
   cursor: pointer;
+}
+
+#categorytitlediv {
+  border-bottom: 3px solid black;
+  position: sticky;
+  background-color: lightgray;
+  border-top: 3px solid lightgray;
+  top: 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 3px;
+}
+
+#categorytitle {
+  font-size: small;
+  font-weight: bold;
+  flex: 1 1;
+  text-align: center;
+}
+
+#categoryweight {
+  font-size: small;
+  font-family: "Courier New", Courier, monospace;
+  margin-left: 5px;
+  text-align: left;
+  flex: 1 1;
+}
+
+#categorypoints {
+  font-size: small;
+  font-family: "Courier New", Courier, monospace;
+  margin-right: 5px;
+  flex: 1 1;
+  text-align: right;
 }

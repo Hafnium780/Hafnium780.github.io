@@ -1,9 +1,9 @@
 {
   "name": "Schoology Grades",
   "description": "Show Schoology grades",
-  "version": "1.1001",
+  "version": "1.2001",
   "manifest_version": 3,
-  "permissions": ["storage"],
+  "permissions": ["storage", "clipboardWrite"],
   "host_permissions": ["https://*.schoology.com/*"],
   "action": {
     "default_popup": "popup.html"
