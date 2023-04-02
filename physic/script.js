@@ -1,13 +1,13 @@
 let canvas = document.getElementById("canvas");
-canvas.width = window.innerWidth;
+canvas.width = window.innerWidth / 2;
 canvas.height = window.innerHeight;
 let ctx = canvas.getContext("2d");
 
 let mouseX = 0;
 let mouseY = 0;
 let v, a;
-let k = 0.2;
-let g = 6;
+let k = 0.15;
+let g = 4;
 
 canvas.addEventListener("mousemove", (e) => {
 	mouseX = e.offsetX;
@@ -16,7 +16,7 @@ canvas.addEventListener("mousemove", (e) => {
 	v =
 		Math.sqrt(
 			tmpCoordinate.x * tmpCoordinate.x + tmpCoordinate.y * tmpCoordinate.y
-		) / 3;
+		) / 4.5;
 	a =
 		tmpCoordinate.x == 0
 			? Math.PI / 2
@@ -40,7 +40,7 @@ function update() {
 	let vksin = vk * Math.sin(a);
 	let gk = g / k;
 	let vksingkk = vksin + gk / k;
-	for (let t = 0; t < 100; t += 0.1) {
+	for (let t = 0; t < 100; t += 0.3) {
 		let e = 1 - Math.exp(-k * t);
 		let x = vkcos * e;
 		let y = vksingkk * e - gk * t;
