@@ -12,7 +12,7 @@ let sketch_cloth = (s) => {
   let dt = 0.01;
   let offset = 200, offsetWidth, offsetHeight, xCount, yCount;
   s.setup = () => {
-    s.createCanvas(600,700);
+    s.createCanvas(600,650);
     offsetWidth = s.width - offset*2;
     // offsetHeight = s.height - offset*2;
     offsetHeight = offsetWidth;
