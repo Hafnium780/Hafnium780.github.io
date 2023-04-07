@@ -1,6 +1,6 @@
 let sketch_line = (s) => {
   let particles = [];
-  let particleCount = 80;
+  let particleCount = 40;
   let dt = 0.05;
   let drag = 0.0005;
   let len = 10;
@@ -11,7 +11,7 @@ let sketch_line = (s) => {
   s.setup = () => {
     s.createCanvas(600, 650);
     lenSlider = s.createSlider(1, 15, 4);
-    particleSlider = s.createSlider(10, 200, 80, 1);
+    particleSlider = s.createSlider(10, 200, 40, 1);
     linesBox = s.createCheckbox("Draw Lines", true);
     generateParticles();
     // particles[particleCount-1].move = false;
