@@ -1,6 +1,6 @@
 let sketch_line = (s) => {
   let particles = [];
-  let particleCount = 40;
+  let particleCount = 80;
   let dt = 0.05;
   let drag = 0.0005;
   let len = 10;
@@ -9,9 +9,9 @@ let sketch_line = (s) => {
   let lenSlider, particleSlider, linesBox;
 
   s.setup = () => {
-    s.createCanvas(600, 650);
+    s.createCanvas(600, 700);
     lenSlider = s.createSlider(1, 15, 4);
-    particleSlider = s.createSlider(10, 200, 40, 1);
+    particleSlider = s.createSlider(10, 200, 80, 1);
     linesBox = s.createCheckbox("Draw Lines", true);
     generateParticles();
     // particles[particleCount-1].move = false;
@@ -39,9 +39,11 @@ let sketch_line = (s) => {
     s.strokeWeight(0);
     s.text("Distance Between Points", 0, s.height-10);
     s.text("Number of Points", 150, s.height-10);
-
-    particles[0].x = s.mouseX > 0 && s.mouseX < s.width ? s.mouseX : particles[0].x;
-    particles[0].y = s.mouseY > 0 && s.mouseY < s.height ? s.mouseY : particles[0].y;
+    
+    if (s.mouseX > 0 && s.mouseX < s.width && s.mouseY > 0 && s.mouseY < s.height) {
+      particles[0].x = s.mouseX;
+      particles[0].y = s.mouseY;
+    }
     for (let s = 0; s < substeps; s++) {
       for (let i = 0; i < particleCount; i++) {
         particles[i].update(0, 100, drag, dt);
