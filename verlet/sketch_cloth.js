@@ -158,4 +158,4 @@ let sketch_cloth = (s) => {
   }
 }
 
-let a = new p5(sketch_cloth, 'cloth');
+setTimeout(() => {let a = new p5(sketch_cloth, 'cloth');}, 100);
