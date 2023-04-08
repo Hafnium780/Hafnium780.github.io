@@ -9,7 +9,7 @@ let sketch_line = (s) => {
   let lenSlider, particleSlider, linesBox;
 
   s.setup = () => {
-    s.createCanvas(600, 700);
+    s.createCanvas(600, 650);
     lenSlider = s.createSlider(1, 15, 4);
     particleSlider = s.createSlider(10, 200, 80, 1);
     linesBox = s.createCheckbox("Draw Lines", true);
