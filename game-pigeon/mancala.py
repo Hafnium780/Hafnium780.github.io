@@ -1,3 +1,6 @@
+import time
+import ctypes
+
 print("Input Board:")
 board = [int(input()) for _ in range(6)] + [0] + [int(input())
                                                   for _ in range(6)]
@@ -22,18 +25,23 @@ def simulate(board, path):
         if copy[x] == 0:
             continue
 
-        path.append(x)
-        while first_move or copy[ind] > 1:
+        pickups = 0
+        moveTime = 1
+
+        while ind != 6 and (first_move or copy[ind] > 1):
             first_move = False
+            pickups = pickups+1
             cur = copy[ind]
             copy[ind] = 0
+            moveTime = moveTime + 0.326*cur + 0.536
             while cur > 0:
                 ind = (ind + 1) % 13
                 cur = cur - 1
                 copy[ind] = copy[ind] + 1
-            if ind == 6:
-                simulate(copy, path)
-                break
+
+        path.append((x, moveTime + pickups*0.5))
+        if ind == 6:
+            simulate(copy, path)
         # win = True
         # for i in range(6):
         #     if copy[i] > 0:
@@ -59,5 +67,82 @@ for i in range(len(record_paths)):
     print(record_paths[i])
     print("Board: ", record_results[i])
     print("")
-# if insta_win:
-#     print("Instant Win: ", win_path)
+
+p = input("Pick a path (empty to quit): ")
+try:
+    if int(p) >= len(record_paths):
+        exit(0)
+except:
+    exit(0)
+
+time.sleep(3)
+
+
+def moveMouse(dx, dy):
+    ctypes.windll.user32.mouse_event(1, dx, dy, 0, 0)
+    time.sleep(0.02)
+
+
+def mouseDown():
+    ctypes.windll.user32.mouse_event(2, 0, 0, 0, 0)
+    time.sleep(0.01)
+
+
+def mouseUp():
+    ctypes.windll.user32.mouse_event(4, 0, 0, 0, 0)
+    time.sleep(0.01)
+
+
+def homeCursor():
+    for _ in range(5):
+        moveMouse(0, -100)
+    for _ in range(5):
+        moveMouse(-100, 0)
+
+
+homeCursor()
+moveMouse(0, 200)
+moveMouse(0, 47)
+moveMouse(95, 0)
+
+
+cy = 0
+
+
+def moveTo(y):
+    global cy
+    while y < cy:
+        moveMouse(0, -41)
+        cy = cy-1
+
+    while y > cy:
+        moveMouse(0, 41)
+        cy = cy+1
+
+
+for (i, t) in record_paths[int(p)]:
+    print(f"Pressing {i}")
+    moveTo(i)
+    time.sleep(0.5)
+    mouseDown()
+    mouseUp()
+    print(f"Waiting {t}")
+    time.sleep(t)
+
+print("Done!")
+
+
+# Timings
+# 1 - 0.89s
+# 2 - 1.04s
+# 3 -
+# 4 - 1.63s
+# 5 - 2.08s
+# 6 - 2.37s
+
+
+# 12 - 4.39s
+
+# t ~ 0.326x + 0.436
+# add 0.1s per chain + 1s overall to be safe
+# + 0.5s per pickup
