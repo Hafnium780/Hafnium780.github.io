@@ -1,5 +1,6 @@
 # Game Pigeon Bots
 ## Word Hunt - [Demo Video](https://youtu.be/rOtLNpUU4B8)
+Current Record - **240600**
 ### Usage
 *Specific screen locations have been programmed for the iPhone 12 Pro, and may have to be changed if you want to use it for any other phone.*
 1) Download and install [Across Center](http://www.acrosscenter.com/)
