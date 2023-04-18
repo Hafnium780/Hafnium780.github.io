@@ -25,12 +25,12 @@
 
 			#main {
 				position: fixed;
-				height: 200vh;
-				width: 200vw;
+				height: 180vh;
+				width: 180vw;
 				left: 0px;
 				top: 0px;
 				translate: 0px 0px;
-				background: #b2b09b;
+				background: none;
 			}
 
 			.node {
@@ -50,6 +50,8 @@
 				text-align: center;
 				background-size: cover;
 				filter: brightness(130%);
+				transition: background-color ease 100ms, filter ease 300ms,
+					scale ease 100ms, box-shadow ease 100ms;
 			}
 
 			a.node {
@@ -67,8 +69,6 @@
 				background-color: #dd5555;
 				scale: 120%;
 				box-shadow: 0px 0px 0px 2px #f7e8e8;
-				transition: background-color ease 100ms, filter ease 300ms,
-					scale ease 100ms, box-shadow ease 100ms;
 				z-index: 100;
 			}
 
@@ -84,18 +84,43 @@
 				position: absolute;
 				z-index: 0;
 				overflow: hidden;
+				transition: scale ease 100ms, box-shadow ease 100ms;
 			}
 
 			.filled.edge {
 				background-color: #dd5555;
 				scale: 105%;
 				box-shadow: 0px 0px 0px 2px #f7e8e8;
-				transition: scale ease 100ms, box-shadow ease 100ms;
+				z-index: 90;
 			}
 
 			.anim {
 				background-color: red;
 				translate: -100% 0px;
+			}
+
+			.description {
+				font-size: 15px;
+				position: absolute;
+				opacity: 0;
+				transition: opacity ease 200ms;
+				color: white;
+				font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+					"Lucida Sans", Arial, sans-serif;
+				z-index: 200;
+				max-width: 130px;
+				background-color: #444444;
+				padding: 5px;
+				border-radius: 4px;
+				border: 2px solid white;
+			}
+
+			.description.show {
+				opacity: 1;
+			}
+
+			.description.no-description {
+				display: none;
 			}
 		</style>
 	</head>
@@ -115,19 +140,29 @@
 				Mini Web Demos|
 				<div>
 					p5.js|
-					<a href="car"> car||car.png </a>
-					<a href="golf"> golf||golf.png </a>
-					<a href="circle"> circle||circle.png </a>
-					<a href="verlet"> verlet||verlet.png </a>
-					<a href="gravity"> gravity||gravity.png </a>
-					<a href="minesweeper3d"> 3d minesweeper||3d-minesweeper.png </a>
-					<a href="raycasting"> raycasting||raycasting.png </a>
-					<a href="perlin"> perlin||perlin.png </a>
+					<a href="car"> car|Machine learning cars|car.png </a>
+					<a href="golf"> golf|2D golf heightmap simulator|golf.png </a>
+					<a href="circle"> circle|Cardiod-like shape drawer|circle.png </a>
+					<a href="verlet">
+						verlet|Cloth and string with verlet integration|verlet.png
+					</a>
+					<a href="gravity"> gravity|Simulation of gravity|gravity.png </a>
+					<a href="minesweeper3d">
+						3d minesweeper|Minesweeper but 3D|3d-minesweeper.png
+					</a>
+					<a href="raycasting">
+						raycasting|Half working raycaster|raycasting.png
+					</a>
+					<a href="perlin"> perlin|Demos of perlin noise|perlin.png </a>
 				</div>
 				<div>
 					Vanilla JS|
-					<a href="gravity2"> gravity 2.0||gravity2.png </a>
-					<a href="gravity-golf"> gravity golf||gravity-golf.png </a>
+					<a href="gravity2">
+						gravity 2.0|Simulation of gravity but better|gravity2.png
+					</a>
+					<a href="gravity-golf">
+						gravity golf|Golf on planets|gravity-golf.png
+					</a>
 				</div>
 			</div>
 			<div>
@@ -137,19 +172,20 @@
 					<a
 						href="https://github.com/Hafnium780/Hafnium780.github.io/tree/main/game-pigeon"
 					>
-						game pigeon||game-pigeon.png
+						game pigeon|Various game pigeon bots|game-pigeon.png
 					</a>
 				</div>
 				<div>
 					Node.js|
 					<a href="https://multiplayer-platformer.glitch.me/">
-						multiplayer platformer||multiplayer-platformer.png
+						multiplayer platformer|Simple multiplayer
+						platformer|multiplayer-platformer.png
 					</a>
 				</div>
 				<div>
 					React.js|
 					<a href="graph-algorithms">
-						graph algorithms||graph-algorithms.png
+						graph algorithms|Visualize algorithms on graphs|graph-algorithms.png
 					</a>
 				</div>
 				<div>
@@ -157,11 +193,11 @@
 					<a
 						href="https://github.com/Hafnium780/Hafnium780.github.io/tree/main/schoology-grades"
 					>
-						schoology grades||schoology-grades.png </a
+						schoology grades|Compiles schoology grades|schoology-grades.png </a
 					><a
 						href="https://github.com/Hafnium780/Hafnium780.github.io/tree/main/bomb-party"
 					>
-						bomb party||bomb-party.png
+						bomb party|Bomb party bot|bomb-party.png
 					</a>
 				</div>
 			</div>
@@ -169,7 +205,7 @@
 		<script defer>
 			// Defined constants
 			const angleFromBottom = Math.PI / 12; // Angle between either side of tree and bottom
-			const sideMargins = 20;
+			const sideMargins = 0;
 			const nodeRadius = 50;
 			const edgeWidth = 2;
 			const animationSpeed = 100;
@@ -249,6 +285,8 @@
 				// Polar coordinates to screen (board) coordinates
 				// Top left = 0, 0
 				// pos y goes down
+				// r = 0 at bottom center of tree
+				// a = 0 at right side of tree
 				return {
 					x: Math.cos(a) * r + main.offsetWidth / 2,
 					y: main.offsetHeight / 2 - Math.sin(a) * r,
@@ -287,6 +325,10 @@
 				const angle = angleSpace(node);
 				let curLeftBound = leftBound;
 				const nodeDiv = document.createElement(node.isLink ? "a" : "div");
+				const descDiv = document.createElement("div");
+				if (node.description) descDiv.innerText = node.description;
+				else descDiv.classList.add("no-description");
+				descDiv.classList.add("description");
 				if (node.isLink) nodeDiv.href = node.href;
 				nodeDiv.classList.add("node");
 				let scaledRadius =
@@ -303,10 +345,23 @@
 					radial / 2 + treeRadius - radiusLeft,
 					(leftBound - rightBound) / 2 + rightBound
 				);
-				moveDiv(nodeDiv, pos.x, pos.y, scaledRadius, scaledRadius);
 				// console.log((leftBound - rightBound) / 2 + rightBound, node.name);
 				main.appendChild(nodeDiv);
+				main.appendChild(descDiv);
+				moveDiv(nodeDiv, pos.x, pos.y, scaledRadius, scaledRadius);
+				// const diag =
+				// 	Math.sqrt(descDiv.offsetWidth ** 2 + descDiv.offsetHeight ** 2) *
+				// 	0.75;
+				const averageAngle = -(leftBound + rightBound) / 2;
+				moveDiv(
+					descDiv,
+					pos.x + 130 * Math.cos(averageAngle),
+					pos.y + 130 * Math.sin(averageAngle),
+					descDiv.offsetWidth,
+					descDiv.offsetHeight
+				);
 				node.div = nodeDiv;
+				node.desc = descDiv;
 				node.percentRadius = radiusLeft / treeRadius;
 				node.leftBound = leftBound;
 				node.rightBound = rightBound;
@@ -413,9 +468,16 @@
 			// 	});
 			// }
 
+			let showingDesc = undefined;
+
 			document.addEventListener("mousemove", (e) => {
 				const node = screenToNode(e.clientX, e.clientY);
-				if (node) curPath = tracePath(curNode, node);
+				if (node) {
+					if (showingDesc) showingDesc.classList.remove("show");
+					showingDesc = node.desc;
+					showingDesc.classList.add("show");
+					curPath = tracePath(curNode, node);
+				}
 			});
 
 			tree.div.classList.add("filled");
