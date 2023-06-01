@@ -2,6 +2,9 @@ Google extension to see Schoology course and assignment grades directly in the e
 
 Uses the Schoology API to obtain grades, loads and grabs the title of assignment pages if the API does not provide one.
 
+## Installation (Tampermonkey)
+https://greasyfork.org/en/scripts/467597-schoology-grades
+
 ## Installation (Firefox)
 https://addons.mozilla.org/en-US/firefox/addon/schoology-grades/
 
