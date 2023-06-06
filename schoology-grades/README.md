@@ -2,9 +2,9 @@ Google extension to see Schoology course and assignment grades directly in the e
 
 Uses the Schoology API to obtain grades, loads and grabs the title of assignment pages if the API does not provide one.
 
-Currently the Tampermonkey version is the most up to date.
+Currently the Greasy Fork version is the most up to date.
 
-## Installation (Tampermonkey)
+## Installation (Greasy Fork)
 https://greasyfork.org/en/scripts/467597-schoology-grades/
 
 ## Installation (Firefox)
