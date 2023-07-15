@@ -1,0 +1,12 @@
+body {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.code-frame {
+  width: 100%;
+  outline: none;
+  border: none;
+  height: 100%;
+  overflow: hidden;
+}
