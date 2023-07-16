@@ -68,7 +68,7 @@ let letterDivsByCiphertext = Array(26)
 
 // helper funcs
 const boardChanged = () => {
-  updateMappingGuess();
+  if (config["syncMappingGuesses"]) updateMappingGuess();
 };
 
 const isLetter = (c) => {
