@@ -15,17 +15,17 @@
 
 .word {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .letter {
   width: 20px;
-  height: 60px;
   border: 1px solid black;
 }
 
 .plaintext {
   width: 100%;
-  height: 50%;
+  height: 30px;
   margin: 0px;
   padding: 0px;
   border: none;
@@ -33,27 +33,41 @@
   caret-color: transparent;
 }
 
-.plaintext:focus {
+.plaintext.plaintext:focus {
   border: none;
   outline: none;
-  background-color: #cccccc;
+  background-color: #bbb;
+}
+
+.plaintext.selected {
+  background-color: #ddd;
 }
 
 .ciphertext {
   width: 100%;
-  height: 49%;
+  height: 30px;
   border-bottom: 1px solid black;
+}
+
+.text-frequency {
+  width: 100%;
+  height: 20px;
+  border-bottom: 1px solid black;
+  font-size: 15px;
 }
 
 .symbol {
   width: 20px;
-  height: 60px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .symbol-upper,
 .symbol-lower {
   width: 100%;
-  height: 50%;
+  height: 30px;
 }
 
 #mapping > .word {

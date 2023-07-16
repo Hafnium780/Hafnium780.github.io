@@ -1,17 +1,17 @@
 document.addEventListener("keydown", (e) => {
+  if (currentTextDiv !== undefined && currentMappingDiv !== undefined)
+    console.warn("Text and mapping div selected");
   if (currentTextDiv !== undefined) {
     e.preventDefault();
+    const ciphertextIndex = letterIndex(
+      letterDivs[currentTextDiv].ciphertext.innerText
+    );
     if (e.key.length === 1 && isLetter(e.key)) {
       const p = e.key.toLowerCase();
-      textDivs[currentTextDiv].plaintext.value = e.key.toLowerCase();
+      letterDivs[currentTextDiv].plaintext.value = e.key.toLowerCase();
       if (syncMappingGuesses) {
-        mappingGuess[
-          letterIndex(textDivs[currentTextDiv].ciphertext.innerText)
-        ] = p;
-        updateCiphertextMappings(
-          letterIndex(textDivs[currentTextDiv].ciphertext.innerText),
-          p
-        );
+        mappingGuess[ciphertextIndex] = p;
+        updateCiphertextMappings(ciphertextIndex, p);
       }
       nextEmptyCell();
       boardChanged();
@@ -24,19 +24,55 @@ document.addEventListener("keydown", (e) => {
           nextCell();
           break;
         case "Backspace":
-          if (textDivs[currentTextDiv].plaintext.value !== "") {
-            textDivs[currentTextDiv].plaintext.value = "";
+          if (letterDivs[currentTextDiv].plaintext.value !== "") {
+            letterDivs[currentTextDiv].plaintext.value = "";
           } else {
             previousCell();
-            textDivs[currentTextDiv].plaintext.value = "";
+            letterDivs[currentTextDiv].plaintext.value = "";
           }
-          mappingGuess[
-            letterIndex(textDivs[currentTextDiv].ciphertext.innerText)
-          ] = "";
-          updateCiphertextMappings(
-            letterIndex(textDivs[currentTextDiv].ciphertext.innerText),
-            ""
+          const newCiphertextIndex = letterIndex(
+            letterDivs[currentTextDiv].ciphertext.innerText
           );
+          mappingGuess[newCiphertextIndex] = "";
+          updateCiphertextMappings(newCiphertextIndex, "");
+          boardChanged();
+          break;
+      }
+    }
+  } else if (currentMappingDiv !== undefined) {
+    e.preventDefault();
+    const ciphertextIndex = letterIndex(
+      mappingDivs[currentMappingDiv].ciphertext.innerText
+    );
+    if (e.key.length === 1 && isLetter(e.key)) {
+      const p = e.key.toLowerCase();
+      mappingDivs[currentMappingDiv].plaintext.value = e.key.toLowerCase();
+      if (syncMappingGuesses) {
+        mappingGuess[ciphertextIndex] = p;
+        updateCiphertextMappings(ciphertextIndex, p);
+      }
+      nextCell();
+      boardChanged();
+    } else {
+      switch (e.key) {
+        case "ArrowLeft":
+          previousCell();
+          break;
+        case "ArrowRight":
+          nextCell();
+          break;
+        case "Backspace":
+          if (mappingDivs[currentMappingDiv].plaintext.value !== "") {
+            mappingDivs[currentMappingDiv].plaintext.value = "";
+          } else {
+            previousCell();
+            mappingDivs[currentMappingDiv].plaintext.value = "";
+          }
+          const newCiphertextIndex = letterIndex(
+            mappingDivs[currentMappingDiv].ciphertext.innerText
+          );
+          mappingGuess[newCiphertextIndex] = "";
+          updateCiphertextMappings(newCiphertextIndex, "");
           boardChanged();
           break;
       }

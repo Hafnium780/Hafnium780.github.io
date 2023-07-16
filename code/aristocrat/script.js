@@ -1,12 +1,13 @@
 // config - done
 let syncMappingGuesses = true; // Sync the mapping between ciphertext and plaintext across all ciphertext occurences, including mapping table if shown.
+let mappingTable = true; // Show the mapping table below the text.
+let textLetterFrequencies = true; // Show the letter freequencies on each letter in the text.
+let tableLetterFrequencies = true; // Show the letter frequencies on the mapping table.
+let hideSymbols = false; // Hide all non-letter characters (patristocrat cipher).
+let highlightAllOccurences = true; // Highlight all occurences of the current ciphertext letter selected.
 
 // config - todo
-let showMappingTable = true; // Show the mapping table below the text.
-let highlightAllOccurences = true; // Highlight all occurences of the current ciphertext letter selected.
-let showLetterFrequenciesOnTable = true; // Show the letter frequencies on the mapping table.
-let showLetterFrequenciesOnLetters = true; // Show the letter freequencies on each letter in the text.
-let hideSymbols = true; // Hide all non-letter characters (patristocrat cipher).
+let preventImpossibleSolutions = true; // Prevents impossible solutions from being entered (e.g. multiple letters mapping to the same letter, letter mapping to same letter)
 
 // variables
 // aristocrat
@@ -17,15 +18,19 @@ let mapping = [],
   reverseMapping = [],
   mappingGuess = [];
 
+let letterFrequencies;
+
 // interaction
 let currentTextDiv;
+let currentMappingDiv;
+let currentCiphertextIndexSelected;
 
 // html
 const textDiv = document.getElementById("text");
 const mappingDiv = document.getElementById("mapping");
-let textDivs = [];
+let letterDivs = [];
 let mappingDivs = [];
-let textDivsByCiphertext = Array(26)
+let letterDivsByCiphertext = Array(26)
   .fill()
   .map(() => []);
 
@@ -44,38 +49,50 @@ const letterIndex = (c) => {
 };
 
 const previousCell = () => {
-  currentTextDiv = (currentTextDiv + textDivs.length - 1) % textDivs.length;
-  textDivs[currentTextDiv].plaintext.focus();
+  if (currentTextDiv !== undefined) {
+    currentTextDiv =
+      (currentTextDiv + letterDivs.length - 1) % letterDivs.length;
+    letterDivs[currentTextDiv].plaintext.focus();
+  } else if (currentMappingDiv !== undefined) {
+    currentMappingDiv =
+      (currentMappingDiv + mappingDivs.length - 1) % mappingDivs.length;
+    mappingDivs[currentMappingDiv].plaintext.focus();
+  }
 };
 
 const nextCell = () => {
-  currentTextDiv = (currentTextDiv + 1) % textDivs.length;
-  textDivs[currentTextDiv].plaintext.focus();
+  if (currentTextDiv !== undefined) {
+    currentTextDiv = (currentTextDiv + 1) % letterDivs.length;
+    letterDivs[currentTextDiv].plaintext.focus();
+  } else if (currentMappingDiv !== undefined) {
+    currentMappingDiv = (currentMappingDiv + 1) % mappingDivs.length;
+    mappingDivs[currentMappingDiv].plaintext.focus();
+  }
 };
 
 const nextEmptyCell = () => {
   const initialCell = currentTextDiv;
   do {
-    currentTextDiv = (currentTextDiv + 1) % textDivs.length;
+    currentTextDiv = (currentTextDiv + 1) % letterDivs.length;
   } while (
-    textDivs[currentTextDiv].plaintext.value !== "" &&
+    letterDivs[currentTextDiv].plaintext.value !== "" &&
     initialCell != currentTextDiv
   );
   if (initialCell === currentTextDiv)
-    currentTextDiv = (currentTextDiv + 1) % textDivs.length;
-  textDivs[currentTextDiv].plaintext.focus();
+    currentTextDiv = (currentTextDiv + 1) % letterDivs.length;
+  letterDivs[currentTextDiv].plaintext.focus();
 };
 
 const updateCiphertextMappings = (c, p) => {
-  for (const textDiv of textDivsByCiphertext[c]) {
+  for (const textDiv of letterDivsByCiphertext[c]) {
     textDiv.plaintext.value = p;
   }
 };
 
 const clearText = () => {
   textDiv.innerHTML = "";
-  textDivs = [];
-  textDivsByCiphertext = Array(26)
+  letterDivs = [];
+  letterDivsByCiphertext = Array(26)
     .fill()
     .map(() => []);
 };
@@ -83,7 +100,7 @@ const clearText = () => {
 const createLetter = (c, wordDiv, inText) => {
   const letterDiv = document.createElement("div");
   const ciphertextDiv = document.createElement("div");
-  const plaintextDiv = document.createElement(inText ? "input" : "div");
+  const plaintextDiv = document.createElement("input");
   letterDiv.classList.add("letter");
   ciphertextDiv.classList.add("ciphertext");
   plaintextDiv.classList.add("plaintext");
@@ -92,20 +109,46 @@ const createLetter = (c, wordDiv, inText) => {
   letterDiv.appendChild(plaintextDiv);
   ciphertextDiv.innerText = c;
   if (inText) {
-    let i = textDivs.length;
+    let i = letterDivs.length;
     plaintextDiv.addEventListener("focus", () => {
       currentTextDiv = i;
+      currentMappingDiv = undefined;
+      selectCiphertext(c);
     });
     plaintextDiv.addEventListener("focusout", () => {
       if (currentTextDiv === i) currentTextDiv = undefined;
     });
-    textDivs.push({ plaintext: plaintextDiv, ciphertext: ciphertextDiv });
-    textDivsByCiphertext[letterIndex(c)].push({
+    letterDivs.push({
+      letter: letterDiv,
+      plaintext: plaintextDiv,
+      ciphertext: ciphertextDiv,
+    });
+    letterDivsByCiphertext[letterIndex(c)].push({
+      plaintext: plaintextDiv,
+      ciphertext: ciphertextDiv,
+    });
+  } else {
+    let i = mappingDivs.length;
+    plaintextDiv.addEventListener("focus", () => {
+      currentMappingDiv = i;
+      currentTextDiv = undefined;
+      selectCiphertext(c);
+    });
+    plaintextDiv.addEventListener("focusout", () => {
+      if (currentMappingDiv === i) currentMappingDiv = undefined;
+    });
+
+    mappingDivs.push({
+      letter: letterDiv,
       plaintext: plaintextDiv,
       ciphertext: ciphertextDiv,
     });
   }
-  return { plaintext: plaintextDiv, ciphertext: ciphertextDiv };
+  return {
+    letter: letterDiv,
+    plaintext: plaintextDiv,
+    ciphertext: ciphertextDiv,
+  };
 };
 
 const createSymbol = (c, wordDiv) => {
@@ -165,11 +208,24 @@ const newText = async () => {
   plaintext = (
     await (await fetch("https://api.quotable.io/random")).json()
   ).content.toUpperCase();
+  if (hideSymbols) {
+    let newPlaintext = "";
+    for (const c of plaintext) {
+      if (isLetter(c)) newPlaintext += c;
+    }
+    plaintext = newPlaintext;
+  }
   clearText();
   newMapping();
+  letterFrequencies = Array(26).fill(0);
   ciphertext = "";
   for (const c of plaintext) {
-    ciphertext += isLetter(c) ? mapping[letterIndex(c)] : c;
+    if (isLetter(c)) {
+      ciphertext += mapping[letterIndex(c)];
+      letterFrequencies[letterIndex(mapping[letterIndex(c)])]++;
+    } else {
+      ciphertext += c;
+    }
   }
 
   lettersLeft = Array(26).fill(0);
@@ -180,16 +236,16 @@ const newText = async () => {
 };
 
 // Mapping UI
-const showMapping = () => {
+const showMappingTable = () => {
   mappingDiv.style.display = "block";
 };
 
-const hideMapping = () => {
+const hideMappingTable = () => {
   mappingDiv.style.display = "none";
 };
 const createMappingDivs = () => {
   let wordDiv;
-  ({ wordDiv: wordDiv, divs: mappingDivs } = createWord(
+  ({ wordDiv: wordDiv, divs: _ } = createWord(
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
     false
   ));
@@ -198,11 +254,76 @@ const createMappingDivs = () => {
 
 const updateMappingGuess = () => {
   for (let i = 0; i < 26; i++) {
-    mappingDivs[i].plaintext.innerText = mappingGuess[i];
+    mappingDivs[i].plaintext.value = mappingGuess[i];
   }
 };
 
-createMappingDivs();
-if (syncMappingGuesses) showMapping();
-else hideMapping();
-newText();
+let textLetterFrequencyDivs = [];
+let tableLetterFrequencyDivs = [];
+
+const showTextLetterFrequencies = () => {
+  for (const letterDiv of letterDivs) {
+    const letterFrequencyDiv = document.createElement("div");
+    letterFrequencyDiv.classList.add("text-frequency");
+    letterFrequencyDiv.innerText =
+      letterFrequencies[letterIndex(letterDiv.ciphertext.innerText)];
+    letterDiv.letter.prepend(letterFrequencyDiv);
+    textLetterFrequencyDivs.push(letterFrequencyDiv);
+  }
+};
+
+const hideTextLetterFrequencies = () => {
+  for (const div of textLetterFrequencyDivs) {
+    div.remove();
+  }
+  textLetterFrequencyDivs = [];
+};
+
+const showTableLetterFrequencies = () => {
+  for (const letterDiv of mappingDivs) {
+    const letterFrequencyDiv = document.createElement("div");
+    letterFrequencyDiv.classList.add("text-frequency");
+    letterFrequencyDiv.innerText =
+      letterFrequencies[letterIndex(letterDiv.ciphertext.innerText)];
+    letterDiv.letter.prepend(letterFrequencyDiv);
+    tableLetterFrequencyDivs.push(letterFrequencyDiv);
+  }
+};
+
+const hideTableLetterFrequencies = () => {
+  for (const div of tableLetterFrequencyDivs) {
+    div.remove();
+  }
+  tableLetterFrequencyDivs = [];
+};
+
+const selectCiphertext = (c) => {
+  if (!highlightAllOccurences) return;
+  const ciphertextIndex = letterIndex(c);
+  if (ciphertextIndex === currentCiphertextIndexSelected) return;
+  if (currentCiphertextIndexSelected !== undefined) {
+    for (const letterDiv of letterDivsByCiphertext[
+      currentCiphertextIndexSelected
+    ]) {
+      letterDiv.plaintext.classList.remove("selected");
+    }
+  }
+  for (const letterDiv of letterDivsByCiphertext[ciphertextIndex]) {
+    letterDiv.plaintext.classList.add("selected");
+  }
+  currentCiphertextIndexSelected = ciphertextIndex;
+};
+
+(async () => {
+  createMappingDivs();
+  if (mappingTable) showMappingTable();
+  else hideMappingTable();
+
+  await newText();
+
+  if (textLetterFrequencies) showTextLetterFrequencies();
+  else hideTextLetterFrequencies();
+
+  if (tableLetterFrequencies) showTableLetterFrequencies();
+  else hideTableLetterFrequencies();
+})();
