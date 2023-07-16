@@ -1,24 +1,20 @@
-const previousCell = () => {
-  currentPlaintextDiv =
-    (currentPlaintextDiv + plaintextDivs.length - 1) % plaintextDivs.length;
-  plaintextDivs[currentPlaintextDiv].focus();
-};
-
-const nextCell = () => {
-  currentPlaintextDiv = (currentPlaintextDiv + 1) % plaintextDivs.length;
-  plaintextDivs[currentPlaintextDiv].focus();
-};
-
 document.addEventListener("keydown", (e) => {
-  if (currentPlaintextDiv !== undefined) e.preventDefault();
-
-  if (currentPlaintextDiv !== undefined) {
-    if (
-      e.key.length === 1 &&
-      ((e.key >= "a" && e.key <= "z") || (e.key >= "A" && e.key <= "Z"))
-    ) {
-      plaintextDivs[currentPlaintextDiv].value = e.key.toLowerCase();
-      nextCell();
+  if (currentTextDiv !== undefined) {
+    e.preventDefault();
+    if (e.key.length === 1 && isLetter(e.key)) {
+      const p = e.key.toLowerCase();
+      textDivs[currentTextDiv].plaintext.value = e.key.toLowerCase();
+      if (syncMappingGuesses) {
+        mappingGuess[
+          letterIndex(textDivs[currentTextDiv].ciphertext.innerText)
+        ] = p;
+        updateCiphertextMappings(
+          letterIndex(textDivs[currentTextDiv].ciphertext.innerText),
+          p
+        );
+      }
+      nextEmptyCell();
+      boardChanged();
     } else {
       switch (e.key) {
         case "ArrowLeft":
@@ -28,12 +24,20 @@ document.addEventListener("keydown", (e) => {
           nextCell();
           break;
         case "Backspace":
-          if (plaintextDivs[currentPlaintextDiv].value !== "")
-            plaintextDivs[currentPlaintextDiv].value = "";
-          else {
+          if (textDivs[currentTextDiv].plaintext.value !== "") {
+            textDivs[currentTextDiv].plaintext.value = "";
+          } else {
             previousCell();
-            plaintextDivs[currentPlaintextDiv].value = "";
+            textDivs[currentTextDiv].plaintext.value = "";
           }
+          mappingGuess[
+            letterIndex(textDivs[currentTextDiv].ciphertext.innerText)
+          ] = "";
+          updateCiphertextMappings(
+            letterIndex(textDivs[currentTextDiv].ciphertext.innerText),
+            ""
+          );
+          boardChanged();
           break;
       }
     }
