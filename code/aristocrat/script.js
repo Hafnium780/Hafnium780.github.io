@@ -9,7 +9,7 @@ const createConfigOption = (
   description,
   changedCallback = () => {}
 ) => {
-  config[id] = defaultValue;
+  config[id] = JSON.parse(localStorage.getItem(id)) ?? defaultValue;
   const configOuterDiv = document.createElement("div");
   const configNameDiv = document.createElement("div");
   const configToggle = document.createElement("input");
@@ -18,12 +18,13 @@ const createConfigOption = (
   configToggle.classList.add("config-toggle");
   configNameDiv.innerText = name;
   configToggle.type = "checkbox";
-  configToggle.checked = defaultValue;
+  configToggle.checked = config[id];
   configOuterDiv.append(configToggle);
   configOuterDiv.append(configNameDiv);
   configDiv.append(configOuterDiv);
 
   configToggle.addEventListener("change", () => {
+    localStorage.setItem(id, configToggle.checked);
     config[id] = configToggle.checked;
     changedCallback();
   });
