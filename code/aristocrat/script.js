@@ -1,13 +1,45 @@
-// config - done
-let syncMappingGuesses = true; // Sync the mapping between ciphertext and plaintext across all ciphertext occurences, including mapping table if shown.
-let mappingTable = true; // Show the mapping table below the text.
-let textLetterFrequencies = true; // Show the letter freequencies on each letter in the text.
-let tableLetterFrequencies = true; // Show the letter frequencies on the mapping table.
-let hideSymbols = false; // Hide all non-letter characters (patristocrat cipher).
-let highlightAllOccurences = true; // Highlight all occurences of the current ciphertext letter selected.
+const config = {};
 
-// config - todo
-let preventImpossibleSolutions = true; // Prevents impossible solutions from being entered (e.g. multiple letters mapping to the same letter, letter mapping to same letter)
+const configDiv = document.getElementById("config");
+
+const createConfigOption = (
+  id,
+  defaultValue,
+  name,
+  description,
+  changedCallback = () => {}
+) => {
+  config[id] = defaultValue;
+  const configOuterDiv = document.createElement("div");
+  const configNameDiv = document.createElement("div");
+  const configToggle = document.createElement("input");
+  configOuterDiv.classList.add("config-outer");
+  configNameDiv.classList.add("config-name");
+  configToggle.classList.add("config-toggle");
+  configNameDiv.innerText = name;
+  configToggle.type = "checkbox";
+  configToggle.checked = defaultValue;
+  configOuterDiv.append(configToggle);
+  configOuterDiv.append(configNameDiv);
+  configDiv.append(configOuterDiv);
+
+  configToggle.addEventListener("change", () => {
+    config[id] = configToggle.checked;
+    changedCallback();
+  });
+  changedCallback();
+};
+
+// // config - done
+// let syncMappingGuesses = true; // Sync the mapping between ciphertext and plaintext across all ciphertext occurences, including mapping table if shown.
+// let mappingTable = true; // Show the mapping table below the text.
+// let textLetterFrequencies = true; // Show the letter freequencies on each letter in the text.
+// let tableLetterFrequencies = true; // Show the letter frequencies on the mapping table.
+// let hideSymbols = false; // Hide all non-letter characters (patristocrat cipher).
+// let highlightAllOccurrences = true; // Highlight all occurences of the current ciphertext letter selected.
+
+// // config - todo
+// let preventImpossibleSolutions = true; // Prevents impossible solutions from being entered (e.g. multiple letters mapping to the same letter, letter mapping to same letter)
 
 // variables
 // aristocrat
@@ -104,9 +136,9 @@ const createLetter = (c, wordDiv, inText) => {
   letterDiv.classList.add("letter");
   ciphertextDiv.classList.add("ciphertext");
   plaintextDiv.classList.add("plaintext");
-  wordDiv.appendChild(letterDiv);
-  letterDiv.appendChild(ciphertextDiv);
-  letterDiv.appendChild(plaintextDiv);
+  wordDiv.append(letterDiv);
+  letterDiv.append(ciphertextDiv);
+  letterDiv.append(plaintextDiv);
   ciphertextDiv.innerText = c;
   if (inText) {
     let i = letterDivs.length;
@@ -158,9 +190,9 @@ const createSymbol = (c, wordDiv) => {
   symbolDiv.classList.add("symbol");
   symbolUpperDiv.classList.add("symbol-upper");
   symbolLowerDiv.classList.add("symbol-lower");
-  wordDiv.appendChild(symbolDiv);
-  symbolDiv.appendChild(symbolUpperDiv);
-  symbolDiv.appendChild(symbolLowerDiv);
+  wordDiv.append(symbolDiv);
+  symbolDiv.append(symbolUpperDiv);
+  symbolDiv.append(symbolLowerDiv);
   symbolUpperDiv.innerText = c;
   symbolLowerDiv.innerText = c;
 };
@@ -168,7 +200,7 @@ const createSymbol = (c, wordDiv) => {
 const createWord = (word, inText) => {
   const wordDiv = document.createElement("div");
   wordDiv.classList.add("word");
-  if (inText) textDiv.appendChild(wordDiv);
+  if (inText) textDiv.append(wordDiv);
   const divs = [];
   for (const c of word) {
     if (isLetter(c)) {
@@ -208,7 +240,7 @@ const newText = async () => {
   plaintext = (
     await (await fetch("https://api.quotable.io/random")).json()
   ).content.toUpperCase();
-  if (hideSymbols) {
+  if (config["hideSymbols"]) {
     let newPlaintext = "";
     for (const c of plaintext) {
       if (isLetter(c)) newPlaintext += c;
@@ -249,7 +281,7 @@ const createMappingDivs = () => {
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
     false
   ));
-  mappingDiv.appendChild(wordDiv);
+  mappingDiv.append(wordDiv);
 };
 
 const updateMappingGuess = () => {
@@ -298,7 +330,6 @@ const hideTableLetterFrequencies = () => {
 };
 
 const selectCiphertext = (c) => {
-  if (!highlightAllOccurences) return;
   const ciphertextIndex = letterIndex(c);
   if (ciphertextIndex === currentCiphertextIndexSelected) return;
   if (currentCiphertextIndexSelected !== undefined) {
@@ -308,6 +339,8 @@ const selectCiphertext = (c) => {
       letterDiv.plaintext.classList.remove("selected");
     }
   }
+
+  if (!config["highlightAllOccurrences"]) return;
   for (const letterDiv of letterDivsByCiphertext[ciphertextIndex]) {
     letterDiv.plaintext.classList.add("selected");
   }
@@ -316,14 +349,45 @@ const selectCiphertext = (c) => {
 
 (async () => {
   createMappingDivs();
-  if (mappingTable) showMappingTable();
-  else hideMappingTable();
-
   await newText();
 
-  if (textLetterFrequencies) showTextLetterFrequencies();
-  else hideTextLetterFrequencies();
-
-  if (tableLetterFrequencies) showTableLetterFrequencies();
-  else hideTableLetterFrequencies();
+  createConfigOption("syncMappingGuesses", true, "Sync Mapping Guesses", "a");
+  createConfigOption("mappingTable", true, "Mapping Table", "a", () => {
+    if (config["mappingTable"]) showMappingTable();
+    else hideMappingTable();
+  });
+  createConfigOption(
+    "textLetterFrequencies",
+    true,
+    "Letter Frequencies Over Text",
+    "a",
+    () => {
+      if (config["textLetterFrequencies"]) showTextLetterFrequencies();
+      else hideTextLetterFrequencies();
+    }
+  );
+  createConfigOption(
+    "tableLetterFrequencies",
+    true,
+    "Letter Frequencies Over Table",
+    "a",
+    () => {
+      if (config["tableLetterFrequencies"]) showTableLetterFrequencies();
+      else hideTableLetterFrequencies();
+    }
+  );
+  createConfigOption(
+    "highlightAllOccurrences",
+    true,
+    "Highlight All Occurrences",
+    "a"
+  );
 })();
+
+// createConfigOption("hideSymbols", false, "Hide Symbols", "a");
+// createConfigOption(
+//   "preventImpossibleSolutions",
+//   false,
+//   "Prevent Impossible Solutions",
+//   "a"
+// );

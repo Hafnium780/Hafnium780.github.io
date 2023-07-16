@@ -9,7 +9,7 @@ document.addEventListener("keydown", (e) => {
     if (e.key.length === 1 && isLetter(e.key)) {
       const p = e.key.toLowerCase();
       letterDivs[currentTextDiv].plaintext.value = e.key.toLowerCase();
-      if (syncMappingGuesses) {
+      if (config["syncMappingGuesses"]) {
         mappingGuess[ciphertextIndex] = p;
         updateCiphertextMappings(ciphertextIndex, p);
       }
@@ -47,7 +47,7 @@ document.addEventListener("keydown", (e) => {
     if (e.key.length === 1 && isLetter(e.key)) {
       const p = e.key.toLowerCase();
       mappingDivs[currentMappingDiv].plaintext.value = e.key.toLowerCase();
-      if (syncMappingGuesses) {
+      if (config["syncMappingGuesses"]) {
         mappingGuess[ciphertextIndex] = p;
         updateCiphertextMappings(ciphertextIndex, p);
       }

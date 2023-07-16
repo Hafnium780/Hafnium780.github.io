@@ -73,3 +73,20 @@
 #mapping > .word {
   justify-content: center;
 }
+
+#config {
+  margin: 20px;
+}
+
+.config-outer {
+  display: flex;
+}
+
+.config-name {
+  margin: 5px;
+  font-size: 16px;
+}
+
+.config-toggle {
+  margin: 5px;
+}
