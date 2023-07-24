@@ -1,6 +1,5 @@
 body {
   height: 100vh;
-  overflow: hidden;
 }
 
 .code-frame {
@@ -8,5 +7,5 @@ body {
   outline: none;
   border: none;
   height: 100%;
-  overflow: hidden;
+  margin-bottom: 20px;
 }
