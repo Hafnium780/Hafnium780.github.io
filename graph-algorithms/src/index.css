@@ -1,0 +1,732 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap"); /* Noto Sans */
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap"); /* Roboto Mono */
+
+* {
+	margin: 0;
+	padding: 0;
+	transition: filter 0.3s ease;
+}
+
+#graph-container * {
+	user-select: none;
+	-ms-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+
+:root {
+	--light-blue: #9dd9d2;
+	--blue: #79addc;
+	--dark-blue: #073b4c;
+	--red: #cc2936;
+	--yellow: #ffd166;
+	--UI-width: 400px;
+	font-family: "Noto Sans", sans-serif;
+}
+
+button {
+	font-family: "Noto Sans", sans-serif;
+}
+
+#main {
+	display: flex;
+}
+
+body {
+	padding: 0px;
+	margin: 0px;
+	height: 100vh;
+	width: 100vw;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+#homeButton {
+	height: 64px;
+	width: 64px;
+	bottom: 0px;
+	position: absolute;
+	background-image: url(./images/home.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+	z-index: 50;
+	cursor: pointer;
+}
+
+#positionText {
+	bottom: 10px;
+	left: 70px;
+	position: absolute;
+	z-index: 50;
+	cursor: default;
+	padding: 2px;
+	background-color: rgb(100, 200, 150);
+	border-radius: 8px;
+	border-width: 3px;
+	border-color: var(--dark-blue);
+	border-style: solid;
+	pointer-events: none;
+	box-sizing: border-box;
+	text-align: center;
+	font-size: 15px;
+}
+
+#algText {
+	bottom: 10px;
+	right: calc(20px + var(--UI-width));
+	position: absolute;
+	z-index: 50;
+	cursor: default;
+	padding: 2px;
+	background-color: rgb(100, 200, 150);
+	border-radius: 8px;
+	border-width: 3px;
+	border-color: var(--dark-blue);
+	border-style: solid;
+	pointer-events: none;
+	box-sizing: border-box;
+	text-align: center;
+	font-size: 15px;
+}
+
+#cycleButton {
+	height: 64px;
+	width: 64px;
+	bottom: 64px;
+	position: absolute;
+	background-image: url(./images/cycle.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+	z-index: 50;
+	cursor: pointer;
+}
+
+#grid {
+	height: 100vh;
+	width: 100vw;
+	background-size: 40px 40px;
+	background-image: linear-gradient(to right, black 1px, transparent 1px),
+		linear-gradient(to bottom, black 1px, transparent 1px);
+	position: absolute;
+	z-index: -10;
+}
+
+#probe {
+	position: absolute;
+	padding: 2px;
+	width: 160px;
+	background-color: rgb(100, 200, 150);
+	border-radius: 8px;
+	border-width: 3px;
+	border-color: var(--dark-blue);
+	border-style: solid;
+	box-sizing: border-box;
+	text-align: center;
+	font-size: 15px;
+}
+
+.probeButton {
+	background-color: lightblue;
+	margin-top: 3px;
+	padding: 0px 4px 0px 4px;
+}
+
+.probeSetNode {
+	width: 40%;
+}
+
+.probeSetNode.start {
+	background-color: green;
+	color: white;
+}
+
+.probeSetNode.goal {
+	background-color: rgb(100, 10, 200);
+	color: white;
+}
+
+#probeWeight {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#weightText {
+	width: 30%;
+	height: 30px;
+}
+
+#weightInp {
+	width: 30%;
+	height: 30px;
+	font-family: "Roboto Mono", monospace;
+	background-color: rgb(100, 200, 150);
+	margin-left: 5px;
+	border: 2px solid black;
+}
+
+#adjustWeight {
+	width: 10%;
+	height: 30px;
+	display: flex;
+	flex-direction: column;
+}
+
+#adjustWeight button {
+	font-family: "Roboto Mono", monospace;
+	font-size: 10px;
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
+	width: 100%;
+	height: 50%;
+	background-color: rgb(100, 200, 150);
+	border: 1px solid black;
+	border-radius: 2px;
+}
+
+#weightDown {
+	font-family: "Roboto Mono", monospace;
+	font-size: 10px;
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
+	width: 100%;
+	height: 50%;
+}
+
+#board {
+	padding: 0px;
+	margin: 0px;
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+}
+
+#graph-container {
+	padding: 0px;
+	margin: 0px;
+	height: 100vh;
+	width: calc(100vw - var(--UI-width));
+	flex: 1 1 auto;
+	cursor: move;
+}
+
+.node {
+	/* position: absolute; */
+	padding: 0px;
+	margin: 0px;
+	fill: var(--dark-blue);
+	z-index: 10;
+	/* border-radius: 50%; */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	/* justify-content: center; */
+}
+
+.nodeButton {
+	cursor: move;
+}
+
+.nodeButton:hover,
+.nodeButton.selected {
+	filter: brightness(60%);
+}
+
+.node.vis1 {
+	background-color: var(--dark-blue);
+	background: repeating-linear-gradient(
+		45deg,
+		var(--dark-blue),
+		var(--dark-blue) 3px,
+		var(--red) 3px,
+		var(--red) 6px
+	);
+}
+
+.node.vis2 {
+	fill: aquamarine;
+}
+
+.node.start {
+	fill: green;
+}
+
+.node.end {
+	fill: rgb(100, 10, 200);
+}
+
+.node.fixed {
+	box-sizing: border-box;
+	stroke: red;
+	stroke-width: 3;
+}
+
+.node.c0 {
+	fill: blue;
+}
+
+.node.c1 {
+	fill: green;
+}
+
+.node.onStack {
+	fill: orange;
+}
+
+.nodeText {
+	fill: white;
+	cursor: move;
+	padding: 0px;
+	margin: 0px;
+	text-anchor: middle;
+	flex-shrink: 0;
+	dominant-baseline: middle;
+}
+
+.nodeRect {
+	fill: rgb(100, 200, 150);
+	stroke-width: 2px;
+	stroke: var(--dark-blue);
+}
+
+.nodeSub {
+	box-sizing: border-box;
+
+	text-anchor: middle;
+	dominant-baseline: middle;
+}
+
+.edgeEdge {
+	cursor: default;
+	stroke: var(--dark-blue);
+	fill: none;
+}
+
+.edgeArrow {
+	cursor: default;
+	font-size: 30px;
+	fill: gray;
+	paint-order: stroke;
+	dominant-baseline: central;
+	stroke: var(--dark-blue);
+	stroke-width: 5px;
+}
+
+.edge {
+	cursor: default;
+	padding: 0px;
+	margin: 0px;
+	stroke: var(--red);
+	fill: none;
+}
+
+.edge.s1 {
+	padding: 0px;
+	margin: 0px;
+	width: 100%;
+	height: 50%;
+	bottom: 0px;
+	background-color: var(--red);
+	border: 3px;
+	border-style: solid;
+	border-color: var(--dark-blue);
+}
+
+.edge.s2 {
+	padding: 0px;
+	margin: 0px;
+	width: 100%;
+	height: 50%;
+	top: 0px;
+	background-color: var(--red);
+	border: 3px;
+	border-style: solid;
+	border-color: var(--dark-blue);
+}
+
+.edge.vis {
+	background-color: var(--yellow);
+}
+
+.edge.vis.in-tree {
+	background-color: greenyellow;
+}
+
+.edge.vis.on-path {
+	background-color: greenyellow;
+}
+
+.edge.vis.bridge {
+	background-color: greenyellow;
+}
+
+.cover {
+	cursor: default;
+	padding: 0px;
+	margin: 0px;
+	width: 100%;
+	height: 100%;
+	fill: none;
+	stroke-dasharray: 1;
+	stroke-dashoffset: 0;
+}
+
+@keyframes fillCover1 {
+	from {
+		stroke-dashoffset: 1;
+	}
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+@keyframes fillCover2 {
+	from {
+		stroke-dashoffset: -1;
+	}
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+.cover.moving.s1 {
+	animation: fillCover1 1s linear forwards;
+}
+
+.cover.moving.s2 {
+	animation: fillCover2 1s linear forwards;
+}
+
+.cover.vis {
+	stroke: var(--yellow);
+	z-index: 5;
+}
+
+.cover.in-tree {
+	stroke: greenyellow;
+}
+
+.cover.on-path {
+	stroke: greenyellow;
+}
+
+.cover.bridge {
+	stroke: greenyellow;
+}
+
+.cover.err {
+	stroke: darkred;
+}
+
+.edgeRect {
+	cursor: default;
+	fill: var(--red);
+	stroke: var(--dark-blue);
+	stroke-width: 2px;
+}
+
+.edgeTextPath {
+	stroke: transparent;
+	fill: transparent;
+	pointer-events: none;
+}
+
+.edgeText {
+	cursor: default;
+	fill: white;
+	text-anchor: middle;
+	dominant-baseline: middle;
+	padding: 2px;
+	margin: 0px;
+	box-sizing: border-box;
+	z-index: 6;
+}
+
+.edgeButton:hover,
+.edgeButton.selected {
+	filter: brightness(60%);
+}
+
+#slider {
+	height: 100%;
+	width: 10px;
+	background: black;
+	cursor: e-resize;
+	z-index: 99;
+}
+
+#ui-box {
+	border-left: 2px solid black;
+	padding: 0px;
+	margin: 0px;
+	height: 100vh;
+	width: var(--UI-width);
+	background-color: var(--light-blue);
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	box-sizing: border-box;
+	align-items: center;
+	text-align: center;
+	align-content: center;
+	z-index: 100;
+	flex: 0 0;
+	/* box-shadow: -7px 0px 9px 0px rgba(0, 0, 0, 0.5); */
+}
+
+#ui-box h1,
+#ui-box h2,
+#ui-box h3,
+#ui-box p {
+	margin: 5px 0px 5px 0px;
+}
+
+#ui-box button:not(.tab-button) {
+	min-height: 30px;
+	box-sizing: border-box;
+	background-size: contain;
+	background-color: var(--blue);
+}
+
+#ui-box button:not(.tab-button):hover {
+	filter: brightness(80%);
+}
+
+#ui-box .tabs {
+	width: 95%;
+	margin: 0px 0px 0px 0px;
+	flex: 1 1 auto;
+	flex-direction: column;
+	row-gap: 0px;
+	min-height: 0;
+}
+
+#ui-box .algorithmDescription {
+	width: 100%;
+	font-size: 14px;
+	word-wrap: break-word;
+	margin: 0px;
+	padding: 0px;
+}
+
+#ui-box .algorithmSteps li::marker {
+	font-family: monospace;
+}
+#ui-box .algorithmSteps {
+	width: auto;
+	font-family: "Roboto Mono", monospace;
+	flex: 1 1 auto;
+	font-size: 14px;
+	word-wrap: break-word;
+	overflow-y: scroll;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 2px 50px 25px;
+	text-align: left;
+}
+
+#ui-box #algorithms :not(.algorithmSteps) {
+	flex: 0 0 auto;
+}
+
+#ui-box #builder button {
+	border: 2px solid black;
+}
+
+#ui-box #builder .createButtons {
+	margin: 0px;
+	padding: 0px;
+	line-height: 0px;
+}
+#ui-box #builder .createButton {
+	display: inline-flex;
+	border: 2px solid black;
+	width: 70px;
+	height: 70px;
+	bottom: 0px;
+}
+
+.createNode {
+	background-image: url(./images/node.png);
+}
+
+.createEdge {
+	background-image: url(./images/edge.png);
+}
+
+.createFix {
+	background-image: url(./images/lock.png);
+}
+
+.createTrash {
+	background-image: url(./images/trash.png);
+}
+
+.halfWidth {
+	width: 50%;
+}
+
+.snapButton {
+	box-sizing: border-box;
+	border: 1px solid black;
+	flex: 0 0 auto;
+}
+
+input.range {
+	-webkit-appearance: none;
+	width: 100%;
+	height: 17px;
+	background: rgb(240, 240, 240);
+	border-radius: 4px;
+}
+
+input.range::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	background: green;
+	height: 17px;
+	width: 17px;
+	border-radius: 4px;
+}
+
+#deleteGraph {
+	margin: auto 0px 10px 0px;
+}
+
+#ui-box #selection {
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	height: 200px;
+	border-top: 2px solid black;
+	flex: 0 0 auto;
+}
+
+.checkbox {
+	padding: 0px;
+	margin: 0px;
+	display: flex;
+}
+
+.checkbox > p {
+	margin: 2px 6px;
+}
+
+.small {
+	font-size: small;
+}
+
+.ui-title {
+	color: black;
+	flex: 0 0 auto;
+}
+
+.tab {
+	background-color: rgb(200, 200, 200);
+	width: 100%;
+	display: flex;
+	justify-content: left;
+	flex: 0 0 auto;
+}
+
+.tab-button {
+	background-color: rgb(240, 240, 240);
+	border: 1px solid black;
+	border-left: none;
+	outline: none;
+	cursor: pointer;
+	padding: 14px 16px;
+	box-sizing: border-box;
+}
+
+.tab-button:hover {
+	filter: brightness(80%);
+}
+
+.tab-button.active {
+	background-color: var(--light-blue);
+	border-bottom: none;
+	filter: brightness(100%);
+}
+
+.algorithm-select {
+	background: #fff;
+	border: 1px solid #ccc;
+	height: 36px;
+	overflow: hidden;
+	position: relative;
+}
+
+.algorithm-select:after {
+	border-color: #000 transparent transparent transparent;
+	border-style: solid;
+	border-width: 9px 9px 0 9px;
+	content: "";
+	height: 0;
+	pointer-events: none;
+	position: absolute;
+	right: 10px;
+	top: 14px;
+	width: 0;
+}
+
+.algorithm-select select {
+	appearance: none;
+	background: none;
+	border: none;
+	color: #000;
+	height: 100%;
+	margin: 0px;
+	padding: 0px 0px 0px 10px;
+	width: 100%;
+}
+
+.algorithm-select select:focus {
+	outline: transparent;
+}
+
+.algorithmButton {
+	width: 100%;
+}
+
+.textInstructions {
+	width: 100%;
+	font-family: "Roboto Mono", monospace;
+	font-size: 11px;
+	word-wrap: break-word;
+	margin: 0px;
+	padding: 0px;
+	flex: 0 0 auto;
+}
+
+.textError {
+	width: 100%;
+	height: 60px;
+	font-family: "Roboto Mono", monospace;
+	font-size: 11px;
+	word-wrap: break-word;
+	margin: 0px;
+	padding: 0px;
+	flex: 0 0 auto;
+}
+
+#graphText {
+	font-family: "Roboto Mono", monospace;
+	resize: none;
+	width: 100%;
+	height: 240px;
+	padding: 2px;
+	box-sizing: border-box;
+	flex: 1 1 auto;
+}
+
+.textButton {
+	flex: 0 0 auto;
+}
+
+#helpText {
+	box-sizing: border-box;
+	overflow-y: scroll;
+	padding: 0px 5px 50px 0px;
+	word-wrap: break-word;
+}

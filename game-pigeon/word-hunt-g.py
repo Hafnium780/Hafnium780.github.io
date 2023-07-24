@@ -193,36 +193,36 @@ while True:
             return
         if x == cx:
             if cy > y:
-                moveMouse(0, -44)
+                moveMouse(0, -36)
             else:
-                moveMouse(0, 44)
+                moveMouse(0, 36)
         elif y == cy:
             if cx > x:
-                moveMouse(-44, 0)
+                moveMouse(-36, 0)
             else:
-                moveMouse(44, 0)
+                moveMouse(36, 0)
         else:
             if cx > x and cy > y:
-                moveMouse(-40, -40)
+                moveMouse(-31, -31)
             elif cx > x and cy < y:
-                moveMouse(-40, 40)
+                moveMouse(-31, 31)
             elif cx < x and cy > y:
-                moveMouse(40, -40)
+                moveMouse(31, -31)
             elif cx < x and cy < y:
-                moveMouse(40, 40)
+                moveMouse(31, 31)
 
     def gotoCell(cx, cy, x, y):
         while cx < x:
-            moveMouse(44, 0)
+            moveMouse(36, 0)
             cx = cx+1
         while cx > x:
-            moveMouse(-44, 0)
+            moveMouse(-36, 0)
             cx = cx-1
         while cy < y:
-            moveMouse(0, 44)
+            moveMouse(0, 36)
             cy = cy+1
         while cy > y:
-            moveMouse(0, -44)
+            moveMouse(0, -36)
             cy = cy-1
 
     ccx = 0
@@ -271,11 +271,11 @@ while True:
         ccy = cy
 
     homeCursor()
-    for _ in range(2):
-        moveMouse(0, 100)
+    moveMouse(0, 80)
 
-    moveMouse(0, 40)
-    moveMouse(53, 0)
+    moveMouse(0, 44)
+    moveMouse(41, 0)
+
     initial_time = time.time()
     print("Expected Score: " + str(expected_score))
     # if expected_score < 200000:
@@ -286,7 +286,7 @@ while True:
     for path in range(len(found_paths)):
         print(found_paths[path][1])
         followPath(found_paths[path][0])
-        if time.time() - initial_time > 10:
+        if time.time() - initial_time > 70:
             finished = False
             break
     if finished:
