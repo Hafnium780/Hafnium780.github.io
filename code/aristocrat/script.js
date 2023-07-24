@@ -399,7 +399,7 @@ const revealAnswer = () => {
 
 const completedCipher = () => {
   stopTimer(true);
-  setTimeout(newText, 500);
+  if (config["autoReset"]) setTimeout(newText, 500);
 };
 
 const secondsToTime = (s) => {
@@ -442,6 +442,7 @@ const clearMappingGuess = () => {
 };
 
 (async () => {
+  createConfigOption("autoReset", false, "Auto Reset on Completion", "a");
   createConfigOption("syncMappingGuesses", true, "Sync Mapping Guesses", "a");
   createConfigOption("mappingTable", true, "Mapping Table", "a", () => {
     if (config["mappingTable"]) showMappingTable();
