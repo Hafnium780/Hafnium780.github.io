@@ -387,12 +387,19 @@ const checkSolution = () => {
   for (const letterDiv of letterDivs) {
     solution += letterDiv.plaintext.value;
   }
-  if (solution.toUpperCase() == rawPlaintext) setTimeout(completedCipher, 200);
+  if (solution.toUpperCase() == rawPlaintext) completedCipher();
+};
+
+const revealAnswer = () => {
+  stopTimer(false);
+  for (const i in letterDivs) {
+    letterDivs[i].plaintext.value = rawPlaintext[i].toLowerCase();
+  }
 };
 
 const completedCipher = () => {
   stopTimer(true);
-  newText();
+  setTimeout(newText, 500);
 };
 
 const secondsToTime = (s) => {
@@ -420,8 +427,8 @@ const stopTimer = (addToStats = false) => {
       Math.round(totalTime / ciphersSolved)
     );
   }
-  timerDiv.innerText = "--:--";
-  timeSeconds = 0;
+  // timerDiv.innerText = "--:--";
+  // timeSeconds = 0;
 };
 
 const clearMappingGuess = () => {
