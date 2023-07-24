@@ -1,6 +1,6 @@
 document.addEventListener("keydown", (e) => {
   if (currentTextDiv !== undefined && currentMappingDiv !== undefined)
-    console.warn("Text and mapping div selected");
+    console.warn("Text and mapping div both selected");
   if (currentTextDiv !== undefined) {
     e.preventDefault();
     const ciphertextIndex = letterIndex(

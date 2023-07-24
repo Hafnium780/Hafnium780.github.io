@@ -1,6 +1,7 @@
 const config = {};
 
 const configDiv = document.getElementById("config");
+const configCallbacks = [];
 
 const createConfigOption = (
   id,
@@ -28,7 +29,11 @@ const createConfigOption = (
     config[id] = configToggle.checked;
     changedCallback();
   });
-  changedCallback();
+  configCallbacks.push(changedCallback);
+};
+
+const callConfigCallbacks = () => {
+  for (const configCallback of configCallbacks) configCallback();
 };
 
 // // config - done
@@ -45,6 +50,7 @@ const createConfigOption = (
 // variables
 // aristocrat
 let plaintext = "";
+let rawPlaintext = "";
 let ciphertext = "";
 
 let mapping = [],
@@ -57,10 +63,19 @@ let letterFrequencies;
 let currentTextDiv;
 let currentMappingDiv;
 let currentCiphertextIndexSelected;
+let timeSeconds;
+let timerInterval;
+
+// stats
+let totalTime = 0;
+let ciphersSolved = 0;
 
 // html
 const textDiv = document.getElementById("text");
 const mappingDiv = document.getElementById("mapping");
+const timerDiv = document.getElementById("timer");
+const averageTimeDiv = document.getElementById("average-time");
+
 let letterDivs = [];
 let mappingDivs = [];
 let letterDivsByCiphertext = Array(26)
@@ -70,6 +85,7 @@ let letterDivsByCiphertext = Array(26)
 // helper funcs
 const boardChanged = () => {
   if (config["syncMappingGuesses"]) updateMappingGuess();
+  checkSolution();
 };
 
 const isLetter = (c) => {
@@ -241,12 +257,12 @@ const newText = async () => {
   plaintext = (
     await (await fetch("https://api.quotable.io/random")).json()
   ).content.toUpperCase();
+  rawPlaintext = "";
+  for (const c of plaintext) {
+    if (isLetter(c)) rawPlaintext += c;
+  }
   if (config["hideSymbols"]) {
-    let newPlaintext = "";
-    for (const c of plaintext) {
-      if (isLetter(c)) newPlaintext += c;
-    }
-    plaintext = newPlaintext;
+    plaintext = rawPlaintext;
   }
   clearText();
   newMapping();
@@ -266,6 +282,13 @@ const newText = async () => {
   for (const w of ciphertext.split(" ")) {
     createWord(w, true);
   }
+
+  try {
+    updateMappingGuess();
+  } catch (e) {}
+
+  callConfigCallbacks();
+  startTimer();
 };
 
 // Mapping UI
@@ -294,15 +317,24 @@ const updateMappingGuess = () => {
 let textLetterFrequencyDivs = [];
 let tableLetterFrequencyDivs = [];
 
+const updateLetterFrequencies = () => {
+  for (const i in textLetterFrequencyDivs)
+    textLetterFrequencyDivs[i].innerText =
+      letterFrequencies[letterIndex(letterDivs[i].ciphertext.innerText)];
+
+  for (const i in tableLetterFrequencyDivs)
+    tableLetterFrequencyDivs[i].innerText = letterFrequencies[i];
+};
+
 const showTextLetterFrequencies = () => {
+  hideTextLetterFrequencies();
   for (const letterDiv of letterDivs) {
     const letterFrequencyDiv = document.createElement("div");
     letterFrequencyDiv.classList.add("text-frequency");
-    letterFrequencyDiv.innerText =
-      letterFrequencies[letterIndex(letterDiv.ciphertext.innerText)];
     letterDiv.letter.prepend(letterFrequencyDiv);
     textLetterFrequencyDivs.push(letterFrequencyDiv);
   }
+  updateLetterFrequencies();
 };
 
 const hideTextLetterFrequencies = () => {
@@ -313,6 +345,7 @@ const hideTextLetterFrequencies = () => {
 };
 
 const showTableLetterFrequencies = () => {
+  hideTableLetterFrequencies();
   for (const letterDiv of mappingDivs) {
     const letterFrequencyDiv = document.createElement("div");
     letterFrequencyDiv.classList.add("text-frequency");
@@ -321,6 +354,7 @@ const showTableLetterFrequencies = () => {
     letterDiv.letter.prepend(letterFrequencyDiv);
     tableLetterFrequencyDivs.push(letterFrequencyDiv);
   }
+  updateLetterFrequencies();
 };
 
 const hideTableLetterFrequencies = () => {
@@ -348,10 +382,59 @@ const selectCiphertext = (c) => {
   currentCiphertextIndexSelected = ciphertextIndex;
 };
 
-(async () => {
-  createMappingDivs();
-  await newText();
+const checkSolution = () => {
+  let solution = "";
+  for (const letterDiv of letterDivs) {
+    solution += letterDiv.plaintext.value;
+  }
+  if (solution.toUpperCase() == rawPlaintext) setTimeout(completedCipher, 200);
+};
 
+const completedCipher = () => {
+  stopTimer(true);
+  newText();
+};
+
+const secondsToTime = (s) => {
+  const minutes = Math.floor(s / 60).toString();
+  const seconds = (s % 60).toString();
+  return minutes.padStart(2, "0") + ":" + seconds.padStart(2, "0");
+};
+
+const startTimer = () => {
+  stopTimer();
+  timerDiv.innerText = "00:00";
+  timeSeconds = 0;
+  timerInterval = setInterval(() => {
+    timeSeconds++;
+    timerDiv.innerText = secondsToTime(timeSeconds);
+  }, 1000);
+};
+
+const stopTimer = (addToStats = false) => {
+  if (timerInterval !== undefined) clearInterval(timerInterval);
+  if (addToStats) {
+    totalTime += timeSeconds;
+    ciphersSolved++;
+    averageTimeDiv.innerText = secondsToTime(
+      Math.round(totalTime / ciphersSolved)
+    );
+  }
+  timerDiv.innerText = "--:--";
+  timeSeconds = 0;
+};
+
+const clearMappingGuess = () => {
+  for (const i in mappingGuess) {
+    mappingGuess[i] = "";
+  }
+  updateMappingGuess();
+  for (const letterDiv of letterDivs) {
+    letterDiv.plaintext.value = "";
+  }
+};
+
+(async () => {
   createConfigOption("syncMappingGuesses", true, "Sync Mapping Guesses", "a");
   createConfigOption("mappingTable", true, "Mapping Table", "a", () => {
     if (config["mappingTable"]) showMappingTable();
@@ -383,6 +466,9 @@ const selectCiphertext = (c) => {
     "Highlight All Occurrences",
     "a"
   );
+
+  createMappingDivs();
+  await newText();
 })();
 
 // createConfigOption("hideSymbols", false, "Hide Symbols", "a");
