@@ -16,7 +16,7 @@ win_path = []
 
 
 def simulate(board, path):
-    print(board, path)
+    print(board, "\n", [p[0] for p in path], "\n\n", sep="")
     global record, record_paths, record_results, insta_win, win_path
     for x in range(6):
         copy = board.copy()
@@ -61,10 +61,13 @@ def simulate(board, path):
 
 
 simulate(board, [])
+
+print("\n\n\n----------\n\n\n\n")
+
 print("Record: ", record)
 for i in range(len(record_paths)):
     print(f"Path {i}")
-    print(record_paths[i])
+    print([path[0] for path in record_paths[i]])
     print("Board: ", record_results[i])
     print("")
 
