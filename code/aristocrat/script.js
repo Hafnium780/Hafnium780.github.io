@@ -66,15 +66,18 @@ let currentCiphertextIndexSelected;
 let timeSeconds;
 let timerInterval;
 
+let completed;
+
 // stats
 let totalTime = 0;
-let ciphersSolved = 0;
+let ciphersCompleted = 0;
 
 // html
 const textDiv = document.getElementById("text");
 const mappingDiv = document.getElementById("mapping");
 const timerDiv = document.getElementById("timer");
 const averageTimeDiv = document.getElementById("average-time");
+const ciphersCompletedDiv = document.getElementById("ciphers-completed");
 
 let letterDivs = [];
 let mappingDivs = [];
@@ -86,6 +89,7 @@ let letterDivsByCiphertext = Array(26)
 const boardChanged = () => {
   if (config["syncMappingGuesses"]) updateMappingGuess();
   checkSolution();
+  if (config["highlightImpossible"]) checkForImpossible();
 };
 
 const isLetter = (c) => {
@@ -254,6 +258,7 @@ const newMapping = () => {
 };
 
 const newText = async () => {
+  completed = false;
   plaintext = (
     await (await fetch("https://api.quotable.io/random")).json()
   ).content.toUpperCase();
@@ -391,14 +396,20 @@ const checkSolution = () => {
 };
 
 const revealAnswer = () => {
+  if (completed) return;
+  completed = true;
   stopTimer(false);
+  clearHighlighting();
   for (const i in letterDivs) {
     letterDivs[i].plaintext.value = rawPlaintext[i].toLowerCase();
   }
 };
 
 const completedCipher = () => {
+  if (completed) return;
+  completed = true;
   stopTimer(true);
+  clearHighlighting();
   if (config["autoReset"]) setTimeout(newText, 500);
 };
 
@@ -422,9 +433,10 @@ const stopTimer = (addToStats = false) => {
   if (timerInterval !== undefined) clearInterval(timerInterval);
   if (addToStats) {
     totalTime += timeSeconds;
-    ciphersSolved++;
+    ciphersCompleted++;
+    ciphersCompletedDiv.innerText = ciphersCompleted;
     averageTimeDiv.innerText = secondsToTime(
-      Math.round(totalTime / ciphersSolved)
+      Math.round(totalTime / ciphersCompleted)
     );
   }
   // timerDiv.innerText = "--:--";
@@ -432,12 +444,51 @@ const stopTimer = (addToStats = false) => {
 };
 
 const clearMappingGuess = () => {
+  clearHighlighting();
   for (const i in mappingGuess) {
     mappingGuess[i] = "";
   }
   updateMappingGuess();
   for (const letterDiv of letterDivs) {
     letterDiv.plaintext.value = "";
+  }
+};
+
+const clearHighlighting = () => {
+  for (const letterDiv of letterDivs) {
+    letterDiv.plaintext.classList.remove("impossible");
+    letterDiv.plaintext.classList.remove("selected");
+  }
+};
+
+const checkForImpossible = () => {
+  const usedLetter = new Array(26).fill(-1);
+  let invalidLetters = new Set();
+  for (let i = 0; i < 26; i++) {
+    if (isLetter(mappingGuess[i])) {
+      if (letterIndex(mappingGuess[i]) == i) {
+        invalidLetters.add(String.fromCharCode(i + 65));
+      }
+      if (
+        usedLetter[letterIndex(mappingGuess[i])] >= 0 &&
+        usedLetter[letterIndex(mappingGuess[i])] !== i
+      ) {
+        invalidLetters.add(String.fromCharCode(i + 65));
+        invalidLetters.add(
+          String.fromCharCode(usedLetter[letterIndex(mappingGuess[i])] + 65)
+        );
+      }
+      usedLetter[letterIndex(mappingGuess[i])] = i;
+    }
+  }
+  invalidLetters = [...invalidLetters];
+  for (const letterDiv of letterDivs) {
+    letterDiv.plaintext.classList.remove("impossible");
+  }
+  for (const invalid of invalidLetters) {
+    for (const letterDiv of letterDivsByCiphertext[letterIndex(invalid)]) {
+      letterDiv.plaintext.classList.add("impossible");
+    }
   }
 };
 
@@ -474,15 +525,14 @@ const clearMappingGuess = () => {
     "Highlight All Occurrences",
     "a"
   );
+  createConfigOption(
+    "highlightImpossible",
+    true,
+    "Highlight Impossible Guesses",
+    "a"
+  );
+  createConfigOption("hideSymbols", false, "Hide Symbols (Patristocrat)", "a");
 
   createMappingDivs();
   await newText();
 })();
-
-// createConfigOption("hideSymbols", false, "Hide Symbols", "a");
-// createConfigOption(
-//   "preventImpossibleSolutions",
-//   false,
-//   "Prevent Impossible Solutions",
-//   "a"
-// );

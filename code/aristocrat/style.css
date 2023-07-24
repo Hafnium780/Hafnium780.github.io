@@ -36,11 +36,15 @@
 .plaintext.plaintext:focus {
   border: none;
   outline: none;
-  background-color: #bbb;
+  filter: brightness(70%);
 }
 
 .plaintext.selected {
-  background-color: #ddd;
+  filter: brightness(90%);
+}
+
+.plaintext.impossible {
+  background-color: #d99;
 }
 
 .ciphertext {
