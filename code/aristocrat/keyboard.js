@@ -33,8 +33,11 @@ document.addEventListener("keydown", (e) => {
           const newCiphertextIndex = letterIndex(
             letterDivs[currentTextDiv].ciphertext.innerText
           );
-          mappingGuess[newCiphertextIndex] = "";
-          updateCiphertextMappings(newCiphertextIndex, "");
+
+          if (config["syncMappingGuesses"]) {
+            mappingGuess[newCiphertextIndex] = "";
+            updateCiphertextMappings(newCiphertextIndex, "");
+          }
           boardChanged();
           break;
       }
@@ -71,8 +74,11 @@ document.addEventListener("keydown", (e) => {
           const newCiphertextIndex = letterIndex(
             mappingDivs[currentMappingDiv].ciphertext.innerText
           );
-          mappingGuess[newCiphertextIndex] = "";
-          updateCiphertextMappings(newCiphertextIndex, "");
+
+          if (config["syncMappingGuesses"]) {
+            mappingGuess[newCiphertextIndex] = "";
+            updateCiphertextMappings(newCiphertextIndex, "");
+          }
           boardChanged();
           break;
       }
