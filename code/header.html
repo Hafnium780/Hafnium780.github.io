@@ -37,10 +37,13 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     width: 40px;
     height: 40px;
     z-index: 11;
+    cursor: pointer;
+
+    transition: gap ease 200ms;
   }
 
   .ham {
@@ -53,8 +56,16 @@
     transition: translate ease 200ms, rotate ease 200ms, width ease 200ms;
   }
 
+  #menu-toggle-checkbox:not(:checked) ~ #menu-toggle-background:hover {
+    gap: 5px;
+  }
+
+  #menu-toggle-checkbox:checked ~ #menu-toggle-background:hover > .ham {
+    width: 27px;
+  }
+
   #menu-toggle-checkbox:checked ~ #menu-toggle-background #ham-top {
-    translate: 0px 9px;
+    translate: 0px 7px;
     rotate: 225deg;
   }
 
@@ -63,7 +74,7 @@
   }
 
   #menu-toggle-checkbox:checked ~ #menu-toggle-background #ham-bottom {
-    translate: 0px -9px;
+    translate: 0px -7px;
     rotate: -225deg;
   }
 
