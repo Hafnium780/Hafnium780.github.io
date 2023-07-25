@@ -8,6 +8,8 @@
   />
   <title>code</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="../header.js" defer></script>
+
   <script src="script.js" defer></script>
   <script src="keyboard.js" defer></script>
 </head>
@@ -23,11 +25,12 @@
     <span id="timer">--:--</span>
   </div>
   <div>
-    <span>Ciphers Completed (not saved yet):</span>
+    <span>Ciphers Completed:</span>
     <span id="ciphers-completed">0</span>
   </div>
   <div>
-    <span>Average Time (not saved yet):</span>
+    <span>Average Time:</span>
     <span id="average-time">--:--</span>
   </div>
+  <button onclick="resetStatistics()">Reset Stats</button>
 </body>

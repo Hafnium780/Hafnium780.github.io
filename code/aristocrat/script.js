@@ -69,8 +69,9 @@ let timerInterval;
 let completed;
 
 // stats
-let totalTime = 0;
-let ciphersCompleted = 0;
+let totalTime = JSON.parse(localStorage.getItem("total-time-spent")) ?? 0;
+let ciphersCompleted =
+  JSON.parse(localStorage.getItem("total-ciphers-completed")) ?? 0;
 
 // html
 const textDiv = document.getElementById("text");
@@ -434,13 +435,27 @@ const stopTimer = (addToStats = false) => {
   if (addToStats) {
     totalTime += timeSeconds;
     ciphersCompleted++;
-    ciphersCompletedDiv.innerText = ciphersCompleted;
-    averageTimeDiv.innerText = secondsToTime(
-      Math.round(totalTime / ciphersCompleted)
-    );
+    updateStatistics();
+    localStorage.setItem("total-time-spent", totalTime);
+    localStorage.setItem("total-ciphers-completed", ciphersCompleted);
   }
   // timerDiv.innerText = "--:--";
   // timeSeconds = 0;
+};
+
+const updateStatistics = () => {
+  ciphersCompletedDiv.innerText = ciphersCompleted;
+  averageTimeDiv.innerText = secondsToTime(
+    Math.round(totalTime / ciphersCompleted) || 0
+  );
+};
+
+const resetStatistics = () => {
+  totalTime = 0;
+  ciphersCompleted = 0;
+  localStorage.removeItem("total-time-spent");
+  localStorage.removeItem("total-ciphers-completed");
+  updateStatistics();
 };
 
 const clearMappingGuess = () => {
@@ -534,5 +549,7 @@ const checkForImpossible = () => {
   createConfigOption("hideSymbols", false, "Hide Symbols (Patristocrat)", "a");
 
   createMappingDivs();
+
+  updateStatistics();
   await newText();
 })();

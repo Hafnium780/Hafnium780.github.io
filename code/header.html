@@ -1,0 +1,116 @@
+<style>
+  #bar {
+    background-color: #363639;
+    width: 100vw;
+    height: 40px;
+    border-bottom: 2px solid #424244;
+    z-index: 10;
+
+    position: fixed;
+    top: 0px;
+    left: 0px;
+  }
+
+  body {
+    margin-top: 40px;
+  }
+
+  #menu-toggle {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 40px;
+    height: 40px;
+    z-index: 11;
+  }
+
+  #menu-toggle-checkbox {
+    display: none;
+  }
+
+  #menu-toggle-background {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    width: 40px;
+    height: 40px;
+    z-index: 11;
+  }
+
+  .ham {
+    width: 25px;
+    height: 3px;
+    border-radius: 2px;
+    background-color: #f5f4f3;
+    z-index: 11;
+
+    transition: translate ease 200ms, rotate ease 200ms, width ease 200ms;
+  }
+
+  #menu-toggle-checkbox:checked ~ #menu-toggle-background #ham-top {
+    translate: 0px 9px;
+    rotate: 225deg;
+  }
+
+  #menu-toggle-checkbox:checked ~ #menu-toggle-background #ham-middle {
+    width: 0;
+  }
+
+  #menu-toggle-checkbox:checked ~ #menu-toggle-background #ham-bottom {
+    translate: 0px -9px;
+    rotate: -225deg;
+  }
+
+  #menu {
+    position: fixed;
+    top: 0px;
+    left: -202px;
+    height: 100vh;
+    width: 200px;
+    background-color: #2e2e30;
+    border-right: 2px solid #424244;
+    z-index: 9;
+    padding-top: 42px;
+    text-align: center;
+
+    transition: left ease 200ms;
+  }
+
+  #menu-toggle:has(#menu-toggle-checkbox:checked) ~ #menu {
+    left: 0px;
+  }
+
+  #menu > a {
+    display: block;
+    text-decoration: none;
+    color: #f5f4f3;
+    background-color: #2e2e30;
+
+    transition: filter ease 200ms;
+    height: 50px;
+    line-height: 50px;
+  }
+
+  #menu > a:hover {
+    filter: brightness(140%);
+  }
+</style>
+<div id="bar"></div>
+<label id="menu-toggle">
+  <input id="menu-toggle-checkbox" type="checkbox" />
+  <span id="menu-toggle-background">
+    <div class="ham" id="ham-top"></div>
+    <div class="ham" id="ham-middle"></div>
+    <div class="ham" id="ham-bottom"></div>
+  </span>
+</label>
+<div id="menu">
+  <a class="" href="../aristocrat/">aristocrat</a>
+  <a class="" href="../find_letters/">find letters</a>
+</div>

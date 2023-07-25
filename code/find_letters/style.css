@@ -11,6 +11,7 @@
   text-align: center;
   gap: 20px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .word {
@@ -58,10 +59,4 @@
 .symbol-lower {
   width: 100%;
   height: 50%;
-}
-
-#target-count {
-}
-
-#target-letter {
 }
