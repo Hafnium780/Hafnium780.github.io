@@ -95,10 +95,3 @@ body {
   -ms-user-select: none;
   user-select: none;
 }
-
-#input-letter-instructions {
-  position: absolute;
-  bottom: 0px;
-  text-align: center;
-  width: calc(100vw - 60px);
-}
