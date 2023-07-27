@@ -1,80 +1,82 @@
 <head>
-	<script>
-		MathJax = {
-			chtml: {
-				scale: 0.7,
-			},
-		};
-	</script>
-	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-	<script
-		id="MathJax-script"
-		async
-		src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
-	></script>
-	<link rel="stylesheet" href="style.css" />
-	<script defer src="script.js"></script>
+  <link rel="icon" href="/images/physic.png" />
+
+  <script>
+    MathJax = {
+      chtml: {
+        scale: 0.7,
+      },
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+  ></script>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
 </head>
 <body>
-	<div id="main">
-		<canvas id="canvas"></canvas>
-		<div id="explanation">
-			Projectile Motion With Linear Drag
-			<div>
-				<p>\[\large{\displaylines{y''=-g-ky' \\ x''=-kx'}}\]</p>
-			</div>
-			<div class="split">
-				<div class="text">
-					General solution for y:
-					<p>\[y'=ae^{-kt}+b\]</p>
-					Plug into differential equation to find b:
-					<p>\[-kae^{-kt}=-g-k(ae^{-kt}+b)\]</p>
-					<p>\[0=-g-kb\]</p>
-					<p>\[b=-\frac{g}{k} \]</p>
-					Plug in initial conditions to find a (\(y'=v\sin(\theta)\) when
-					\(t=0\)):
-					<p>\[y'=ae^{-kt}-\frac{g}{k} \]</p>
-					<p>\[v\sin(\theta)=a-\frac{g}{k} \]</p>
-					<p>\[a=v\sin(\theta)+\frac{g}{k} \]</p>
-					Integrate:
-					<p>
-						\[\int{y'dt}=\int{((v\sin(\theta)+\frac{g}{k})e^{-kt}-\frac{g}{k})dt}\]
-					</p>
-					<p>
-						\[y=-\frac{1}{k}(v\sin(\theta)+\frac{g}{k})e^{-kt}-\frac{g}{k}t+c\]
-					</p>
-					Plug in initial conditions to find c (\(y=0\) when \(t=0\))
-					<p>\[0=-\frac{1}{k}(v\sin(\theta)+\frac{g}{k})-0+c\]</p>
-					<p>\[c=\frac{1}{k}(v\sin(\theta)+\frac{g}{k})\]</p>
-					Simplify:
-					<p>
-						\[y=-\frac{1}{k}(v\sin(\theta)+\frac{g}{k})e^{-kt}-\frac{g}{k}t+\frac{1}{k}(v\sin(\theta)+\frac{g}{k})\]
-					</p>
-					<p>
-						\[y=\frac{1}{k}(v\sin(\theta)+\frac{g}{k})(1-e^{-kt})-\frac{g}{k}t\]
-					</p>
-					<p>\[y=\frac{(v\sin(\theta)+\frac{g}{k})(1-e^{-kt})-gt}{k}\]</p>
-				</div>
-				<div class="text">
-					General solution for x:
-					<p>\[x'=ae^{-kt}+b\]</p>
-					Plug into differential equation to find b:
-					<p>\[-kae^{-kt}=-k(ae^{-kt}+b)\]</p>
-					<p>\[b=0\]</p>
-					Plug in initial conditions to find a (\(x'=v\cos(\theta)\) when
-					\(t=0\)):
-					<p>\[v\cos(\theta)=a\]</p>
-					Integrate:
-					<p>\[\int{x'dt}=\int{v\cos(\theta)e^{-kt}dt}\]</p>
-					<p>\[x=-\frac{v}{k}\cos(\theta)e^{-kt}+c\]</p>
-					Plug in initial conditions to find c (\(x=0\) when \(t=0\))
-					<p>\[0=-\frac{v}{k}\cos(\theta)+c\]</p>
-					<p>\[c=\frac{v}{k}\cos(\theta)\]</p>
-					Simplify:
-					<p>\[x=-\frac{v}{k}\cos(\theta)e^{-kt}+\frac{v}{k}\cos(\theta)\]</p>
-					<p>\[x=\frac{v\cos(\theta)}{k}(1-e^{-kt})\]</p>
-				</div>
-			</div>
-		</div>
-	</div>
+  <div id="main">
+    <canvas id="canvas"></canvas>
+    <div id="explanation">
+      Projectile Motion With Linear Drag
+      <div>
+        <p>\[\large{\displaylines{y''=-g-ky' \\ x''=-kx'}}\]</p>
+      </div>
+      <div class="split">
+        <div class="text">
+          General solution for y:
+          <p>\[y'=ae^{-kt}+b\]</p>
+          Plug into differential equation to find b:
+          <p>\[-kae^{-kt}=-g-k(ae^{-kt}+b)\]</p>
+          <p>\[0=-g-kb\]</p>
+          <p>\[b=-\frac{g}{k} \]</p>
+          Plug in initial conditions to find a (\(y'=v\sin(\theta)\) when
+          \(t=0\)):
+          <p>\[y'=ae^{-kt}-\frac{g}{k} \]</p>
+          <p>\[v\sin(\theta)=a-\frac{g}{k} \]</p>
+          <p>\[a=v\sin(\theta)+\frac{g}{k} \]</p>
+          Integrate:
+          <p>
+            \[\int{y'dt}=\int{((v\sin(\theta)+\frac{g}{k})e^{-kt}-\frac{g}{k})dt}\]
+          </p>
+          <p>
+            \[y=-\frac{1}{k}(v\sin(\theta)+\frac{g}{k})e^{-kt}-\frac{g}{k}t+c\]
+          </p>
+          Plug in initial conditions to find c (\(y=0\) when \(t=0\))
+          <p>\[0=-\frac{1}{k}(v\sin(\theta)+\frac{g}{k})-0+c\]</p>
+          <p>\[c=\frac{1}{k}(v\sin(\theta)+\frac{g}{k})\]</p>
+          Simplify:
+          <p>
+            \[y=-\frac{1}{k}(v\sin(\theta)+\frac{g}{k})e^{-kt}-\frac{g}{k}t+\frac{1}{k}(v\sin(\theta)+\frac{g}{k})\]
+          </p>
+          <p>
+            \[y=\frac{1}{k}(v\sin(\theta)+\frac{g}{k})(1-e^{-kt})-\frac{g}{k}t\]
+          </p>
+          <p>\[y=\frac{(v\sin(\theta)+\frac{g}{k})(1-e^{-kt})-gt}{k}\]</p>
+        </div>
+        <div class="text">
+          General solution for x:
+          <p>\[x'=ae^{-kt}+b\]</p>
+          Plug into differential equation to find b:
+          <p>\[-kae^{-kt}=-k(ae^{-kt}+b)\]</p>
+          <p>\[b=0\]</p>
+          Plug in initial conditions to find a (\(x'=v\cos(\theta)\) when
+          \(t=0\)):
+          <p>\[v\cos(\theta)=a\]</p>
+          Integrate:
+          <p>\[\int{x'dt}=\int{v\cos(\theta)e^{-kt}dt}\]</p>
+          <p>\[x=-\frac{v}{k}\cos(\theta)e^{-kt}+c\]</p>
+          Plug in initial conditions to find c (\(x=0\) when \(t=0\))
+          <p>\[0=-\frac{v}{k}\cos(\theta)+c\]</p>
+          <p>\[c=\frac{v}{k}\cos(\theta)\]</p>
+          Simplify:
+          <p>\[x=-\frac{v}{k}\cos(\theta)e^{-kt}+\frac{v}{k}\cos(\theta)\]</p>
+          <p>\[x=\frac{v\cos(\theta)}{k}(1-e^{-kt})\]</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
