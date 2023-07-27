@@ -36,13 +36,13 @@
   morseButton.addEventListener("mouseup", morse_up);
 
   document.addEventListener("keydown", (e) => {
-    if (tabIsActive() && !e.repeat && e.key === " ") {
+    if (tabIsActive() && !e.repeat && (e.key === " " || e.key === "Enter")) {
       e.preventDefault();
       morse_down();
     }
   });
   document.addEventListener("keyup", (e) => {
-    if (tabIsActive() && e.key === " ") {
+    if (tabIsActive() && (e.key === " " || e.key === "Enter")) {
       e.preventDefault();
       morse_up();
     }

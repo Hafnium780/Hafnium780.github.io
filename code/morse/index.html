@@ -7,6 +7,7 @@
     <script src="morse-helper.js" defer></script>
     <!-- <script src="script.js" defer></script> -->
     <script src="script-il.js" defer></script>
+    <script src="script-ol.js" defer></script>
     <meta name="google" content="notranslate" />
     <title>morse</title>
     <link rel="stylesheet" href="style.css" />
@@ -24,15 +25,20 @@
           <p id="input-letter-actual">A</p>
         </div>
       </div>
-      <div id="input-letter-morse" tabindex="-1">Click or Press Space</div>
+      <div id="input-letter-morse" tabindex="-1"></div>
     </div>
-    <div id="input-word-tab" style="display: none">
+    <div id="output-letter-tab" style="display: none">
+      <div id="output-letter-display">.-</div>
+      <div id="output-letter-buttons-top"></div>
+      <div id="output-letter-buttons-bottom"></div>
+    </div>
+    <!-- <div id="input-word-tab" style="display: none">
       <input id="input" type="text" />
       <button id="morse">Click</button>
     </div>
     <div id="output-word-tab" style="display: none">
       <div id="light"></div>
       <input id="guess" type="text" />
-    </div>
+    </div> -->
   </body>
 </html>

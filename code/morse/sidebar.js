@@ -1,6 +1,7 @@
 const sidebar = document.getElementById("sidebar");
 const sidebarElements = [
   { id: "input-letter-tab", name: "Letter\n\u2193\nMorse" },
+  { id: "output-letter-tab", name: "Morse\n\u2193\nLetter" },
   // { id: "input-word-tab", name: "Word\n\u2193\nMorse" },
   // { id: "output-word-tab", name: "Morse\n\u2193\nWord" },
 ];
