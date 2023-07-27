@@ -16,8 +16,10 @@
 
   document.addEventListener("keydown", (e) => {
     if (
-      (tabIsActive() && !e.repeat && e.key >= "a" && e.key <= "z") ||
-      (e.key >= "A" && e.key <= "Z")
+      tabIsActive() &&
+      !e.repeat &&
+      e.key.length === 1 &&
+      ((e.key >= "a" && e.key <= "z") || (e.key >= "A" && e.key <= "Z"))
     ) {
       let key = e.key.toLowerCase();
       letterToOutputButton[key].click();
