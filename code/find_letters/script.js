@@ -104,8 +104,10 @@
   let lettersLeft = [];
   const newText = async () => {
     plaintext = (
-      await (await fetch("https://api.quotable.io/random")).json()
-    ).content.toUpperCase();
+      await (
+        await fetch("https://quote-garden.onrender.com/api/v3/quotes/random")
+      ).json()
+    ).data[0].quoteText.toUpperCase();
     clearText();
     newMapping();
     ciphertext = "";
