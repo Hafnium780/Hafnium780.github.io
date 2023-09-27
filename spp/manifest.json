@@ -1,0 +1,21 @@
+{
+  "name": "spp",
+  "description": "sp but p",
+  "version": "0.001",
+  "manifest_version": 3,
+  "permissions": ["storage"],
+  "host_permissions": ["https://*.schoology.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://*.schoology.com/todo"],
+      "js": ["main.js"]
+    },
+    {
+      "matches": ["https://*.schoology.com/api"],
+      "js": ["getkey.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "sppsw.js"
+  }
+}
