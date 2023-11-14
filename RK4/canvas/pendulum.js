@@ -1,9 +1,6 @@
 // Pendulum w/ movable pivot
 
-const m = 1,
-  M = 1,
-  r = 1,
-  g = 9.8;
+let m, M, r, g;
 
 const accel = (state) => {
   const num =
@@ -24,10 +21,9 @@ const aaccel = (state) => {
 
 const vars = ["Time", "Angle", "Angular Velocity", "Position", "Velocity"];
 
-// t, th, th', x, x'
-const data = RK4(
+const rk4 = new RK4(
   5,
-  [0, Math.PI, -0.4, 0, -0.2],
+  [0, 0, 0, 0, 0],
   [
     (state) => {
       // t' = 1
@@ -50,39 +46,85 @@ const data = RK4(
       return accel(state);
     },
   ],
-  0.001,
-  6,
-  10
+  0.001
 );
 
-const ctx = document.getElementById("myChart");
-
-const chartData = {
-  datasets: [],
+const setConditions = (mass, Mass, rad, grav, t0, w0, x0, v0) => {
+  m = mass;
+  M = Mass;
+  r = rad;
+  g = grav;
+  rk4.state[1] = t0;
+  rk4.state[2] = w0;
+  rk4.state[3] = x0;
+  rk4.state[4] = v0;
 };
 
-for (let i = 1; i < data[0].length; i++) {
-  const compiledData = [];
-  for (const d of data) {
-    compiledData.push({ x: d[0], y: d[i] });
-  }
-  chartData.datasets.push({
-    label: vars[i],
-    data: compiledData,
-    backgroundColor:
-      "rgb(" + Math.floor((255 * i) / data[0].length) + ", 100, 100)",
-  });
-}
+setConditions(1, 1, 10, 9.8, 2, 0, -30, 0.6);
 
-new Chart(ctx, {
-  type: "scatter",
-  data: chartData,
-  options: {
-    scales: {
-      x: {
-        type: "linear",
-        position: "bottom",
-      },
-    },
-  },
-});
+const canvas = document.getElementById("main");
+const ctx = canvas.getContext("2d");
+canvas.style.width = window.innerWidth + "px";
+canvas.style.height = window.innerHeight + "px";
+canvas.width = 2 * window.innerWidth;
+canvas.height = 2 * window.innerHeight;
+ctx.translate(canvas.width / 2, canvas.height / 2);
+
+const cartW = 80;
+const cartH = 10;
+const massR = 16;
+const stateScale = 40;
+
+const path = [];
+const maxPathLen = 100000;
+const pathR = 4;
+
+setInterval(() => {
+  ctx.fillStyle = "rgb(0, 0, 0)";
+  ctx.fillRect(
+    -canvas.width / 2,
+    -canvas.height / 2,
+    canvas.width,
+    canvas.height
+  );
+
+  if (path.length) {
+    ctx.fillStyle = ctx.strokeStyle = "rgb(200, 200, 200)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(path[0].x, path[0].y);
+    for (const p of path) {
+      // ctx.arc(p.x, p.y, pathR, 0, 2 * Math.PI);
+      ctx.lineTo(p.x, p.y);
+    }
+    ctx.stroke();
+  }
+  ctx.fillStyle = ctx.strokeStyle = "rgb(150, 150, 150)";
+  ctx.beginPath();
+  ctx.moveTo(-canvas.width / 2, 0);
+  ctx.lineTo(canvas.width / 2, 0);
+  ctx.stroke();
+
+  ctx.fillStyle = ctx.strokeStyle = "rgb(255, 255, 255)";
+  ctx.fillRect(stateScale * rk4.state[3] - cartW / 2, -cartH / 2, cartW, cartH);
+
+  const massX = rk4.state[3] + Math.sin(rk4.state[1]) * r;
+  const massY = Math.cos(rk4.state[1]) * r;
+
+  ctx.fillStyle = ctx.strokeStyle = "rgb(200, 100, 100)";
+  ctx.beginPath();
+  ctx.arc(stateScale * massX, stateScale * massY, massR, 0, 2 * Math.PI);
+  ctx.fill();
+
+  ctx.fillStyle = ctx.strokeStyle = "rgb(150, 150, 150)";
+  ctx.beginPath();
+  ctx.moveTo(stateScale * rk4.state[3], 0);
+  ctx.lineTo(stateScale * massX, stateScale * massY);
+  ctx.stroke();
+
+  path.push({ x: stateScale * massX, y: stateScale * massY });
+  if (path.length > maxPathLen) {
+    path.shift();
+  }
+  rk4.step(30);
+}, 1000 / 60);

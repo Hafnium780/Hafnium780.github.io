@@ -18,7 +18,7 @@ const vars = ["Time", "Angle", "Angular Velocity", "Position", "Velocity"];
 
 const rk4 = new RK4(
   5,
-  [0, -1, 1, 13, 0],
+  [0, 0, 0, 0, 0],
   [
     (state) => {
       // t' = 1
@@ -89,7 +89,7 @@ setInterval(() => {
   );
 
   if (path.length) {
-    ctx.fillStyle = ctx.strokeStyle = "rgb(150, 150, 150)";
+    ctx.fillStyle = ctx.strokeStyle = "rgb(200, 200, 200)";
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(path[0].x, path[0].y);
@@ -102,7 +102,6 @@ setInterval(() => {
 
   ctx.lineWidth = 1;
   ctx.fillStyle = ctx.strokeStyle = "rgb(200, 200, 200)";
-  ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.arc(pulleyX, -pulleyY, pulleyR, 0, 2 * Math.PI);
   ctx.fill();
@@ -110,7 +109,7 @@ setInterval(() => {
   ctx.arc(-pulleyX, -pulleyY, pulleyR, 0, 2 * Math.PI);
   ctx.fill();
 
-  ctx.fillStyle = ctx.strokeStyle = "rgb(255, 255, 255)";
+  ctx.fillStyle = ctx.strokeStyle = "rgb(150, 150, 150)";
   ctx.beginPath();
   ctx.moveTo(-pulleyX, -pulleyY - pulleyR);
   ctx.lineTo(pulleyX, -pulleyY - pulleyR);
@@ -156,7 +155,7 @@ setInterval(() => {
   const stringX = pulleyX + swingMassX + dist * Math.cos(ang);
   const stringY = swingMassY - pulleyY - dist * Math.sin(ang);
 
-  ctx.fillStyle = ctx.strokeStyle = "rgb(255, 255, 255)";
+  ctx.fillStyle = ctx.strokeStyle = "rgb(150, 150, 150)";
   ctx.beginPath();
   ctx.moveTo(stringX, stringY);
   ctx.lineTo(pulleyX + swingMassX, swingMassY - pulleyY);
