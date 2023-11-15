@@ -100,6 +100,7 @@ const setConditions = (
 
 // fun
 setConditions(1, 1, 10, 10, 9.8, 1, 0, -30, 0.6, 8, 0);
+// setConditions(1, 10, 10, 10, 9.8, 3, 0, -30, 0, 8, 4);
 
 const canvas = document.getElementById("main");
 const ctx = canvas.getContext("2d");
@@ -114,9 +115,16 @@ const cartH = 10;
 const massR = 16;
 const stateScale = 40;
 
+let cameraX = 0;
+
 const path = [];
 const maxPathLen = 100000;
 const pathR = 4;
+
+document.addEventListener("keydown", (e) => {
+  if (e.key == "d") cameraX += 100;
+  else if (e.key == "a") cameraX -= 100;
+});
 
 setInterval(() => {
   ctx.fillStyle = "rgb(0, 0, 0)";
@@ -131,10 +139,10 @@ setInterval(() => {
     ctx.fillStyle = ctx.strokeStyle = "rgb(200, 200, 200)";
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(path[0].x, path[0].y);
+    ctx.moveTo(path[0].x - cameraX, path[0].y);
     for (const p of path) {
       // ctx.arc(p.x, p.y, pathR, 0, 2 * Math.PI);
-      ctx.lineTo(p.x, p.y);
+      ctx.lineTo(p.x - cameraX, p.y);
     }
     ctx.stroke();
   }
@@ -145,20 +153,31 @@ setInterval(() => {
   ctx.stroke();
 
   ctx.fillStyle = ctx.strokeStyle = "rgb(255, 255, 255)";
-  ctx.fillRect(stateScale * rk4.state[3] - cartW / 2, -cartH / 2, cartW, cartH);
+  ctx.fillRect(
+    stateScale * rk4.state[3] - cartW / 2 - cameraX,
+    -cartH / 2,
+    cartW,
+    cartH
+  );
 
   const massX = rk4.state[3] + Math.sin(rk4.state[1]) * rk4.state[5];
   const massY = Math.cos(rk4.state[1]) * rk4.state[5];
 
   ctx.fillStyle = ctx.strokeStyle = "rgb(200, 100, 100)";
   ctx.beginPath();
-  ctx.arc(stateScale * massX, stateScale * massY, massR, 0, 2 * Math.PI);
+  ctx.arc(
+    stateScale * massX - cameraX,
+    stateScale * massY,
+    massR,
+    0,
+    2 * Math.PI
+  );
   ctx.fill();
 
   ctx.fillStyle = ctx.strokeStyle = "rgb(150, 150, 150)";
   ctx.beginPath();
-  ctx.moveTo(stateScale * rk4.state[3], 0);
-  ctx.lineTo(stateScale * massX, stateScale * massY);
+  ctx.moveTo(stateScale * rk4.state[3] - cameraX, 0);
+  ctx.lineTo(stateScale * massX - cameraX, stateScale * massY);
   ctx.stroke();
 
   path.push({ x: stateScale * massX, y: stateScale * massY });
