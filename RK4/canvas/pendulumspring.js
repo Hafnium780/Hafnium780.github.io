@@ -94,6 +94,7 @@ const setConditions = (
 
 // Normal pendulum
 // setConditions(1, 1, 1000, 10, 9.8, 2, 0, -30, 0.6, 10, 0);
+// setConditions(0.1, 1, 1000, 10, 9.8, 2, 0, -30, 0.6, 10, 0);
 
 // Normal spring
 // setConditions(1, 1, 10, 10, 9.8, 0, 0, 0, 0, 8, 0);
@@ -117,12 +118,18 @@ const cartH = 10;
 const massR = 16;
 const stateScale = 40;
 
+const cmR = 8;
+
+let simulationSteps = 30;
 let cameraX = 0;
 const cameraRange = 150;
 const lineSpacing = 200;
 
 const path = [];
 const cartPath = [];
+const cmPath = [];
+let pathCount = 0;
+const pathSkip = 30;
 const maxPathLen = 100000;
 const pathR = 4;
 
@@ -137,6 +144,17 @@ document.body.appendChild(optionsDiv);
 
 const sliders = [
   {
+    name: "simulation speed",
+    id: "simulation_speed",
+    min: "1",
+    max: "100",
+    step: "1",
+    default: "30",
+    callback: (value) => {
+      simulationSteps = value;
+    },
+  },
+  {
     name: "natural length",
     id: "natural_length",
     min: "0",
@@ -145,6 +163,7 @@ const sliders = [
     default: "10",
     callback: (value) => {
       l = value;
+      resetPath();
     },
   },
   {
@@ -156,6 +175,19 @@ const sliders = [
     default: "10",
     callback: (value) => {
       k = value;
+      resetPath();
+    },
+  },
+  {
+    name: "gravity",
+    id: "gravity",
+    min: "-9.8",
+    max: "9.8",
+    step: "0.1",
+    default: "9.8",
+    callback: (value) => {
+      g = value;
+      resetPath();
     },
   },
   {
@@ -166,7 +198,8 @@ const sliders = [
     step: "0.1",
     default: "1",
     callback: (value) => {
-      M = value;
+      m = value;
+      resetPath();
     },
   },
   {
@@ -178,6 +211,7 @@ const sliders = [
     default: "1",
     callback: (value) => {
       M = value;
+      resetPath();
     },
   },
 ];
@@ -193,15 +227,56 @@ for (const sl of sliders) {
   sliderDiv.setAttribute("max", sl.max);
   sliderDiv.setAttribute("step", sl.step);
   sliderDiv.setAttribute("value", sl.default);
-  sliderDiv.addEventListener("input", () => {
-    sl.callback(parseFloat(sliderDiv.value));
-  });
   optionDiv.appendChild(sliderDiv);
   const sliderLabel = document.createElement("label");
   sliderLabel.classList.add("slider-label");
   sliderLabel.setAttribute("for", sl.id);
-  sliderLabel.innerText = sl.name;
+  sliderLabel.innerText = sl.name + ": " + sl.default;
+  sliderDiv.addEventListener("input", () => {
+    sl.callback(parseFloat(sliderDiv.value));
+    sliderLabel.innerText = sl.name + ": " + sliderDiv.value;
+  });
   optionDiv.appendChild(sliderLabel);
+}
+
+let paused = false;
+
+const buttons = [
+  {
+    name: "stop velocity",
+    run: () => {
+      rk4.state[2] = 0;
+      rk4.state[4] = 0;
+      rk4.state[6] = 0;
+      resetPath();
+    },
+  },
+  {
+    name: "randomize velocity",
+    run: () => {
+      rk4.state[2] = Math.random() * 4 - 2;
+      rk4.state[4] = Math.random() * 2 - 1;
+      rk4.state[6] = Math.random() * 4 - 1;
+      resetPath();
+    },
+  },
+  {
+    name: "(un)pause simulation (space)",
+    run: () => {
+      paused = !paused;
+    },
+  },
+];
+
+document.addEventListener("keypress", (e) => {
+  if (e.key === " ") paused = !paused;
+});
+
+for (const b of buttons) {
+  const buttonDiv = document.createElement("button");
+  buttonDiv.addEventListener("click", b.run);
+  buttonDiv.innerText = b.name;
+  optionsDiv.appendChild(buttonDiv);
 }
 
 /*
@@ -272,6 +347,66 @@ const stats = [
       return stats[2].get() + stats[3].get();
     },
   },
+  {
+    name: "cart momentum",
+    id: "cart_momentum",
+    precision: 4,
+    get: () => {
+      return M * rk4.state[4];
+    },
+  },
+  {
+    name: "bob momentum (x)",
+    id: "bob_momentum_x",
+    precision: 4,
+    get: () => {
+      return (
+        m *
+        (rk4.state[4] +
+          rk4.state[6] * Math.sin(rk4.state[1]) +
+          rk4.state[5] * rk4.state[2] * Math.cos(rk4.state[1]))
+      );
+    },
+  },
+  {
+    name: "bob momentum (y)",
+    id: "bob_momentum_y",
+    precision: 4,
+    get: () => {
+      return (
+        m *
+        (rk4.state[6] * Math.cos(rk4.state[1]) -
+          rk4.state[5] * rk4.state[2] * Math.sin(rk4.state[1]))
+      );
+    },
+  },
+  {
+    name: "total momentum (x)",
+    id: "total_momentum_x",
+    precision: 16,
+    get: () => {
+      return stats[5].get() + stats[6].get();
+    },
+  },
+  // {
+  //   name: "angular momentum?",
+  //   id: "angular_momentum",
+  //   precision: 16,
+  //   get: () => {
+  //     // return rk4.state[2] * m * rk4.state[5] * rk4.state[5];
+  //     return (
+  //       m *
+  //       rk4.state[5] *
+  //       (Math.cos(rk4.state[1]) *
+  //         (rk4.state[4] +
+  //           rk4.state[6] * Math.sin(rk4.state[1]) +
+  //           rk4.state[5] * rk4.state[2] * Math.cos(rk4.state[1])) +
+  //         Math.sin(rk4.state[1]) *
+  //           (rk4.state[6] * Math.cos(rk4.state[1]) -
+  //             rk4.state[5] * rk4.state[2] * Math.sin(rk4.state[1])))
+  //     );
+  //   },
+  // },
 ];
 
 const statsDiv = document.createElement("div");
@@ -291,11 +426,31 @@ for (const st of stats) {
   statsDivs.push({ div: div, visual: visualDiv });
 }
 
+const resetPath = () => {
+  for (const p of path) {
+    p.red = true;
+  }
+  for (const p of cartPath) {
+    p.red = true;
+  }
+  for (const p of cmPath) {
+    p.red = true;
+  }
+};
+
 setInterval(() => {
+  if (paused) return;
   if (cameraX < rk4.state[3] * stateScale - cameraRange)
     cameraX = rk4.state[3] * stateScale - cameraRange;
   if (cameraX > rk4.state[3] * stateScale + cameraRange)
     cameraX = rk4.state[3] * stateScale + cameraRange;
+  // no work
+  // if (rk4.state[3] * stateScale + cartW / 2 > canvas.width / 2) {
+  //   rk4.state[4] = -rk4.state[4];
+  // }
+  // if (rk4.state[3] * stateScale - cartW / 2 < -canvas.width / 2) {
+  //   rk4.state[4] = -rk4.state[4];
+  // }
   ctx.fillStyle = "rgb(0, 0, 0)";
   ctx.fillRect(
     -canvas.width / 2,
@@ -322,38 +477,66 @@ setInterval(() => {
     statsDivs[i].visual.style.width = percent * 100 + "%";
   }
 
+  let massX = rk4.state[3] + Math.sin(rk4.state[1]) * rk4.state[5];
+  let massY = Math.cos(rk4.state[1]) * rk4.state[5];
+
+  let cmX = (massX * m + rk4.state[3] * M) / (m + M);
+  let cmY = (massY * m) / (m + M);
+
   const offset = cameraX % lineSpacing;
-  ctx.fillStyle = ctx.strokeStyle = "rgb(150, 150, 150)";
+  ctx.fillStyle = ctx.strokeStyle = "rgb(70, 70, 70)";
   for (
     let x = -canvas.width / 2 - offset;
     x <= canvas.width / 2;
     x += lineSpacing
   ) {
     ctx.beginPath();
-    ctx.moveTo(x, -10);
-    ctx.lineTo(x, 10);
+    ctx.moveTo(x, -canvas.height / 2);
+    ctx.lineTo(x, canvas.height / 2);
     ctx.stroke();
   }
 
   if (path.length) {
-    ctx.fillStyle = ctx.strokeStyle = "rgb(200, 200, 200)";
     ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(path[0].x - cameraX, path[0].y);
-    for (const p of path) {
+    for (let i = 1; i < path.length; i++) {
       // ctx.arc(p.x, p.y, pathR, 0, 2 * Math.PI);
-      ctx.lineTo(p.x - cameraX, p.y);
+      ctx.fillStyle = ctx.strokeStyle = path[i - 1].red
+        ? "rgb(200, 50, 50)"
+        : "rgb(200, 200, 200)";
+      ctx.beginPath();
+      ctx.moveTo(path[i - 1].x - cameraX, path[i - 1].y);
+      ctx.lineTo(path[i].x - cameraX, path[i].y);
+      ctx.stroke();
     }
-    ctx.stroke();
     ctx.beginPath();
     let y = 0;
-    for (const p of cartPath.slice().reverse()) {
-      ctx.lineTo(p.x - cameraX, y);
+    for (let i = cartPath.length - 1; i > 0; i--) {
+      ctx.fillStyle = ctx.strokeStyle = cartPath[i - 1].red
+        ? "rgb(200, 50, 50)"
+        : "rgb(200, 200, 200)";
+      ctx.beginPath();
+      ctx.moveTo(cartPath[i - 1].x - cameraX, y + 1);
+      ctx.lineTo(cartPath[i].x - cameraX, y);
+      ctx.stroke();
+      y -= 1;
+      if (y < -canvas.height / 2) break;
+    }
+    ctx.stroke();
+    y = 0;
+    for (let i = cmPath.length - 1; i > 0; i--) {
+      ctx.fillStyle = ctx.strokeStyle = cmPath[i - 1].red
+        ? "rgb(200, 50, 50)"
+        : "rgb(50, 200, 50)";
+      ctx.beginPath();
+      ctx.moveTo(cmPath[i - 1].x - cameraX, y + 1);
+      ctx.lineTo(cmPath[i].x - cameraX, y);
+      ctx.stroke();
       y -= 1;
       if (y < -canvas.height / 2) break;
     }
     ctx.stroke();
   }
+
   ctx.fillStyle = ctx.strokeStyle = "rgb(150, 150, 150)";
   ctx.beginPath();
   ctx.moveTo(-canvas.width / 2, 0);
@@ -368,32 +551,61 @@ setInterval(() => {
     cartH
   );
 
-  for (let i = 0; i < 1; i++) {
-    const massX = rk4.state[3] + Math.sin(rk4.state[1]) * rk4.state[5];
-    const massY = Math.cos(rk4.state[1]) * rk4.state[5];
+  ctx.fillStyle = ctx.strokeStyle = "rgb(150, 150, 255)";
+  ctx.beginPath();
+  ctx.arc(
+    stateScale * rk4.state[3] - cameraX,
+    0,
+    l * stateScale,
+    -rk4.state[1] - 0.1 + Math.PI / 2,
+    -rk4.state[1] + 0.1 + Math.PI / 2
+  );
+  ctx.stroke();
 
-    ctx.fillStyle = ctx.strokeStyle = "rgb(200, 100, 100)";
-    ctx.beginPath();
-    ctx.arc(
-      stateScale * massX - cameraX,
-      stateScale * massY,
-      massR,
-      0,
-      2 * Math.PI
-    );
-    ctx.fill();
+  ctx.fillStyle = ctx.strokeStyle = "rgb(200, 100, 100)";
+  ctx.beginPath();
+  ctx.arc(
+    stateScale * massX - cameraX,
+    stateScale * massY,
+    massR,
+    0,
+    2 * Math.PI
+  );
+  ctx.fill();
 
-    ctx.fillStyle = ctx.strokeStyle = "rgb(150, 150, 150)";
-    ctx.beginPath();
-    ctx.moveTo(stateScale * rk4.state[3] - cameraX, 0);
-    ctx.lineTo(stateScale * massX - cameraX, stateScale * massY);
-    ctx.stroke();
+  ctx.fillStyle = ctx.strokeStyle = "rgb(100, 200, 100)";
+  ctx.beginPath();
+  ctx.arc(stateScale * cmX - cameraX, stateScale * cmY, cmR, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(stateScale * cmX - cameraX, stateScale * cmY);
+  ctx.lineTo(stateScale * cmX - cameraX, 0);
+  ctx.stroke();
 
-    path.push({ x: stateScale * massX, y: stateScale * massY });
-    cartPath.push({ x: stateScale * rk4.state[3], y: 0 });
-    if (path.length > maxPathLen) {
-      path.shift();
+  ctx.fillStyle = ctx.strokeStyle = "rgb(150, 150, 150)";
+  ctx.beginPath();
+  ctx.moveTo(stateScale * rk4.state[3] - cameraX, 0);
+  ctx.lineTo(stateScale * massX - cameraX, stateScale * massY);
+  ctx.stroke();
+
+  for (let i = 0; i < simulationSteps; i++) {
+    massX = rk4.state[3] + Math.sin(rk4.state[1]) * rk4.state[5];
+    massY = Math.cos(rk4.state[1]) * rk4.state[5];
+
+    cmX = (massX * m + rk4.state[3] * M) / (m + M);
+    cmY = (massY * m) / (m + M);
+    pathCount++;
+    if (pathCount % pathSkip === 0) {
+      pathCount = 0;
+      path.push({ x: stateScale * massX, y: stateScale * massY, red: false });
+      cartPath.push({ x: stateScale * rk4.state[3], y: 0, red: false });
+      cmPath.push({ x: stateScale * cmX, y: stateScale * cmY, red: false });
+      if (path.length > maxPathLen) {
+        path.shift();
+        cartPath.shift();
+        cmPath.shift();
+      }
     }
-    rk4.step(30);
+    rk4.step(1);
   }
 }, 1000 / 60);
