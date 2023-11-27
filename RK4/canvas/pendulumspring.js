@@ -480,6 +480,30 @@ setInterval(() => {
   let massX = rk4.state[3] + Math.sin(rk4.state[1]) * rk4.state[5];
   let massY = Math.cos(rk4.state[1]) * rk4.state[5];
 
+  let velX =
+    rk4.state[4] +
+    rk4.state[6] * Math.sin(rk4.state[1]) +
+    rk4.state[5] * rk4.state[2] * Math.cos(rk4.state[1]);
+  let velY =
+    rk4.state[6] * Math.cos(rk4.state[1]) -
+    rk4.state[5] * rk4.state[2] * Math.sin(rk4.state[1]);
+
+  const xdd = xdotdot(rk4.state);
+  const rdd = rdotdot(rk4.state);
+  const tdd = tdotdot(rk4.state);
+  let accelX =
+    xdd +
+    rdd * Math.sin(rk4.state[1]) +
+    2 * rk4.state[6] * rk4.state[2] * Math.cos(rk4.state[1]) +
+    rk4.state[5] * tdd * Math.cos(rk4.state[1]) -
+    rk4.state[5] * Math.pow(rk4.state[2], 2) * Math.sin(rk4.state[1]);
+
+  let accelY =
+    rdd * Math.cos(rk4.state[1]) -
+    2 * rk4.state[6] * rk4.state[2] * Math.sin(rk4.state[1]) -
+    rk4.state[5] * tdd * Math.sin(rk4.state[1]) -
+    rk4.state[5] * Math.pow(rk4.state[2], 2) * Math.cos(rk4.state[1]);
+
   let cmX = (massX * m + rk4.state[3] * M) / (m + M);
   let cmY = (massY * m) / (m + M);
 
@@ -508,6 +532,10 @@ setInterval(() => {
       ctx.lineTo(path[i].x - cameraX, path[i].y);
       ctx.stroke();
     }
+    ctx.beginPath();
+    ctx.moveTo(path[path.length - 1].x - cameraX, path[path.length - 1].y);
+    ctx.lineTo(stateScale * massX - cameraX, stateScale * massY);
+    ctx.stroke();
     ctx.beginPath();
     let y = 0;
     for (let i = cartPath.length - 1; i > 0; i--) {
@@ -573,6 +601,25 @@ setInterval(() => {
   );
   ctx.fill();
 
+  ctx.lineWidth = 2;
+  ctx.fillStyle = ctx.strokeStyle = "rgb(100, 200, 100)";
+  ctx.beginPath();
+  ctx.moveTo(stateScale * massX - cameraX, stateScale * massY);
+  ctx.lineTo(
+    stateScale * massX + (stateScale / 5) * velX - cameraX,
+    stateScale * massY + (stateScale / 5) * velY
+  );
+  ctx.stroke();
+  ctx.fillStyle = ctx.strokeStyle = "rgb(100, 100, 200)";
+  ctx.beginPath();
+  ctx.moveTo(stateScale * massX - cameraX, stateScale * massY);
+  ctx.lineTo(
+    stateScale * massX + (stateScale / 10) * accelX - cameraX,
+    stateScale * massY + (stateScale / 10) * accelY
+  );
+  ctx.stroke();
+  ctx.lineWidth = 1;
+
   ctx.fillStyle = ctx.strokeStyle = "rgb(100, 200, 100)";
   ctx.beginPath();
   ctx.arc(stateScale * cmX - cameraX, stateScale * cmY, cmR, 0, 2 * Math.PI);
@@ -594,6 +641,7 @@ setInterval(() => {
 
     cmX = (massX * m + rk4.state[3] * M) / (m + M);
     cmY = (massY * m) / (m + M);
+
     pathCount++;
     if (pathCount % pathSkip === 0) {
       pathCount = 0;
