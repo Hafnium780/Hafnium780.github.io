@@ -113,6 +113,21 @@ canvas.width = 2 * window.innerWidth;
 canvas.height = 2 * window.innerHeight;
 ctx.translate(canvas.width / 2, canvas.height / 2);
 
+let resizeTimeout;
+window.addEventListener("resize", (e) => {
+  if (resizeTimeout) {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = 0;
+  }
+  resizeTimeout = setTimeout(() => {
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    canvas.width = 2 * window.innerWidth;
+    canvas.height = 2 * window.innerHeight;
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+  }, 100);
+});
+
 const cartW = 80;
 const cartH = 10;
 const massR = 16;
