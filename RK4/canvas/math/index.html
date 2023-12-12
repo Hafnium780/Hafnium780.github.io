@@ -1,0 +1,47 @@
+<head>
+  <script>
+    MathJax = {
+      chtml: {
+        scale: 0.7,
+      },
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+  ></script>
+  <style>
+    #main {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="main">
+    <div id="explanation">
+      Movable Cart w/ Spring Pendulum
+      <div class="split">
+        <div class="text">
+          <p>\[\vec{r}_b=\left(x+r\sin{\theta}, r\cos{\theta}\right)\]</p>
+          <p>\[\vec{v}_b=\left(\dot{x}+\dot{r}\sin{\theta}+r\dot{\theta}\cos{\theta}, \dot{r}\cos{\theta}-r\dot{\theta}\sin{\theta}\right)\]</p>
+          <p>\[\vec{v}_b\cdot\vec{v}_b=\dot{x}^2+\dot{r}^2+r^2\dot{\theta}^2+2\dot{x}\dot{r}\sin{\theta}+2\dot{x}r\dot{\theta}\cos{\theta}\]</p>
+          <p>\[K_b=\frac{1}{2}m\left(\dot{x}^2+\dot{r}^2+r^2\dot{\theta}^2+2\dot{x}\dot{r}\sin{\theta}+2\dot{x}r\dot{\theta}\cos{\theta}\right)\]</p>
+          <p>\[K_c=\frac{1}{2}M\dot{x}\]</p>
+          <p>\[U=-mgr\cos{\theta}+\frac{1}{2}k\left(r-l\right)^2\]</p>
+          <p>\[\mathcal{L}=K_b+K_c-U=\frac{1}{2}m\left(\dot{x}^2+\dot{r}^2+r^2\dot{\theta}^2+2\dot{x}\dot{r}\sin{\theta}+2\dot{x}r\dot{\theta}\cos{\theta}\right)+\frac{1}{2}M\dot{x}+mgr\cos{\theta}-\frac{1}{2}k\left(r-l\right)^2\]</p>
+          <p>\[\frac{d}{dt}\frac{\delta \mathcal{L}}{\delta \dot{x}}=\left(m+M\right)\ddot{x}+m\ddot{r}\sin{\theta}+2m\dot{r}\dot{\theta}\cos{\theta}+mr\ddot{\theta}\cos{\theta}-mr\dot{\theta}^2\sin{\theta}\]</p>
+          <p>\[\frac{\delta \mathcal{L}}{\delta x}=0\]</p>
+          <p>\[\frac{d}{dt}\frac{\delta \mathcal{L}}{\delta \dot{r}}=m\ddot{r}+m\ddot{x}\sin{\theta}+m\dot{x}\dot{\theta}\cos{\theta}\]</p>
+          <p>\[\frac{\delta \mathcal{L}}{\delta r}=mr\dot{\theta}^2+m\dot{x}\dot{\theta}\cos{\theta}+mg\cos{\theta}-kr+kl\]</p>
+          <p>\[\frac{d}{dt}\frac{\delta \mathcal{L}}{\delta \dot{\theta}}=2mr\dot{r}\dot{\theta}+mr^2\ddot{\theta}+m\ddot{x}r\cos{\theta}+m\dot{x}\dot{r}\cos{\theta}-m\dot{x}r\dot{\theta}\sin{\theta}\]</p>
+          <p>\[\frac{\delta \mathcal{L}}{\delta \theta}=m\dot{x}\dot{r}\cos{\theta}-m\dot{x}r\dot{\theta}\sin{\theta}-mgr\sin{\theta}\]</p>
+          Equations of motion:
+          <p>\[(m+M)\ddot{x}+m\ddot{r}\sin{\theta}+2m\dot{r}\dot{\theta}\cos{\theta}+mr\ddot{\theta}\cos{\theta}-mr\dot{\theta}^2\sin{\theta}\]</p>
+          <p>\[m\ddot{r}+m\ddot{x}\sin{\theta}=mr\dot{\theta}^2+mg\cos{\theta}-kr+kl\]</p>
+          <p>\[2mr\dot{r}\dot{\theta}+mr^2\ddot{\theta}+m\ddot{x}r\cos{\theta}=-mgr\sin{\theta}\]</p>
+      </div>
+    </div>
+  </div>
+</body>

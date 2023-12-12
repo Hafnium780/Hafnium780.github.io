@@ -1,0 +1,21 @@
+{
+  "name": "Schoology Grades",
+  "description": "Show Schoology grades",
+  "version": "2.0",
+  "manifest_version": 3,
+  "permissions": ["storage"],
+  "host_permissions": ["https://*.schoology.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://*.schoology.com/sg"],
+      "js": ["main.js"]
+    },
+    {
+      "matches": ["https://*.schoology.com/api"],
+      "js": ["getkey.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "sgsw.js"
+  }
+}
