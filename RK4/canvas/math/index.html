@@ -1,4 +1,6 @@
+<html lang="en">
 <head>
+  <meta name="google" content="notranslate" />
   <script>
     MathJax = {
       chtml: {
@@ -19,6 +21,7 @@
   </style>
 </head>
 <body>
+  <img src="diagram.svg"></img>
   <div id="main">
     <div id="explanation">
       Movable Cart w/ Spring Pendulum
@@ -41,7 +44,12 @@
           <p>\[(m+M)\ddot{x}+m\ddot{r}\sin{\theta}+2m\dot{r}\dot{\theta}\cos{\theta}+mr\ddot{\theta}\cos{\theta}-mr\dot{\theta}^2\sin{\theta}\]</p>
           <p>\[m\ddot{r}+m\ddot{x}\sin{\theta}=mr\dot{\theta}^2+mg\cos{\theta}-kr+kl\]</p>
           <p>\[2mr\dot{r}\dot{\theta}+mr^2\ddot{\theta}+m\ddot{x}r\cos{\theta}=-mgr\sin{\theta}\]</p>
+          Solving for second derivatives:
+          <p>\[\ddot{x}=\frac{k}{M}(r-l)\sin{\theta}\]</p>
+          <p>\[\ddot{r}=g\cos{\theta}+r\dot{\theta}^2-k\left(\frac{\sin^2{\theta}}{M}+\frac{1}{m}\right)(r-l)\]</p>
+          <p>\[\ddot{\theta}=-\frac{g}{r}\sin{\theta}-\frac{k}{M}\left(1-\frac{l}{r}\right)\sin{\theta}\cos{\theta}-2\frac{\dot{r}}{r}\dot{\theta}\]</p>
       </div>
     </div>
   </div>
 </body>
+</html>
