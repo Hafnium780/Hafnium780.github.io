@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<head>
+  <title>RK4</title>
+  <script src="RK4.js"></script>
+</head>
+<body>
+  <script src="nn.js" defer></script>
+  <script src="PendulumInstance.js" defer></script>
+  <script src="pendulummoveml.js" defer></script>
+  <style>
+    * {
+      margin: 0px;
+      padding: 0px;
+      overflow: hidden;
+    }
+
+    #toself {
+      position: absolute;
+      color: white;
+    }
+
+    .options-div {
+      position: absolute;
+      top: 40px;
+      left: 0px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slider-label {
+      color: white;
+      padding-left: 3px;
+    }
+
+    .stats-div {
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      display: flex;
+      flex-direction: column;
+      width: 300px;
+    }
+
+    .stats-label {
+      color: white;
+      padding-left: 3px;
+      height: 20px;
+      width: 100%;
+      overflow: visible;
+      text-wrap: nowrap;
+    }
+
+    .stats-visual {
+      width: 60%;
+      height: 100%;
+      background-color: #444444;
+      overflow: visible;
+    }
+  </style>
+  <a id="toself" href="pendulummove.html">Try it yourself</a>
+  <canvas id="main"></canvas>
+</body>

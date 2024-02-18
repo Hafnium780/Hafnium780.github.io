@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<head>
+  <title>RK4</title>
+  <script src="RK4.js"></script>
+</head>
+<body>
+  <script src="pendulummove.js" defer></script>
+  <style>
+    * {
+      margin: 0px;
+      padding: 0px;
+      overflow: hidden;
+    }
+
+    #toml {
+      position: absolute;
+      color: white;
+    }
+
+    #reset {
+      position: absolute;
+      top: 20px;
+      color: white;
+    }
+
+    #inst {
+      position: absolute;
+      top: 40px;
+      color: white;
+    }
+  </style>
+  <a id="toml" href="pendulummoveml.html">ML implementation</a>
+  <a id="reset" href="pendulummove.html">Reset (reload)</a>
+  <p id="inst">Use arrow keys to balance the pendulum!</p>
+  <canvas id="main"></canvas>
+</body>
