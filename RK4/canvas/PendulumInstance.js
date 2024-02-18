@@ -128,7 +128,7 @@ class PendulumInstance {
     ];
 
     this.nn.predict(input);
-    // this.score -= Math.abs(state[4] / 100);
+    this.score -= Math.abs(state[4] / 1000);
     // this.score += Math.abs(this.nn.outputValues[0] / 100);
     return this.nn.outputValues[0] * 80;
   }
