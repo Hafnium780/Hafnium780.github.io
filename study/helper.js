@@ -296,6 +296,6 @@ document.getElementById("fake-data").addEventListener("click", async () => {
   tutees = [];
   tutors = [];
   pairings = [];
-  processTutees(parse(await (await fetch("/tutees.csv")).text()));
-  processTutors(parse(await (await fetch("/tutors.csv")).text()));
+  processTutees(parse(await (await fetch("./tutees.csv")).text()));
+  processTutors(parse(await (await fetch("./tutors.csv")).text()));
 });
