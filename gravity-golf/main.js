@@ -19,7 +19,7 @@ let fullControl = false;
 let globalTime = 0;
 let stoppedTime = 0;
 let maxProjectionSteps = 5000;
-let projectStep = 5;
+let projectStep = 10;
 
 let skipUpdate = false;
 let launchVel = 0;
@@ -34,77 +34,77 @@ map.generateRandom();
 updateHeights();
 
 function update() {
-	let ct = Date.now();
-	if (frameRateCapture > 0) {
-		frameRateCapture--;
-		if (frameRateCapture === 0) printFrameRate();
-	}
-	if (skipUpdate) {
-		skipUpdate = false;
-		return;
-	}
-	if (ct - pt > 100) {
-		pt = ct;
-		return;
-	}
-	const dt = 60;
-	keyboard(dt);
-	if (!fullControl) updateMap(Math.floor((spd * dt) / 100));
-	draw();
-	// if (mouseDown) shoot(ball);
-	// ball.update((ct - pt) / 1000, map.walls);
-	// pt = ct;
+  let ct = Date.now();
+  if (frameRateCapture > 0) {
+    frameRateCapture--;
+    if (frameRateCapture === 0) printFrameRate();
+  }
+  if (skipUpdate) {
+    skipUpdate = false;
+    return;
+  }
+  if (ct - pt > 100) {
+    pt = ct;
+    return;
+  }
+  const dt = 60;
+  keyboard(dt);
+  if (!fullControl) updateMap(Math.floor((spd * dt) / 100));
+  draw();
+  // if (mouseDown) shoot(ball);
+  // ball.update((ct - pt) / 1000, map.walls);
+  // pt = ct;
 }
 
 function updateMap(time) {
-	globalTime += time;
-	if (fullControl && globalTime < stoppedTime) {
-		time += stoppedTime - globalTime;
-		globalTime = stoppedTime;
-	}
-	for (let i = 0; i < Math.abs(time); i++) {
-		map.update(time < 0 ? -stepDt : stepDt);
-		ball.update(time < 0 ? -stepDt : stepDt);
-	}
+  globalTime += time;
+  if (fullControl && globalTime < stoppedTime) {
+    time += stoppedTime - globalTime;
+    globalTime = stoppedTime;
+  }
+  for (let i = 0; i < Math.abs(time); i++) {
+    map.update(time < 0 ? -stepDt : stepDt);
+    ball.update(time < 0 ? -stepDt : stepDt);
+  }
 }
 
 function frameRate(x = 100) {
-	frameRateCapture = x;
-	frameRateCaptureTotal = x;
-	frameRateStartTime = Date.now();
+  frameRateCapture = x;
+  frameRateCaptureTotal = x;
+  frameRateStartTime = Date.now();
 }
 
 function printFrameRate() {
-	console.log(
-		"Frame Rate Over Last " +
-			frameRateCaptureTotal +
-			" Frames: " +
-			(frameRateCaptureTotal / (Date.now() - frameRateStartTime)) * 1000
-	);
+  console.log(
+    "Frame Rate Over Last " +
+      frameRateCaptureTotal +
+      " Frames: " +
+      (frameRateCaptureTotal / (Date.now() - frameRateStartTime)) * 1000
+  );
 }
 
 function updateHeights() {
-	createCanvas();
+  createCanvas();
 }
 
 let interval = setInterval(update, 1000 / 60);
 // update();
 
 document.addEventListener("visibilitychange", () => {
-	keydown = {};
-	// clearInterval(sliderMoveInterval);
-	mouseDownLeft = false;
-	mouseDownRight = false;
+  keydown = {};
+  // clearInterval(sliderMoveInterval);
+  mouseDownLeft = false;
+  mouseDownRight = false;
 });
 
 function ballStop() {
-	fullControl = true;
-	stoppedTime = globalTime;
-	launchVel = 7;
-	launchAng = Math.PI / 2;
-	// launchAng = 0;
+  fullControl = true;
+  stoppedTime = globalTime;
+  launchVel = 7;
+  launchAng = Math.PI / 2;
+  // launchAng = 0;
 }
 
 function ballStart() {
-	fullControl = false;
+  fullControl = false;
 }

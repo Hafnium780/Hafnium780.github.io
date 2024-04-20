@@ -1,0 +1,107 @@
+#main-div {
+  margin: 0px;
+  padding: 0px;
+  font-size: large;
+  display: flex;
+}
+
+#tutees-div,
+#tutors-div,
+#pairings-div {
+  flex: 1 0 0;
+}
+
+#tutees-div,
+#tutors-div {
+  border-right: 1px solid black;
+}
+
+#tutees,
+#tutors,
+#pairings {
+  font-size: small;
+}
+
+.tutee-div,
+.tutor-div {
+  display: flex;
+  border-bottom: 1px solid black;
+  padding: 2px;
+  background-color: white;
+}
+
+.tutee-div-name,
+.tutor-div-name {
+  flex: 0 0 25%;
+}
+.tutee-div-subjects {
+  flex: 0 0 20%;
+}
+.tutor-div-subjects {
+  flex: 0 0 30%;
+}
+
+.tutee-div-times,
+.tutor-div-times,
+.tutee-div-count {
+  flex: 0 0 30%;
+}
+
+div.tutee-done {
+  background-color: #aaffaa;
+}
+
+.highlight {
+  background-color: #cccccc;
+}
+.select {
+  filter: brightness(70%);
+}
+
+.pairing-div {
+  display: grid;
+  grid-template-columns: 30% 30% 30%;
+  border-bottom: 1px solid black;
+}
+
+.pairing-div-tutee {
+  grid-column: 1;
+  grid-row: 1;
+  padding: 2px;
+}
+
+.pairing-div-tutor {
+  grid-column: 2;
+  grid-row: 1;
+  padding: 2px;
+}
+
+.pairing-div-delete {
+  grid-column: 3;
+  grid-row: 1;
+  padding: 2px;
+
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.pairing-div-subjects {
+  grid-column: 1;
+  grid-row: 2;
+  padding: 2px;
+}
+
+.pairing-div-subjects-row {
+  padding: 2px;
+}
+
+.pairing-div-times {
+  grid-column: 2;
+  grid-row: 2;
+  padding: 2px;
+}
+
+.pairing-div-times-row {
+  padding: 2px;
+}

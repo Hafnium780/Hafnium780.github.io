@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<head>
+  <script src="csv.js" defer></script>
+  <script src="helper.js" defer></script>
+  <script src="tuts.js" defer></script>
+  <script src="pairings.js" defer></script>
+  <script src="start.js" defer></script>
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+  <a style="color: blue" href="/assignments">Go to summary</a>
+  <div>
+    <label for="tutee-file">Tutee .csv file: </label>
+    <input type="file" id="tutee-file" name="tutee-file" accept=".csv" />
+    <br />
+    <label for="tutor-file">Tutor .csv file: </label>
+    <input type="file" id="tutor-file" name="tutor-file" accept=".csv" />
+    <button id="fake-data" style="position: absolute; right: 0px; top: 0px">
+      Load fake data
+    </button>
+  </div>
+  <div id="main-div">
+    <div id="tutees-div">
+      <b>Tutees</b>
+      <div id="tutees"></div>
+    </div>
+    <div id="tutors-div">
+      <b>Tutors</b>
+      <div id="tutors"></div>
+    </div>
+    <div id="pairings-div">
+      <b>Pairings</b><br />
+      <div id="pairings"></div>
+    </div>
+  </div>
+</body>

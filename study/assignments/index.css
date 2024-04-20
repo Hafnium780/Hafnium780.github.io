@@ -1,0 +1,54 @@
+#main-div {
+  margin: 0px;
+  padding: 0px;
+  font-size: large;
+  display: flex;
+}
+
+#tutees-div,
+#tutors-div {
+  flex: 1 0 0;
+}
+
+#tutees-div {
+  border-right: 2px solid black;
+}
+
+#tutees,
+#tutors {
+  font-size: small;
+}
+
+.tutee-div,
+.tutor-div {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 2px solid black;
+  padding: 2px;
+  background-color: white;
+  grid-template-columns: 50%, 50%;
+}
+
+.tutee-div-name,
+.tutor-div-name {
+  font-size: 15px;
+}
+
+.tutee-pairing-div,
+.tutor-pairing-div {
+  display: flex;
+}
+
+.tutee-subjects-div,
+.tutee-times-div,
+.tutee-tutor-div,
+.tutor-subjects-div,
+.tutor-times-div,
+.tutor-tutee-div {
+  flex: 1 0 0;
+}
+
+.tutee-pairing-div:nth-child(even),
+.tutor-pairing-div:nth-child(even) {
+  background-color: #dddddd;
+}
