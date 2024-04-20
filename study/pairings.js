@@ -71,8 +71,10 @@ const displayPairings = () => {
         refresh();
       });
 
-      if (subjects.length == 1 && p.matches[s] == undefined)
+      if (subjects.length == 1 && p.matches[s] == undefined) {
         newSubjectsDivCheck.click();
+        return;
+      }
     }
 
     const times = getMutualTimesPairing(p);
@@ -96,8 +98,10 @@ const displayPairings = () => {
         refresh();
       });
 
-      if (times.length == 1 && p.matches[t] == undefined)
+      if (times.length == 1 && p.matches[t] == undefined) {
         newTimesDivCheck.click();
+        return;
+      }
     }
 
     newPairingDivDelete.addEventListener("click", () => {
