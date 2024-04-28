@@ -4,6 +4,7 @@
   <script src="helper.js" defer></script>
   <script src="tuts.js" defer></script>
   <script src="pairings.js" defer></script>
+  <script src="autopair.js" defer></script>
   <script src="start.js" defer></script>
   <link rel="stylesheet" href="index.css" />
 </head>
@@ -15,6 +16,9 @@
     <br />
     <label for="tutor-file">Tutor .csv file: </label>
     <input type="file" id="tutor-file" name="tutor-file" accept=".csv" />
+    <button id="pair" style="position: absolute; left: 66.66%; top: 0px">
+      Pair (Remaining) Tutees
+    </button>
     <button id="fake-data" style="position: absolute; right: 0px; top: 0px">
       Load fake data
     </button>

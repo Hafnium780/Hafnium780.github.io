@@ -1,4 +1,5 @@
 const pairingsDiv = document.getElementById("pairings");
+const pairButton = document.getElementById("pair");
 
 let pairings = [];
 
@@ -11,6 +12,41 @@ const clearPairingsDiv = () => {
 const addPairing = (tuteeID, tutorID) => {
   pairings.push(new Pairing(tuteeID, tutorID));
   refresh();
+};
+
+// Adds a pairing and subjects & times, does not refresh
+const addPairingSubjectTime = (tuteeID, tutorID, subjects, times) => {
+  const p = new Pairing(tuteeID, tutorID);
+  for (s of subjects) p.matches[s] = true;
+  for (t of times) p.matches[t] = true;
+  pairings.push(p);
+};
+
+const getPairingsByTutee = (tuteeID) => {
+  const ret = [];
+  for (const p of pairings) {
+    if (p.tuteeID == tuteeID) ret.push(p);
+  }
+  return ret;
+};
+
+const getPairingsByTutor = (tutorID) => {
+  const ret = [];
+  for (const p of pairings) {
+    if (p.tutorID == tutorID) ret.push(p);
+  }
+  return ret;
+};
+
+// Get the number of times for which a tutor has been matched
+const getTimesMatched = (tutorID) => {
+  let cnt = 0;
+  for (const p of getPairingsByTutor(tutorID)) {
+    for (const k in p.matches) {
+      if (isMatchTime(k) && p.matches[k]) cnt++;
+    }
+  }
+  return cnt;
 };
 
 // Displays the pairings in the pairings array
@@ -99,8 +135,8 @@ const displayPairings = () => {
       });
 
       if (times.length == 1 && p.matches[t] == undefined) {
-        newTimesDivCheck.click();
-        return;
+        // newTimesDivCheck.click();
+        // return;
       }
     }
 
@@ -117,3 +153,7 @@ const displayPairings = () => {
     }
   }
 };
+
+pairButton.addEventListener("click", () => {
+  autoPair();
+});

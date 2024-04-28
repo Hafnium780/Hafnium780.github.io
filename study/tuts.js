@@ -21,57 +21,6 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-// Get a tutor by their student ID
-const getTutorByID = (id) => {
-  for (const t of tutors) if (t.id === id) return t;
-  return null;
-};
-
-// Get a tutee by their student ID
-const getTuteeByID = (id) => {
-  for (const t of tutees) if (t.id === id) return t;
-  return null;
-};
-
-// Check if two tutee/tutor times coincide(ish)
-const isValidTime = (tuteeTime, tutorTime) => {
-  if (tuteeTime.day != tutorTime.day) return false;
-  // if starting and ending times match by ~ 10 min, consider it valid
-  if (
-    Math.abs(tuteeTime.time.start - tutorTime.time.start) <= 10 &&
-    Math.abs(tuteeTime.time.end - tutorTime.time.end) <= 10
-  )
-    return true;
-  return false;
-};
-
-// Get all tutors that tutor an unmatched subject and have a coinciding time with a tutee
-const getValidTutors = (id) => {
-  const tutee = getTuteeByID(id);
-  const subjectRet = new Set();
-  for (const s of getUnmatchedSubjects(tutee)) {
-    for (const t of tutors) {
-      for (const ts of t.subjects) {
-        if (ts == s) {
-          subjectRet.add(t.id);
-          break;
-        }
-      }
-    }
-  }
-
-  const timeRet = new Set();
-  for (const ti of getUnmatchedTimes(tutee)) {
-    for (const t of tutors) {
-      for (const tti of getTimesString(t)) {
-        // if (isValidTime(ti, tti))
-        if (ti == tti) timeRet.add(t.id);
-      }
-    }
-  }
-  return Array.from(subjectRet.intersection(timeRet));
-};
-
 // Load previous data from localStorage
 const loadData = () => {
   tutees = JSON.parse(localStorage.getItem("tutees") || "[]");
@@ -222,7 +171,14 @@ const processTutees = (input) => {
       row[6].trim(),
       row[7].trim(),
       row[8].trim().split(", ").sort(),
-      times.sort()
+      times.sort(),
+      [
+        row[9].trim(),
+        row[10].trim(),
+        row[11].trim(),
+        row[12].trim(),
+        row[13].trim(),
+      ]
     );
     // console.log(t);
     tutees.push(t);
@@ -343,7 +299,8 @@ const displayTutees = () => {
     newTuteeDivTimes.classList.add("tutee-div-times");
     newTuteeDivCount.classList.add("tutee-div-count");
 
-    if (validTutorCount == 0) newTuteeDiv.classList.add("tutee-done");
+    if (getUnmatchedSubjects(t).length == 0)
+      newTuteeDiv.classList.add("tutee-done");
 
     t.div = newTuteeDiv;
 

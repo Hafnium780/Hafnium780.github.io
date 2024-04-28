@@ -1,4 +1,4 @@
-subjectsList = [
+const subjectsList = [
   "Algebra 1",
   "Geometry",
   "Algebra 2",
@@ -18,7 +18,7 @@ subjectsList = [
   "French",
 ];
 
-timesList = [
+const timesList = [
   "Monday 6th period, 2:15 - 3:00",
   "Monday 7th period, 3:05 - 3:50",
   "Monday after school, 3:55 - 4:30",
@@ -33,6 +33,8 @@ timesList = [
   "Thursday 7th period B, 3:05 - 3:50",
   "Thursday after school, 3:50 - 4:30",
 ];
+
+const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
 const shuffle = (a) => {
   for (let i = a.length - 1; i > 0; i--) {
@@ -81,6 +83,82 @@ const generateRandomRows = () => {
     }
   }
   return ret;
+};
+
+// Get a tutor by their student ID
+const getTutorByID = (id) => {
+  for (const t of tutors) if (t.id === id) return t;
+  return null;
+};
+
+// Get a tutee by their student ID
+const getTuteeByID = (id) => {
+  for (const t of tutees) if (t.id === id) return t;
+  return null;
+};
+
+// Check if two tutee/tutor times coincide(ish)
+const isValidTime = (tuteeTime, tutorTime) => {
+  if (tuteeTime.day != tutorTime.day) return false;
+  // if starting and ending times match by ~ 10 min, consider it valid
+  if (
+    Math.abs(tuteeTime.time.start - tutorTime.time.start) <= 10 &&
+    Math.abs(tuteeTime.time.end - tutorTime.time.end) <= 10
+  )
+    return true;
+  return false;
+};
+
+// Get all tutors that tutor an unmatched subject and have a coinciding time with a tutee
+const getValidTutors = (id) => {
+  const tutee = getTuteeByID(id);
+  const subjectRet = new Set();
+  for (const s of getUnmatchedSubjects(tutee)) {
+    for (const t of tutors) {
+      for (const ts of t.subjects) {
+        if (ts == s) {
+          subjectRet.add(t.id);
+          break;
+        }
+      }
+    }
+  }
+
+  const timeRet = new Set();
+  for (const ti of getUnmatchedTimes(tutee)) {
+    for (const t of tutors) {
+      for (const tti of getTimesString(t)) {
+        // if (isValidTime(ti, tti))
+        if (ti == tti) timeRet.add(t.id);
+      }
+    }
+  }
+  return Array.from(subjectRet.intersection(timeRet));
+};
+
+// Get all tutors that tutor an given subject and have a coinciding time with a tutee
+const getValidTutorsForSubject = (id, subject) => {
+  const tutee = getTuteeByID(id);
+  const subjectRet = new Set();
+  for (const t of tutors) {
+    for (const ts of t.subjects) {
+      if (ts == subject) {
+        subjectRet.add(t.id);
+        break;
+      }
+    }
+  }
+
+  const timeRet = new Set();
+  for (const ti of getUnmatchedTimes(tutee)) {
+    for (const t of tutors) {
+      for (const tti of getTimesString(t)) {
+        // if (isValidTime(ti, tti))
+        if (ti == tti) timeRet.add(t.id);
+      }
+    }
+  }
+  return Array.from(subjectRet.intersection(timeRet));
 };
 
 const getTimesString = (tut) => {
@@ -151,7 +229,8 @@ class Tutee {
     parentEmail,
     grade,
     subjects,
-    times
+    times,
+    grades
   ) {
     this.id = id;
     this.first = first;
@@ -164,6 +243,7 @@ class Tutee {
     this.subjects = subjects;
     this.times = times;
     this.div = null;
+    this.grades = grades;
   }
 }
 
@@ -290,6 +370,11 @@ const afterSchoolEnd = {
   Wednesday: 440,
   Thursday: 440,
   Friday: 440,
+};
+
+// Is the given match a time? if not, it is a subject
+const isMatchTime = (m) => {
+  return days.includes(m.split(" ")[0]);
 };
 
 document.getElementById("fake-data").addEventListener("click", async () => {
