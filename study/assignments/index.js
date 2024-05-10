@@ -9,6 +9,19 @@ const tutorInput = document.getElementById("tutor-file");
 const tuteeDiv = document.getElementById("tutees");
 const tutorDiv = document.getElementById("tutors");
 
+document.getElementById("export").addEventListener("click", () => {
+  exportTuteeDataToSpreadsheet("\t");
+  exportTutorDataToSpreadsheet("\t");
+});
+
+document.getElementById("copy-tutor").addEventListener("click", () => {
+  navigator.clipboard.writeText(exportTutorDataToSpreadsheet("\t"));
+});
+
+document.getElementById("copy-tutee").addEventListener("click", () => {
+  navigator.clipboard.writeText(exportTuteeDataToSpreadsheet("\t"));
+});
+
 let tutors = [],
   tutees = [],
   pairings = [];
@@ -22,6 +35,11 @@ const getTutorByID = (id) => {
 const getTuteeByID = (id) => {
   for (const t of tutees) if (t.id === id) return t;
   return null;
+};
+
+// Is the given match a time? if not, it is a subject
+const isMatchTime = (m) => {
+  return days.includes(m.split(" ")[0]);
 };
 
 // Load previous data from localStorage
@@ -153,6 +171,98 @@ const displayTutors = () => {
       }
     }
   }
+};
+
+const exportTuteeDataToSpreadsheet = (delimiter) => {
+  let output =
+    "Tutee,Tutor,Subjects,Times,Tutor,Subjects,Times,Tutor,Subjects,Times,Tutor,Subjects,Times,Tutor,Subjects,Times\n".replaceAll(
+      ",",
+      delimiter
+    );
+  for (const t of tutees) {
+    output += t.first + " " + t.last + delimiter;
+    for (const p of pairings) {
+      if (p.tuteeID == t.id) {
+        let subjectString = "";
+        let subjectTime = "";
+        let firstSubject = true,
+          firstTime = true;
+        for (const m in p.matches) {
+          if (p.matches[m]) {
+            if (isMatchTime(m)) {
+              subjectTime += (firstTime ? "" : ",") + m;
+              firstTime = false;
+            } else {
+              subjectString += (firstSubject ? "" : ",") + m;
+              firstSubject = false;
+            }
+          }
+        }
+        output +=
+          getTutorByID(p.tutorID).first +
+          " " +
+          getTutorByID(p.tutorID).last +
+          delimiter;
+        output +=
+          '"' +
+          subjectString +
+          '"' +
+          delimiter +
+          '"' +
+          subjectTime +
+          '"' +
+          delimiter;
+      }
+    }
+    output += "\n";
+  }
+  return output;
+};
+
+const exportTutorDataToSpreadsheet = (delimiter) => {
+  let output =
+    "Tutor,Tutee,Subjects,Times,Tutee,Subjects,Times,Tutee,Subjects,Times,Tutee,Subjects,Times\n".replaceAll(
+      ",",
+      delimiter
+    );
+  for (const t of tutors) {
+    output += t.first + " " + t.last + delimiter;
+    for (const p of pairings) {
+      if (p.tutorID == t.id) {
+        let subjectString = "";
+        let subjectTime = "";
+        let firstSubject = true,
+          firstTime = true;
+        for (const m in p.matches) {
+          if (p.matches[m]) {
+            if (isMatchTime(m)) {
+              subjectTime += (firstTime ? "" : ",") + m;
+              firstTime = false;
+            } else {
+              subjectString += (firstSubject ? "" : ",") + m;
+              firstSubject = false;
+            }
+          }
+        }
+        output +=
+          getTuteeByID(p.tuteeID).first +
+          " " +
+          getTuteeByID(p.tuteeID).last +
+          delimiter;
+        output +=
+          '"' +
+          subjectString +
+          '"' +
+          delimiter +
+          '"' +
+          subjectTime +
+          '"' +
+          delimiter;
+      }
+    }
+    output += "\n";
+  }
+  return output;
 };
 
 loadData();
