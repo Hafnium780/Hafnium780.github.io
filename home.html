@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>hi</title>
+    <link rel="stylesheet" href="home.css" />
+  </head>
+  <body>
+    <script defer>
+      fetch("header.html")
+        .then((v) => v.text())
+        .then((v) => {
+          document
+            .getElementById("header")
+            .append(document.createRange().createContextualFragment(v));
+        });
+    </script>
+    <div id="header"></div>
+
+    <!-- <img id="hf780" src="hf780.svg" /> -->
+
+    <!-- <span id="intro">I'm</span>
+    <span id="intro2">Allen Li</span>
+    <span id="intro3">aka</span> -->
+    <div id="name">
+      <div id="hafnium">
+        <div id="element">Hafnium</div>
+        <div id="atom">0</div>
+      </div>
+      <div id="num">
+        <div id="number">780</div>
+        <div id="binary">000000 000000</div>
+      </div>
+    </div>
+
+    <div id="pulley"></div>
+    <div id="string1"></div>
+    <div id="string2"></div>
+    <svg preserveAspectRatio="none" viewBox="0 -2 102 14" id="spring">
+      <path
+        stroke-width="2"
+        stroke="black"
+        fill="none"
+        d="M0,5 L7.5,5 L10,10 L15,0 L20,10 L25,0 L30,10 L35,0 L40,10 L45,0 L50,10 L55,0 L60,10 L65,0 L70,10 L75,0 L80,10 L85,0 L90,10 L92.5,5 L100,5"
+      ></path>
+      <rect x="98" y="3" width="4" height="4" fill="black"></rect>
+    </svg>
+
+    <script defer>
+      const sleep = (t) => {
+        return new Promise((res) => {
+          setTimeout(res, t);
+        });
+      };
+
+      (async () => {
+        const cnt = 50;
+        let vx = [],
+          vy = [],
+          x = [],
+          y = [],
+          ball = [];
+        for (let i = 0; i < cnt; i++) {
+          vx[i] = Math.random() * 6 - 3;
+          vy[i] = Math.random() * 3;
+          x[i] = Math.random() * window.innerWidth;
+          y[i] = 10 - Math.sqrt(vy[i]);
+          ball[i] = document.createElement("div");
+          ball[i].id = "ball";
+          document.body.appendChild(ball[i]);
+        }
+        let g = 0.03;
+        while (true) {
+          for (let i = 0; i < cnt; i++) {
+            // vy[i] -= g;
+            x[i] += vx[i];
+            y[i] += vy[i];
+            if (y[i] < 0) {
+              vy[i] = -vy[i];
+              y[i] = 0;
+            }
+            if (x[i] < 0) {
+              vx[i] = -vx[i];
+              x[i] = 0;
+            }
+            if (x[i] > window.innerWidth - ball[i].offsetWidth) {
+              vx[i] = -vx[i];
+              x[i] = window.innerWidth - ball[i].offsetWidth;
+            }
+            if (y[i] > window.innerHeight - ball[i].offsetWidth - 70) {
+              vy[i] = -vy[i];
+              y[i] = window.innerHeight - ball[i].offsetWidth - 70;
+            }
+            ball[i].style.left = x[i] + "px";
+            ball[i].style.top = y[i] + "px";
+          }
+          await sleep(10);
+        }
+      })();
+
+      (async () => {
+        await sleep(10);
+        const binary = document.getElementById("binary");
+        const number = document.getElementById("number");
+        const num = document.getElementById("num");
+        num.style.left = num.offsetLeft + "px";
+        num.style.top = num.offsetTop + "px";
+        num.style.position = "absolute";
+
+        let x = 0;
+        while (x < 780) {
+          x += 3;
+          binary.innerText =
+            x.toString(2).padStart(12, "0").substring(0, 6) +
+            " " +
+            x.toString(2).padStart(12, "0").substring(6);
+          number.innerText = x.toString().padStart(3, "0");
+          await sleep(1);
+        }
+      })();
+
+      (async () => {
+        await sleep(10);
+        const element = document.getElementById("element");
+        const atom = document.getElementById("atom");
+        atom.style.width = atom.offsetWidth + "px";
+        const elements = [
+          "H",
+          "He",
+          "Li",
+          "Be",
+          "B",
+          "C",
+          "N",
+          "O",
+          "F",
+          "Ne",
+          "Na",
+          "Mg",
+          "Al",
+          "Si",
+          "P",
+          "S",
+          "Cl",
+          "Ar",
+          "K",
+          "Ca",
+          "Sc",
+          "Ti",
+          "V",
+          "Cr",
+          "Mn",
+          "Fe",
+          "Co",
+          "Ni",
+          "Cu",
+          "Zn",
+          "Ga",
+          "Ge",
+          "As",
+          "Se",
+          "Br",
+          "Kr",
+          "Rb",
+          "Sr",
+          "Y",
+          "Zr",
+          "Nb",
+          "Mo",
+          "Tc",
+          "Ru",
+          "Rh",
+          "Pd",
+          "Ag",
+          "Cd",
+          "In",
+          "Sn",
+          "Sb",
+          "Te",
+          "I",
+          "Xe",
+          "Cs",
+          "Ba",
+          "La",
+          "Ce",
+          "Pr",
+          "Nd",
+          "Pm",
+          "Sm",
+          "Eu",
+          "Gd",
+          "Tb",
+          "Dy",
+          "Ho",
+          "Er",
+          "Tm",
+          "Yb",
+          "Lu",
+          "Hf",
+          "Haf",
+          "Hafn",
+          "Hafni",
+          "Hafniu",
+          "Hafnium",
+        ];
+        let x = 0;
+        while (x < 72) {
+          element.innerText = elements[x];
+          atom.innerText = x + 1;
+          x += 1;
+          await sleep(10);
+        }
+        while (x < 77) {
+          element.innerText = elements[x];
+          x += 1;
+          await sleep(200);
+        }
+      })();
+    </script>
+  </body>
+</html>

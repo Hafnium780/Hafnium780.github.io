@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>hi</title>
+    <meta
+      name="google-site-verification"
+      content="nwiDYewgmTc1xCpZ5-JJ0Zt6LDAwp5bOurIgnaaJAAM"
+    />
+    <style>
+      * {
+        margin: 0px;
+        padding: 0px;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-user-drag: none;
+      }
+
+      #main {
+        position: fixed;
+        height: 200vh;
+        width: 200vw;
+        left: 0px;
+        top: 0px;
+        translate: 0px 0px;
+        background: linear-gradient(to top, rgb(200, 200, 240), white);
+      }
+
+      .node {
+        background-color: #dd5555;
+        color: black;
+        text-decoration: none;
+        border: 2px solid black;
+        position: absolute;
+        border-radius: 50%;
+        z-index: 10;
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background-size: cover;
+        filter: brightness(130%);
+        transition: background-color ease 100ms, filter ease 300ms,
+          scale ease 100ms, box-shadow ease 100ms;
+      }
+
+      a.node {
+        background-color: #aaaaaa;
+        color: white;
+        scale: 110%;
+      }
+
+      a.filled.node {
+        background-color: #aa3333;
+        scale: 150%;
+      }
+
+      .filled.node {
+        background-color: #dd5555;
+        scale: 120%;
+        box-shadow: 0px 0px 0px 2px #f7e8e8;
+        z-index: 100;
+      }
+
+      .node:not(.filled) {
+        filter: brightness(50%);
+
+        /* opacity: 0.5; */
+      }
+
+      .edge {
+        background-color: #361f27;
+        border: 2px solid #0d090a;
+        position: absolute;
+        z-index: 0;
+        overflow: hidden;
+        transition: scale ease 100ms, box-shadow ease 100ms;
+      }
+
+      .filled.edge {
+        background-color: #dd5555;
+        scale: 105%;
+        box-shadow: 0px 0px 0px 2px #f7e8e8;
+        z-index: 90;
+      }
+
+      .anim {
+        background-color: red;
+        translate: -100% 0px;
+      }
+
+      .description {
+        font-size: 15px;
+        position: absolute;
+        opacity: 0;
+        transition: opacity ease 200ms;
+        color: white;
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+        z-index: 200;
+        max-width: 130px;
+        background-color: #444444;
+        padding: 5px;
+        border-radius: 4px;
+        border: 2px solid white;
+      }
+
+      .description.show {
+        opacity: 1;
+      }
+
+      .description.no-description {
+        display: none;
+      }
+
+      #back {
+        position: absolute;
+        /* background-color: #862516; */
+        background-image: linear-gradient(#862516, black);
+        width: 100%;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        height: 50%;
+        z-index: 300;
+        border-top: 5px solid black;
+      }
+
+      .stem {
+        height: 10px !important;
+      }
+
+      #bg {
+        position: absolute;
+        width: max(400vh, 400vw);
+        height: max(400vh, 400vw);
+        pointer-events: none;
+      }
+
+      /* @keyframes grow {
+        0% {
+          scale: 0;
+        }
+        100% {
+          scale: 40;
+        }
+      }
+
+      #cover {
+        position: absolute;
+        scale: 0;
+        animation: grow ease-in 1500ms forwards;
+        height: 2000vh;
+        width: 2000vw;
+        z-index: 200;
+        pointer-events: none;
+      } */
+    </style>
+  </head>
+
+  <body>
+    <script defer>
+      fetch("header.html")
+        .then((v) => v.text())
+        .then((v) => {
+          document
+            .getElementById("header")
+            .append(document.createRange().createContextualFragment(v));
+        });
+    </script>
+    <div id="header"></div>
+    <!--
+      <layer of tree>
+        name|description|image_url
+        <layer of tree>
+        ...
+      </layer of tree>
+    -->
+    <div id="main">
+      <!-- <svg id="cover">
+        <defs>
+          <mask id="mask" x="0" y="0">
+            <rect x="0" y="0" width="100%" height="100%" fill="#fff" />
+            <circle cx="50%" cy="50%" r="100" />
+          </mask>
+        </defs>
+        <rect
+          fill="black"
+          x="0"
+          y="0"
+          width="100%"
+          height="100%"
+          mask="url(#mask)"
+          fill-opacity="1"
+        />
+      </svg> -->
+    </div>
+    <div id="tree" style="display: none">
+      Projects|
+      <div>
+        Mini Web Demos|
+        <div>
+          p5.js|
+          <a href="car"> car|Machine learning cars|car.png </a>
+          <a href="golf"> golf|2D golf heightmap simulator|golf.png </a>
+          <a href="circle"> circle|Cardiod-like shape drawer|circle.png </a>
+          <a href="verlet">
+            verlet|Cloth and string with verlet integration|verlet.png
+          </a>
+          <a href="gravity"> gravity|Simulation of gravity|gravity.png </a>
+          <a href="minesweeper3d">
+            3d minesweeper|Minesweeper but 3D|3d-minesweeper.png
+          </a>
+          <a href="raycasting">
+            raycasting|Half working raycaster|raycasting.png
+          </a>
+          <a href="perlin"> perlin|Demos of perlin noise|perlin.png </a>
+        </div>
+        <div>
+          Vanilla JS|
+          <a href="study">
+            study|Study Buddies scheduling program for MV|study.png
+          </a>
+          <a href="gravity2">
+            gravity 2.0|Simulation of gravity but better|gravity2.png
+          </a>
+          <a href="gravity-golf">
+            gravity golf|Golf on planets|gravity-golf.png
+          </a>
+          <a href="code"> code|Scioly Codebusters practice|code.png </a>
+          <a href="RK4/canvas"> RK4|RK4 Lagrangian Integrator|rk4.png </a>
+        </div>
+      </div>
+      <div>
+        Large Scale|
+        <div>
+          Python|
+          <a
+            href="https://github.com/Hafnium780/Hafnium780.github.io/tree/main/game-pigeon"
+          >
+            game pigeon|Various game pigeon bots|game-pigeon.png
+          </a>
+        </div>
+        <div>
+          Node.js|
+          <a href="https://multiplayer-platformer.glitch.me/">
+            multiplayer platformer|Simple multiplayer
+            platformer|multiplayer-platformer.png
+          </a>
+        </div>
+        <div>
+          React.js|
+          <a href="graph-algorithms">
+            graph algorithms|Visualize algorithms on graphs|graph-algorithms.png
+          </a>
+        </div>
+        <div>
+          Google Extensions|
+          <a
+            href="https://github.com/Hafnium780/Hafnium780.github.io/tree/main/bomb-party"
+          >
+            bomb party|Bomb party bot|bomb-party.png
+          </a>
+        </div>
+      </div>
+    </div>
+    <script defer>
+      // Defined constants
+      const angleFromBottom = Math.PI / 24; // Angle between either side of tree and bottom
+      const sideMargins = 100;
+      const nodeRadius = 45;
+      const edgeWidth = 2;
+      const animationSpeed = 100;
+
+      const randomize = false; // randomize tree layout
+
+      const main = document.getElementById("main");
+
+      // Calculated constants
+      const leftTreeBound = Math.PI - angleFromBottom; // Angle between left side of tree and bottom
+      // const leftTreeBound = Math.PI * 2;
+      const rightTreeBound = angleFromBottom; // Angle between right side of tree and bottom
+      // const rightTreeBound = 0;
+      const treeAngle = Math.PI - 2 * angleFromBottom; // Angle available to use for tree
+      // const treeAngle = Math.PI * 2;
+      const treeRadius =
+        // Math.min(main.offsetWidth / 2, main.offsetHeight) -
+        Math.min(window.innerWidth, window.innerHeight) -
+        sideMargins * 2 -
+        nodeRadius / 2; // Radius of tree
+
+      const nodesToEdge = new Map();
+      const allNodes = [];
+
+      const crawl = (node, depth = 0) => {
+        // Convert html nodes to tree nodes
+        const text = node.firstChild.nodeValue.trim().split("|");
+        const tree = {
+          name: text[0], // name of node
+          description: text[1], // description of node
+          image: text[2],
+          depth: depth, // depth of node from root
+          maxDepth: depth, // maximum depth of subtree
+          size: 1, // size of subtree
+          children: [], // subtree
+          leafCount: 0, // number of leaf nodes in subtree
+          parent: null, // parent
+          isLink: node.nodeName === "A", // is it a link
+          href: node.href, // link
+        };
+        allNodes.push(tree);
+        for (const child of node.children) {
+          const childTree = crawl(child, depth + 1);
+          childTree.parent = tree;
+          tree.children.push(childTree);
+          tree.size += childTree.size;
+          tree.leafCount += childTree.leafCount;
+          tree.maxDepth = Math.max(tree.maxDepth, childTree.maxDepth);
+        }
+
+        if (randomize) {
+          let current = tree.children.length,
+            random;
+
+          while (current > 0) {
+            random = Math.floor(Math.random() * current);
+            current--;
+
+            [tree.children[current], tree.children[random]] = [
+              tree.children[random],
+              tree.children[current],
+            ];
+          }
+        }
+
+        if (!node.children.length) tree.leafCount = 1;
+
+        return tree;
+      };
+
+      const root = document.getElementById("tree");
+      const tree = crawl(root);
+      root.remove();
+
+      const nodeAngle = treeAngle / tree.leafCount; // angle each leaf gets
+
+      // Each node takes up (radius left over/(depth of subtree)) space radially, and (nodeAngle*leafCount) space tangentially
+      // Each path
+      //   Goes through x nodes
+      //   -> radius is not treeRadius/x, but
+      //         x-- --x-- --x--
+      //          r/2  r     r
+      //       treeRadius/(x-1/2)
+
+      const radialSpace = (node, radiusLeft) => {
+        return radiusLeft / (node.maxDepth - node.depth + 0.5);
+      };
+
+      const angleSpace = (node) => {
+        return nodeAngle * node.leafCount;
+      };
+
+      const polarToScreen = (r, a) => {
+        // Polar coordinates to screen (board) coordinates
+        // Top left = 0, 0
+        // pos y goes down
+        // r = 0 at bottom center of tree -> (main.offsetWidth / 2, main.offsetHeight / 2)
+        // a = 0 at right side of tree
+        return {
+          x: Math.cos(a) * r + main.offsetWidth / 2,
+          y: main.offsetHeight / 2 - Math.sin(a) * r,
+        };
+      };
+
+      const moveDiv = (div, x, y, width, height) => {
+        // Place center of div at x, y
+        div.style.left = x - width / 2 + "px";
+        div.style.top = y - height / 2 + "px";
+        // div.style.left = Math.floor(x) + "px";
+        // div.style.top = Math.floor(y) + "px";
+      };
+
+      const drawEdge = (x1, y1, x2, y2) => {
+        // Draw edge from x1, y1 to x2, y2
+        const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        const edge = document.createElement("div");
+        edge.classList.add("edge");
+        edge.style.height = edgeWidth + "px";
+        edge.style.width = length + "px";
+        edge.style.rotate = Math.atan2(y2 - y1, x2 - x1) + "rad";
+        moveDiv(edge, (x1 + x2) / 2, (y1 + y2) / 2, length, edgeWidth);
+        const anim = document.createElement("div");
+        anim.classList.add("anim");
+        anim.style.height = edgeWidth + "px";
+        anim.style.width = length + "px";
+        main.prepend(edge);
+        edge.appendChild(anim);
+        return { edge: edge, anim: anim };
+      };
+
+      let rootX, rootY;
+
+      const drawTree = (node, leftBound, rightBound, radiusLeft) => {
+        // Draw subtree of node with given left/right bounds and radius left
+
+        nodesToEdge.set(node, new Map());
+
+        // Space available to this node
+        const radial = radialSpace(node, radiusLeft);
+        const angle = angleSpace(node);
+
+        let curLeftBound = leftBound;
+
+        // Create divs
+        const nodeDiv = document.createElement(node.isLink ? "a" : "div");
+        const descDiv = document.createElement("div");
+        if (node.description) descDiv.innerText = node.description;
+        else descDiv.classList.add("no-description");
+        descDiv.classList.add("description");
+        if (node.isLink) nodeDiv.href = node.href;
+        nodeDiv.classList.add("node");
+
+        // Radius of node increases with distance from the root
+        let scaledRadius =
+          nodeRadius * 2 - nodeRadius * (radiusLeft / treeRadius);
+        nodeDiv.style.height = nodeDiv.style.width = scaledRadius + "px";
+        nodeDiv.innerText = node.name;
+        nodeDiv.style.fontSize = 14 - 5 * (radiusLeft / treeRadius) + "px";
+        // Put image in background of node
+        if (node.image)
+          nodeDiv.style.backgroundImage =
+            "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(images/" +
+            node.image +
+            ")";
+
+        // Position divs
+        const pos = polarToScreen(
+          radial / 2 + treeRadius - radiusLeft,
+          (leftBound - rightBound) / 2 + rightBound
+        );
+        // console.log((leftBound - rightBound) / 2 + rightBound, node.name);
+        main.prepend(nodeDiv);
+        main.prepend(descDiv);
+        moveDiv(nodeDiv, pos.x, pos.y, scaledRadius, scaledRadius);
+        // const diag =
+        // 	Math.sqrt(descDiv.offsetWidth ** 2 + descDiv.offsetHeight ** 2) *
+        // 	0.75;
+        const averageAngle = -(leftBound + rightBound) / 2;
+        moveDiv(
+          descDiv,
+          pos.x + 110 * Math.cos(averageAngle),
+          pos.y + 110 * Math.sin(averageAngle),
+          descDiv.offsetWidth,
+          descDiv.offsetHeight
+        );
+
+        if (rootX == undefined) {
+          // is root node
+          nodeDiv.classList.add("root");
+          rootX = pos.x;
+          rootY = pos.y;
+        }
+
+        node.div = nodeDiv;
+        node.desc = descDiv;
+        node.percentRadius = radiusLeft / treeRadius;
+        node.leftBound = leftBound;
+        node.rightBound = rightBound;
+        node.innerRadius = treeRadius - radiusLeft;
+        node.outerRadius = treeRadius - radiusLeft + radial;
+        for (const child of node.children) {
+          const rightBound = curLeftBound - angleSpace(child);
+          const childPos = drawTree(
+            child,
+            curLeftBound,
+            rightBound,
+            radiusLeft - radial
+          );
+          const edge = drawEdge(pos.x, pos.y, childPos.x, childPos.y);
+          nodesToEdge.get(node).set(child, edge);
+          nodesToEdge.get(child).set(node, edge);
+          curLeftBound = rightBound;
+        }
+
+        return pos;
+      };
+
+      drawTree(tree, leftTreeBound, rightTreeBound, treeRadius);
+
+      //   const stem = document.createElement("div");
+      //   stem.classList.add("edge", "stem");
+      const stem = drawEdge(rootX, rootY, rootX, rootY + 300);
+      stem.edge.classList.add("stem", "filled");
+
+      const back = document.createElement("div");
+      back.id = "back";
+      main.prepend(back);
+      moveDiv(back, back.offsetWidth / 2, rootY + 100, back.offsetWidth, 0);
+
+      const bg = document.createElement("div");
+      bg.id = "bg";
+      main.prepend(bg);
+      moveDiv(bg, rootX, rootY, bg.offsetWidth, bg.offsetHeight);
+      bg.style.background =
+        "radial-gradient(transparent " +
+        Math.floor(treeRadius / 2) +
+        "px, black)";
+
+      //   const cover = document.getElementById("cover");
+      //   moveDiv(
+      //     cover,
+      //     rootX,
+      //     rootY,
+      //     cover.getBBox().width,
+      //     cover.getBBox().height
+      //   );
+
+      const animateEdge = (anim, direction) => {
+        return new Promise(async (res) => {
+          anim.animate(
+            { translate: direction ? "0% 0px" : "-100% 0px" },
+            { duration: animationSpeed, fill: "forwards" }
+          );
+          setTimeout(res, animationSpeed);
+        });
+      };
+
+      const backup = (from, to) => {
+        const path = [from];
+        while (from !== to) {
+          from = from.parent;
+          path.push(from);
+          // curNode = from;
+        }
+        return path;
+      };
+
+      const backdown = (from, to) => {
+        let path = undefined;
+        if (from === to) return [to];
+        for (const child of from.children) {
+          const ret = backdown(child, to);
+          if (ret) {
+            path = ret;
+            break;
+          }
+        }
+        if (!path) return undefined;
+        path.push(from);
+        return path;
+      };
+
+      const findLCA = (a, b) => {
+        while (a !== b) {
+          if (a.depth > b.depth) a = a.parent;
+          else b = b.parent;
+        }
+        return a;
+      };
+
+      const tracePath = (from, to) => {
+        const lca = findLCA(from, to);
+        return backup(from, lca)
+          .slice(0, -1)
+          .concat(backdown(lca, to).reverse());
+      };
+
+      let curPath = [];
+      let curNode = tree;
+
+      const screenToNode = (x, y) => {
+        const style = window.getComputedStyle(main);
+        x -= parseFloat(style.left.substring(0, style.left.length - 2));
+        y -= parseFloat(style.top.substring(0, style.top.length - 2));
+        // cos(a)r = x - main.innerWidth/2;
+        // sin(a)r = main.innerHeight/2 - y;
+        let angle = Math.atan2(
+          main.offsetHeight / 2 - y,
+          x - main.offsetWidth / 2
+        );
+        if (angle < 0) angle += Math.PI * 2;
+        const radius = (x - main.offsetWidth / 2) / Math.cos(angle);
+        for (const node of allNodes) {
+          if (
+            node.leftBound >= angle &&
+            node.rightBound <= angle &&
+            node.innerRadius <= radius &&
+            (node.outerRadius >= radius || node.children.length === 0)
+          )
+            return node;
+        }
+      };
+
+      // for (const node of allNodes) {
+      // 	node.div.addEventListener("mouseenter", (e) => {
+      // 		curPath = tracePath(curNode, node);
+      // 	});
+      // }
+
+      let showingDesc = undefined;
+
+      document.addEventListener("mousemove", (e) => {
+        const node = screenToNode(e.clientX, e.clientY);
+        if (node) {
+          if (showingDesc) showingDesc.classList.remove("show");
+          showingDesc = node.desc;
+          showingDesc.classList.add("show");
+          curPath = tracePath(curNode, node);
+        }
+      });
+
+      tree.div.classList.add("filled");
+
+      setInterval(() => {
+        if (curPath.length > 0) {
+          while (curPath[0] === curNode) curPath.shift();
+          if (curPath.length <= 0) return;
+          const prevNode = curNode;
+          curNode = curPath.shift();
+          const newNode = curNode;
+          const filling = curNode.parent === prevNode;
+          animateEdge(
+            nodesToEdge.get(prevNode).get(curNode).anim,
+            filling
+          ).then(() => {
+            if (filling) {
+              nodesToEdge
+                .get(prevNode)
+                .get(newNode)
+                .edge.classList.add("filled");
+              newNode.div.classList.add("filled");
+              // newNode.div.style.scale = 140 - newNode.percentRadius * 40 + "%";
+            } else {
+              nodesToEdge
+                .get(prevNode)
+                .get(newNode)
+                .edge.classList.remove("filled");
+              prevNode.div.classList.remove("filled");
+              // prevNode.div.style.scale = "100%";
+            }
+          });
+        }
+      }, animationSpeed);
+
+      const moveWidth = main.offsetWidth - window.innerWidth;
+      const moveHeight = main.offsetHeight - window.innerHeight;
+
+      main.animate(
+        {
+          left: -0.5 * moveWidth + "px ",
+          top: -0.5 * moveHeight + main.offsetHeight / 5 + "px",
+        },
+        { duration: 0, fill: "forwards" }
+      );
+
+      //   document.addEventListener("mousemove", (e) => {
+      //     const px = -e.clientX / window.innerWidth;
+      //     const py = -e.clientY / window.innerHeight;
+
+      //     main.animate(
+      //       {
+      //         left: px * moveWidth + "px ",
+      //         top: (py * moveHeight) / 2 + main.offsetHeight / 8 + "px",
+      //       },
+      //       { duration: 2000, fill: "forwards" }
+      //     );
+      //   });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,156 @@
+body {
+  width: 100vw;
+  height: 100vh;
+}
+
+@property --angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 90deg;
+}
+
+@property --bg-color {
+  syntax: "<color>";
+  initial-value: white;
+  inherits: false;
+}
+
+@keyframes bg-anim {
+  0% {
+    --bg-color: rgba(150, 120, 210, 0.7);
+    --angle: 0deg;
+  }
+
+  100% {
+    --bg-color: rgba(150, 150, 240, 0.7);
+    --angle: 360deg;
+  }
+}
+
+body {
+  animation: bg-anim 15s ease-in-out infinite alternate;
+  background: linear-gradient(var(--angle), var(--bg-color), white),
+    linear-gradient(to top left, black, white);
+  background-attachment: fixed;
+}
+
+#name {
+  position: absolute;
+  display: flex;
+  width: 50vw;
+  top: 300px;
+  left: 72px;
+}
+
+#atom {
+  font-family: monospace;
+  font-size: 32px;
+  text-align: center;
+}
+
+#element {
+  font-family: "Roboto";
+  font-weight: bold;
+  font-size: 150px;
+}
+
+#binary {
+  font-family: monospace;
+  font-size: 32px;
+  text-wrap: nowrap;
+  position: absolute;
+  top: 175px;
+}
+
+#number {
+  position: absolute;
+  font-family: "Roboto";
+  font-weight: bold;
+  font-size: 150px;
+  text-wrap: nowrap;
+  animation: number-anim 1s ease-in-out infinite alternate;
+}
+
+@keyframes number-anim {
+  0% {
+    top: 25px;
+  }
+  100% {
+    top: -25px;
+  }
+}
+
+#pulley {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  background-color: #444;
+  border: 3px solid black;
+  top: 100px;
+  left: 749px;
+  border-radius: 50%;
+  z-index: 100;
+}
+
+#string1 {
+  position: absolute;
+  height: 3px;
+  top: 100px;
+  background-color: #000000;
+  animation: string1-anim ease-in-out 1s infinite alternate;
+}
+
+@keyframes string1-anim {
+  0% {
+    width: calc(767px - 150px);
+    left: 150px;
+  }
+  100% {
+    width: calc(767px - 100px);
+    left: 100px;
+  }
+}
+
+#string2 {
+  position: absolute;
+  width: 3px;
+  top: 113px;
+  left: 777px;
+  background-color: #000000;
+  animation: string2-anim ease-in-out 1s infinite alternate;
+}
+
+@keyframes string2-anim {
+  0% {
+    height: calc(352px - 100px);
+  }
+  100% {
+    height: calc(352px - 150px);
+  }
+}
+
+#ball {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: transparent;
+  border-radius: 50%;
+  box-shadow: 0px 0px 10px -1px rgba(0, 0, 0, 0.3);
+}
+
+#spring {
+  position: absolute;
+  width: 100px;
+  height: 20px;
+  top: 92px;
+  animation: spring-anim ease-in-out 1s infinite alternate;
+}
+
+@keyframes spring-anim {
+  0% {
+    width: 150px;
+  }
+  100% {
+    width: 100px;
+  }
+}

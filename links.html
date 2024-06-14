@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style></style>
+  </head>
+  <body>
+    <script defer>
+      fetch("header.html")
+        .then((v) => v.text())
+        .then((v) => {
+          document
+            .getElementById("header")
+            .append(document.createRange().createContextualFragment(v));
+        });
+    </script>
+    <div id="header"></div>
+  </body>
+</html>

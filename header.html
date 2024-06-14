@@ -1,0 +1,118 @@
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  * {
+    margin: 0px;
+    padding: 0px;
+  }
+
+  body {
+    overflow: hidden;
+  }
+
+  #header-main {
+    left: 0px;
+    bottom: 0px;
+    position: fixed;
+    height: 70px;
+    width: 100vw;
+    background-color: #ddd;
+    z-index: 100000;
+    display: flex;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.7);
+    /* border-top: 3px solid black; */
+  }
+
+  #links {
+    width: 100%;
+    display: flex;
+    position: absolute;
+  }
+
+  #header-home {
+    flex: 0 0 400px;
+    font-family: "Roboto";
+    cursor: pointer;
+    color: black;
+    background: linear-gradient(
+      to right,
+      rgba(180, 170, 230, 0.7),
+      transparent
+    );
+  }
+
+  #header-hafnium {
+    position: absolute;
+    font-size: 25px;
+    font-weight: bold;
+    left: 75px;
+    top: 12px;
+    transition: left ease 200ms, top ease 200ms;
+  }
+
+  #header-home:hover #header-hafnium {
+    left: 50px;
+    top: 23px;
+  }
+
+  #header-780 {
+    position: absolute;
+    font-size: 14px;
+    top: 40px;
+    left: 150px;
+    transition: left ease 200ms, top ease 200ms, font-size ease 200ms;
+  }
+
+  #header-home:hover #header-780 {
+    left: 147px;
+    top: 23px;
+    font-size: 25px;
+  }
+
+  #pad {
+    flex: 1 1 0px;
+  }
+
+  .header-section {
+    flex: 0 0;
+    padding-right: 20px;
+    transition: color ease 300ms;
+    color: black;
+    text-decoration: none;
+    line-height: 70px;
+    text-align: center;
+  }
+
+  .header-section:hover {
+    color: blue;
+  }
+
+  .header-name {
+    font-family: "Roboto";
+  }
+</style>
+<div id="header-main">
+  <div id="links">
+    <div id="header-home">
+      <p id="header-hafnium">Hafnium</p>
+      <p id="header-780">780</p>
+    </div>
+    <div id="pad"></div>
+    <a href="/projects.html" class="header-section">
+      <p class="header-name">Projects</p>
+    </a>
+    <a href="/links.html" class="header-section">
+      <p class="header-name">Links</p>
+    </a>
+  </div>
+</div>
+
+<script defer>
+  document.getElementById("header-home").addEventListener("click", () => {
+    location.href = "/home.html";
+  });
+</script>
