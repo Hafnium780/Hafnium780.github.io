@@ -1,3 +1,3 @@
-Science Olympiad Codebusters practice site. Currently only a basic aristocrat practice.
+Science Olympiad Codebusters practice site. Currently has aristocrat and morse code practice.
 
 Quotes sourced from [Quote Garden](https://github.com/pprathameshmore/QuoteGarden).
