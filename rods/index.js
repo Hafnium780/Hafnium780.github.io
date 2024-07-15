@@ -61,7 +61,7 @@ const p = [
   { x: 0, y: -rigiddist },
   { x: 0, y: 0 },
   { x: 0, y: rigiddist },
-  { x: 0, y: 2 * rigiddist },
+  //   { x: 0, y: 2 * rigiddist },
 ];
 
 const v0 = 300;
@@ -71,20 +71,20 @@ const rigidk = 10000;
 let minDist = 2 * rigiddist;
 
 const v = [
-  { x: (2 * v0) / 4, y: 0 },
-  { x: -v0 / 4, y: 0 },
-  { x: -v0 / 4, y: 0 },
-  { x: 0, y: 0 },
+  { x: (2 * v0) / 3, y: 0 },
+  { x: -v0 / 3, y: 0 },
+  { x: -v0 / 3, y: 0 },
+  //   { x: 0, y: 0 },
   //   { x: 0, y: 0 },
 ];
 
 const springs = [
   { i: 0, j: 1, k: rigidk, dist: rigiddist },
   { i: 1, j: 2, k: rigidk, dist: rigiddist },
-  { i: 2, j: 3, k: rigidk, dist: rigiddist },
+  //   { i: 2, j: 3, k: rigidk, dist: rigiddist },
   //   { i: 0, j: 3, k: 2, dist: 0 },
-  { i: 0, j: 2, k: 4, dist: 2 * rigiddist - 50 },
-  { i: 1, j: 3, k: 4, dist: 2 * rigiddist - 50 },
+  //   { i: 0, j: 2, k: 4, dist: 2 * rigiddist - 50 },
+  //   { i: 1, j: 3, k: 4, dist: 2 * rigiddist - 50 },
 ];
 
 const f = (i, j, k, dist) => {
