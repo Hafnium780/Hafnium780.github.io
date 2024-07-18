@@ -1,3 +1,3 @@
 Science Olympiad Codebusters practice site. Currently has aristocrat and morse code practice.
 
-Quotes sourced from [Quote Garden](https://github.com/pprathameshmore/QuoteGarden).
+Quotes sourced from [Monkey Type](https://github.com/monkeytypegame/monkeytype/blob/master/frontend/static/quotes/english.json).

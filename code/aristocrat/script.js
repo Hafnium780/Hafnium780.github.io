@@ -258,14 +258,13 @@ const newMapping = () => {
   });
 };
 
+let quoteList;
+
 const newText = async () => {
   completed = false;
 
-  plaintext = (
-    await (
-      await fetch("https://quote-garden.onrender.com/api/v3/quotes/random")
-    ).json()
-  ).data[0].quoteText.toUpperCase();
+  plaintext =
+    quoteList[Math.floor(Math.random() * quoteList.length)].text.toUpperCase();
 
   rawPlaintext = "";
   for (const c of plaintext) {
@@ -555,5 +554,6 @@ const checkForImpossible = () => {
   createMappingDivs();
 
   updateStatistics();
+  quoteList = (await (await fetch("quotes.json")).json()).quotes;
   await newText();
 })();
