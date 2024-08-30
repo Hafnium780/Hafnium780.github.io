@@ -232,6 +232,7 @@ function draw() {
     projectedVelocity.y
   );
   let i = 0;
+  let prev = undefined;
   for (const point of projection.path) {
     ctx.fillStyle =
       "rgba(100, 100, 100, " + (1.4 - i / projection.path.length) + ")";
