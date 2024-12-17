@@ -12,14 +12,18 @@
       "32": "bp.png"
     }
   },
-  "content_scripts": [{
-    "all_frames": true,
-    "js": ["content-script.js"],
-    "css": ["inject.css"],
-    "matches": ["https://falcon.jklm.fun/*", "https://phoenix.jklm.fun/*"]
-  }],
-  "web_accessible_resources": [{
-    "resources": [ "dict.txt" ],
-    "matches": [ "https://falcon.jklm.fun/*", "https://phoenix.jklm.fun/*" ]
-  }]
+  "content_scripts": [
+    {
+      "all_frames": true,
+      "js": ["content-script.js"],
+      "css": ["inject.css"],
+      "matches": ["https://falcon.jklm.fun/*", "https://phoenix.jklm.fun/*"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["dict.txt", "dict_common.txt"],
+      "matches": ["https://falcon.jklm.fun/*", "https://phoenix.jklm.fun/*"]
+    }
+  ]
 }

@@ -21,6 +21,12 @@ inject.innerHTML = `
     </div>
     <div class="option">
       <label class="toggle">
+        <input class="use-common toggle-checkbox" type="checkbox">
+        <div class="toggle-switch"></div>
+      </label><span class="text-label">Use Common Words</span>
+    </div>
+    <div class="option">
+      <label class="toggle">
         <input class="lessnesses toggle-checkbox" type="checkbox">
         <div class="toggle-switch"></div>
       </label><span class="text-label">LESSNESSES</span>
@@ -43,6 +49,7 @@ inject.innerHTML = `
 canvasArea.appendChild(inject);
 
 let enableb = document.getElementsByClassName("enable")[0];
+let useCommonb = document.getElementsByClassName("use-common")[0];
 let lessnessesb = document.getElementsByClassName("lessnesses")[0];
 let typeb = document.getElementsByClassName("type")[0];
 let lengthb = document.getElementById("length");
@@ -50,6 +57,7 @@ let typesb = document.getElementById("interval");
 let typel = document.getElementsByClassName("typing-speed")[0];
 
 let enabled = false,
+  useCommon = false,
   lessnesses = false,
   typing = false,
   length = 25,
@@ -62,6 +70,10 @@ enableb.addEventListener("change", (e) => {
   } else {
     end();
   }
+});
+
+useCommonb.addEventListener("change", (e) => {
+  useCommon = e.target.checked;
 });
 
 lessnessesb.addEventListener("change", (e) => {
@@ -122,6 +134,15 @@ fetch(chrome.runtime.getURL("dict.txt"))
     used = Array(words.length).fill(false);
   });
 
+fetch(chrome.runtime.getURL("dict_common.txt"))
+  .then((response) => response.text())
+  .then((data) => {
+    commonWords = data.split(/\r?\n/);
+    for (let i = 0; i < commonWords.length; i++) {
+      commonWords[i] = commonWords[i].toUpperCase();
+    }
+  });
+
 let interval = undefined;
 let pause = 0;
 
@@ -178,7 +199,13 @@ function run() {
       }
       if (done) usedLetters.fill(false);
       if (typing) {
+        // toType = "";
+
+        // for (let i = 0; i < maxStr.length; i++) {
+        //   toType = maxStr[i] + "|";
+        // }
         toType = maxStr;
+
         setTimeout(type, 1000);
       } else {
         entry.value = maxStr;
@@ -189,6 +216,9 @@ function run() {
 
   function evalStr(s) {
     let score = 0;
+    if (useCommon && commonWords.includes(s)) {
+      score = 10000;
+    }
     if (lessnesses && s.substring(s.length - 10, s.length) == "LESSNESSES")
       score = 10000;
     for (let i = 0; i < s.length; i++) {
