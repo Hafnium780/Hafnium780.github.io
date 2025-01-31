@@ -50,46 +50,39 @@ const createCanvas = () => {
       n[i][j] = 1;
       if (
         j < widthCells / 5 ||
-        j > (widthCells * 2) / 5 ||
+        j > (widthCells * 3) / 10 ||
         i < heightCells / 7 ||
         i > (heightCells * 6) / 7
       )
         n[i][j] = 1;
-      else n[i][j] = 1.5 - Math.pow(i / heightCells - 0.5, 2) * 2;
+      else if (
+        Math.abs(j - (widthCells * 5) / 20) <
+        ((1 - Math.pow((i / heightCells - 0.5) * 2, 2)) * widthCells) / 20
+      )
+        n[i][j] = 1.5;
+      else n[i][j] = 1;
     }
   }
-  //   sources = [
-  //     { x: widthCells / 4, y: heightCells / 3, w: 4 },
-  //     { x: widthCells / 4, y: (heightCells * 2) / 3, w: 4 },
-  //   ];
+  /* diverging
 
-  //   for (
-  //     let i = Math.floor(heightCells / 2) - initialSize;
-  //     i <= Math.floor(heightCells / 2) + initialSize;
-  //     i++
-  //   ) {
-  //     for (
-  //       let j = Math.floor(widthCells / 2) - initialSize;
-  //       j <= Math.floor(widthCells / 2) + initialSize;
-  //       j++
-  //     ) {
-  //       grid[i][j] = 10;
-  //     }
-  //   }
-
-  //   for (
-  //     let i = Math.floor(heightCells / 2) - initialSize;
-  //     i <= Math.floor(heightCells / 2) + initialSize;
-  //     i++
-  //   ) {
-  //     for (
-  //       let j = Math.floor(widthCells / 2) - initialSize;
-  //       j <= Math.floor(widthCells / 2) + initialSize;
-  //       j++
-  //     ) {
-  //       grid[i][j] = 10;
-  //     }
-  //   }
+  for (let i = 0; i < heightCells; i++) {
+    grid[i] = [];
+    gridVel[i] = [];
+    n[i] = [];
+    for (let j = 0; j < widthCells; j++) {
+      grid[i][j] = 0;
+      gridVel[i][j] = 0;
+      n[i][j] = 1;
+      if (j < widthCells / 5 || j > (widthCells * 2) / 5) n[i][j] = 1;
+      else if (
+        Math.abs(j - (widthCells * 3) / 10) <
+        (Math.pow((i / heightCells - 0.5) * 2, 2) * widthCells) / 10
+      )
+        n[i][j] = 1.5;
+      else n[i][j] = 1;
+    }
+  }
+    */
   draw();
 };
 
