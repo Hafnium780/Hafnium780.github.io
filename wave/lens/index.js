@@ -3,7 +3,7 @@ let canvas, ctx;
 
 let colorScale = 255 / 40; // color units / magnitude units
 const step = 1 / 60; // sec / tick
-const skip = 3;
+const skip = 2;
 
 const resolution = 5; // height of each simulation grid
 let heightCells; // number of cells that span the height of the screen
