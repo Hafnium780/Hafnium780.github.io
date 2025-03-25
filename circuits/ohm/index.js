@@ -13,6 +13,7 @@ const atomSpacingWidth = 100;
 const atomSpacingHeight = 100;
 let atomCountWidth, atomCountHeight;
 let atoms = [];
+let atomOffset = 0;
 
 let currentBlocks = [];
 let current = 0;
@@ -65,6 +66,18 @@ const sliders = [
     callback: (value) => {
       thermalVelocity = value;
       resetStats();
+    },
+  },
+  {
+    name: "atom offset",
+    id: "atom_offset",
+    min: "0",
+    max: "100",
+    step: "1",
+    default: "0",
+    callback: (value) => {
+      atomOffset = value;
+      createCanvas();
     },
   },
 ];
@@ -184,7 +197,10 @@ const createCanvas = () => {
     for (let j = 0; j < atomCountHeight; j++) {
       atoms[j + i * atomCountHeight] = {
         x: (i + 0.5) * atomSpacingWidth - width / 2,
-        y: (j + 0.5) * atomSpacingHeight - height / 2,
+        y:
+          (j + 0.5) * atomSpacingHeight -
+          height / 2 +
+          (i % 2 == 0 ? atomOffset : 0),
         //   i % 2 == 0
         //     ? (j + 0.5) * atomSpacingHeight - height / 2
         //     : j * atomSpacingHeight - height / 2,
