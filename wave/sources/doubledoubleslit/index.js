@@ -1,7 +1,7 @@
 const board = document.getElementById("board");
 let canvas, ctx;
 
-let colorScale = 255 / 40; // color units / magnitude units
+let colorScale = 255 / 400; // color units / magnitude units
 const step = 1 / 60; // sec / tick
 const skip = 3;
 
@@ -10,7 +10,7 @@ let heightCells; // number of cells that span the height of the screen
 let widthCells;
 
 let grid, gridVel;
-const c = 400; // wave speed
+const c = 800; // wave speed
 const lengthScale = 10;
 const initialSize = 5;
 let n;
@@ -52,8 +52,10 @@ const createCanvas = () => {
     }
   }
   sources = [
-    { x: widthCells / 4, y: heightCells / 3, w: 4 },
-    { x: widthCells / 4, y: (heightCells * 2) / 3, w: 5 },
+    { x: widthCells / 4, y: (heightCells * 5) / 16, w: 1000 },
+    { x: widthCells / 4, y: (heightCells * 6) / 16, w: 1000 },
+    { x: widthCells / 4, y: (heightCells * 10) / 16, w: 1000 },
+    { x: widthCells / 4, y: (heightCells * 11) / 16, w: 1000 },
   ];
 
   //   for (
@@ -91,7 +93,7 @@ window.addEventListener("resize", (e) => {
 });
 
 const main = () => {
-  update();
+  //   update();
   draw();
 };
 
@@ -99,16 +101,25 @@ const draw = () => {
   ctx.strokeStyle = "none";
   ctx.fillStyle = "black";
   ctx.fillRect(-width / 2, -height / 2, width, height);
+  t += step;
 
   for (let i = 0; i < heightCells; i++) {
     for (let j = 0; j < widthCells; j++) {
-      let nOffset = (n[i][j] - 1) * 100;
-      let red = nOffset,
-        blue = nOffset;
-      if (grid[i][j] < 0)
-        red = Math.min(-grid[i][j] * colorScale + nOffset, 255);
-      else blue = Math.min(grid[i][j] * colorScale + nOffset, 255);
-      ctx.fillStyle = "rgb(" + red + "," + nOffset + "," + blue + ")";
+      //   let nOffset = (n[i][j] - 1) * 100;
+      let red = 0,
+        blue = 0;
+      grid[i][j] = 0;
+      for (const { x, y, w } of sources) {
+        grid[i][j] +=
+          m *
+          Math.sin(
+            (c / w) * Math.sqrt((x - j) * (x - j) + (y - i) * (y - i)) -
+              (w * t) / 100
+          );
+      }
+      if (grid[i][j] < 0) red = Math.min(-grid[i][j] * colorScale, 255);
+      else blue = Math.min(grid[i][j] * colorScale, 255);
+      ctx.fillStyle = "rgb(" + red + "," + "0" + "," + blue + ")";
       ctx.fillRect(
         -width / 2 + j * resolution,
         -height / 2 + i * resolution,
@@ -127,45 +138,45 @@ const getGridVal = (i, j) => {
   return grid[i][j];
 };
 
-const update = () => {
-  for (let s = 0; s < skip; s++) {
-    t += step;
-    const newGrid = [];
-    let maxMag = 0;
-    for (let i = 0; i < heightCells; i++) {
-      newGrid[i] = [];
-      for (let j = 0; j < widthCells; j++) {
-        newGrid[i][j] = grid[i][j];
-        let dx =
-          (getGridVal(i, j - 1) + getGridVal(i, j + 1) - 2 * getGridVal(i, j)) /
-          resolution /
-          resolution /
-          lengthScale /
-          lengthScale; // d^2f/dx^2
-        let dy =
-          (getGridVal(i - 1, j) + getGridVal(i + 1, j) - 2 * getGridVal(i, j)) /
-          resolution /
-          resolution /
-          lengthScale /
-          lengthScale; // d^2f/dy^2
-        gridVel[i][j] += ((c * c) / n[i][j] / n[i][j]) * (dx + dy) * step;
-        newGrid[i][j] += gridVel[i][j] * step;
-      }
-    }
-    for (let i = 0; i < heightCells; i++) {
-      for (let j = 0; j < widthCells; j++) {
-        grid[i][j] = newGrid[i][j];
-        maxMag = Math.max(grid[i][j], maxMag);
-      }
-    }
+// const update = () => {
+//   for (let s = 0; s < skip; s++) {
+//     t += step;
+//     const newGrid = [];
+//     let maxMag = 0;
+//     for (let i = 0; i < heightCells; i++) {
+//       newGrid[i] = [];
+//       for (let j = 0; j < widthCells; j++) {
+//         newGrid[i][j] = grid[i][j];
+//         let dx =
+//           (getGridVal(i, j - 1) + getGridVal(i, j + 1) - 2 * getGridVal(i, j)) /
+//           resolution /
+//           resolution /
+//           lengthScale /
+//           lengthScale; // d^2f/dx^2
+//         let dy =
+//           (getGridVal(i - 1, j) + getGridVal(i + 1, j) - 2 * getGridVal(i, j)) /
+//           resolution /
+//           resolution /
+//           lengthScale /
+//           lengthScale; // d^2f/dy^2
+//         gridVel[i][j] += ((c * c) / n[i][j] / n[i][j]) * (dx + dy) * step;
+//         newGrid[i][j] += gridVel[i][j] * step;
+//       }
+//     }
+//     for (let i = 0; i < heightCells; i++) {
+//       for (let j = 0; j < widthCells; j++) {
+//         grid[i][j] = newGrid[i][j];
+//         maxMag = Math.max(grid[i][j], maxMag);
+//       }
+//     }
 
-    for (const { x, y, w } of sources) {
-      grid[Math.floor(y)][Math.floor(x)] = m * Math.sin(w * t);
-    }
+//     for (const { x, y, w } of sources) {
+//       grid[Math.floor(y)][Math.floor(x)] = m * Math.sin(w * t);
+//     }
 
-    // colorScale = 255 / maxMag;
-  }
-};
+//     // colorScale = 255 / maxMag;
+//   }
+// };
 
 createCanvas();
 
