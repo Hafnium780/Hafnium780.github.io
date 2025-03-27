@@ -1,8 +1,69 @@
 const board = document.getElementById("board");
 let canvas, ctx;
 
+const ctxChart = document.getElementById("chart");
+
+const chartData = {
+  datasets: [],
+};
+
+const distance = [];
+
+chartData.datasets.push({
+  label: "Distance",
+  data: distance,
+  borderColor: "rgb(255, 100, 100)",
+});
+
+const expected = [];
+
+chartData.datasets.push({
+  label: "Expected Min",
+  data: expected,
+  borderColor: "rgb(100, 255, 100)",
+});
+
+chart = new Chart(ctxChart, {
+  type: "line",
+  data: chartData,
+  options: {
+    animation: {
+      duration: 0,
+    },
+    maintainAspectRatio: true,
+    aspectRatio: window.innerWidth / 3 / window.innerHeight,
+    scales: {
+      x: {
+        min: 0,
+        max: 15,
+        type: "linear",
+        position: "bottom",
+        title: {
+          text: "Time (a.u.)",
+          display: true,
+        },
+      },
+      y: {
+        min: 0,
+        max: 2,
+        type: "linear",
+        position: "bottom",
+        title: {
+          text: "Distance (rods lengths)",
+          display: true,
+        },
+      },
+    },
+    elements: {
+      point: {
+        radius: 0,
+      },
+    },
+  },
+});
+
 const createCanvas = () => {
-  width = window.innerWidth;
+  width = (window.innerWidth * 2) / 3;
   height = window.innerHeight;
   board.style = "height: " + height + "px";
   board.innerHTML =
@@ -40,11 +101,11 @@ const draw = () => {
     ctx.stroke();
   }
 
-  //   ctx.strokeStyle = "red";
-  //   ctx.beginPath();
-  //   ctx.moveTo(p[0].x, p[0].y);
-  //   ctx.lineTo(p[p.length - 1].x, p[p.length - 1].y);
-  //   ctx.stroke();
+  ctx.strokeStyle = "rgba(255, 100, 100, 0.5)";
+  ctx.beginPath();
+  ctx.moveTo(p[0].x, p[0].y);
+  ctx.lineTo(p[p.length - 1].x, p[p.length - 1].y);
+  ctx.stroke();
 
   ctx.fillStyle = "white";
   for (const pt of p) {
@@ -96,6 +157,10 @@ const f = (i, j, k, dist) => {
   return { x: m * (p[i].x - p[j].x), y: m * (p[i].y - p[j].y) };
 };
 
+let t = 0;
+let recordData = 0;
+let dataRecordRate = 5;
+
 const update = () => {
   for (let i = 0; i < p.length; i++) {
     p[i].x += v[i].x * step;
@@ -117,6 +182,15 @@ const update = () => {
     v[s.i].x -= ff.x * step;
     v[s.i].y -= ff.y * step;
   }
+
+  if (recordData > dataRecordRate && t < 15) {
+    distance.push({ x: t, y: d / rigiddist });
+    expected.push({ x: t, y: Math.sqrt(5 / 2) });
+    t += 0.1;
+    chart.update();
+    recordData = 0;
+  }
+  recordData++;
 };
 
 createCanvas();

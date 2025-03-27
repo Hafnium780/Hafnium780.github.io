@@ -3,3 +3,8 @@
   padding: 0px;
   overflow: hidden;
 }
+
+body {
+  display: flex;
+  /* flex: auto; */
+}
