@@ -19,8 +19,6 @@ const w = 10,
   m = 30;
 let t = 0;
 
-// let sources;
-
 const createCanvas = () => {
   width = window.innerWidth;
   height = window.innerHeight;
