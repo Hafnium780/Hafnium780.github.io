@@ -16,7 +16,7 @@ const initialSize = 5;
 let n, invnsq;
 
 const w = 2,
-  m = 30,
+  m = 40,
   v = 9;
 let t = 0;
 let newGrid;
@@ -78,7 +78,7 @@ const draw = () => {
 
   for (let i = 0; i < heightCells; i++) {
     for (let j = 0; j < widthCells; j++) {
-      let nOffset = ((n[i][j] - 1) * 100) / 2;
+      let nOffset = ((n[i][j] - 1) * 100) / 1.5;
       let red = nOffset,
         blue = nOffset;
       if (grid[i][j] < 0)
@@ -134,8 +134,12 @@ const update = () => {
             getGridVal(i, j + 1));
         newGrid[i][j] += gridVel[i][j] * curstep;
         // if (i > (heightCells * 15) / 16) newGrid[i][j] *= 0.99;
-        if (i < heightCells * 0.125) newGrid[i][j] *= 0.98;
-        if (j > widthCells * 0.9375) newGrid[i][j] *= 0.99;
+        if (i < heightCells * 0.125)
+          newGrid[i][j] *= 1 - 0.02 * (1 - (8 * i) / heightCells);
+        else if (i > heightCells * 0.875)
+          newGrid[i][j] *= 1 - 0.02 * (1 - 8 * (1 - i / heightCells));
+        if (j > widthCells * 0.9)
+          newGrid[i][j] *= 1 - 0.02 * (1 - 10 * (1 - j / widthCells));
         newGrid[i][j] *= 0.9985;
       }
     }
