@@ -1,8 +1,8 @@
 const board = document.getElementById("board");
 let canvas, ctx;
 
-let colorScale = 255 / 40; // color units / magnitude units
-const step = 1 / 60; // sec / tick
+let colorScale = 255 / 30; // color units / magnitude units
+const step = 1 / 30; // sec / tick
 const skip = 3;
 
 const resolution = 5; // height of each simulation grid
@@ -10,17 +10,16 @@ let heightCells; // number of cells that span the height of the screen
 let widthCells;
 
 let grid, gridVel;
-const c = 400; // wave speed
+const c = 300; // wave speed
 const lengthScale = 5;
 const initialSize = 5;
 let n, invnsq;
 
-const w = 10,
-  m = 30;
+const w = 2,
+  m = 30,
+  v = 9;
 let t = 0;
 let newGrid;
-
-// let sources;
 
 const createCanvas = () => {
   width = window.innerWidth;
@@ -54,49 +53,12 @@ const createCanvas = () => {
       gridVel[i][j] = 0;
       newGrid[i][j] = 0;
       n[i][j] = 1;
-      if (
-        j < widthCells / 5 ||
-        j > (widthCells * 2) / 5 ||
-        i < heightCells / 7 ||
-        i > (heightCells * 6) / 7
-      )
-        n[i][j] = 1;
-      else n[i][j] = 1.5 - Math.pow(i / heightCells - 0.5, 2) * 2;
+      //   if (i < heightCells / 4) n[i][j] = 2;
+      n[i][j] = 1 + 2 * (1 / Math.sqrt(i / heightCells + 0.1) - 1);
       invnsq[i][j] = 1 / Math.pow(n[i][j], 2);
+      //   else n[i][j] = (i/heightCells-.25)*;
     }
   }
-  //   sources = [
-  //     { x: widthCells / 4, y: heightCells / 3, w: 4 },
-  //     { x: widthCells / 4, y: (heightCells * 2) / 3, w: 4 },
-  //   ];
-
-  //   for (
-  //     let i = Math.floor(heightCells / 2) - initialSize;
-  //     i <= Math.floor(heightCells / 2) + initialSize;
-  //     i++
-  //   ) {
-  //     for (
-  //       let j = Math.floor(widthCells / 2) - initialSize;
-  //       j <= Math.floor(widthCells / 2) + initialSize;
-  //       j++
-  //     ) {
-  //       grid[i][j] = 10;
-  //     }
-  //   }
-
-  //   for (
-  //     let i = Math.floor(heightCells / 2) - initialSize;
-  //     i <= Math.floor(heightCells / 2) + initialSize;
-  //     i++
-  //   ) {
-  //     for (
-  //       let j = Math.floor(widthCells / 2) - initialSize;
-  //       j <= Math.floor(widthCells / 2) + initialSize;
-  //       j++
-  //     ) {
-  //       grid[i][j] = 10;
-  //     }
-  //   }
   draw();
 };
 
@@ -116,7 +78,7 @@ const draw = () => {
 
   for (let i = 0; i < heightCells; i++) {
     for (let j = 0; j < widthCells; j++) {
-      let nOffset = (n[i][j] - 1) * 100;
+      let nOffset = ((n[i][j] - 1) * 100) / 2;
       let red = nOffset,
         blue = nOffset;
       if (grid[i][j] < 0)
@@ -144,6 +106,7 @@ const getGridVal = (i, j) => {
   }
   return grid[i][j];
 };
+
 const invrl = Math.pow(1 / resolution / lengthScale, 2);
 let lastTime = Date.now();
 
@@ -171,25 +134,24 @@ const update = () => {
             getGridVal(i, j + 1));
         newGrid[i][j] += gridVel[i][j] * curstep;
         // if (i > (heightCells * 15) / 16) newGrid[i][j] *= 0.99;
-        if (i < heightCells * 0.125)
-          newGrid[i][j] *= 1 - 0.02 * (1 - (8 * i) / heightCells);
-        else if (i > heightCells * 0.875)
-          newGrid[i][j] *= 1 - 0.02 * (1 - 8 * (1 - i / heightCells));
-        if (j > widthCells * 0.9)
-          newGrid[i][j] *= 1 - 0.3 * (1 - 10 * (1 - j / widthCells));
+        if (i < heightCells * 0.125) newGrid[i][j] *= 0.98;
+        if (j > widthCells * 0.9375) newGrid[i][j] *= 0.99;
         newGrid[i][j] *= 0.9985;
       }
     }
     for (let i = 0; i < heightCells; i++) {
       for (let j = 0; j < widthCells; j++) {
         grid[i][j] = newGrid[i][j];
-        maxMag = Math.max(grid[i][j], maxMag);
+        // maxMag = Math.max(grid[i][j], maxMag);
       }
     }
-
-    for (let i = 0; i < heightCells; i++) {
-      grid[i][0] = m * Math.sin(w * t);
-    }
+    grid[Math.floor((heightCells * 2) / 5)][
+      Math.floor(
+        v * t +
+          widthCells / 4 -
+          widthCells * Math.floor((v * t + widthCells / 4) / widthCells)
+      )
+    ] = m;
 
     // colorScale = 255 / maxMag;
   }
