@@ -3,22 +3,22 @@ let canvas, ctx;
 
 let colorScale = 255 / 30; // color units / magnitude units
 const step = 1 / 30; // sec / tick
-const skip = 5;
+const skip = 30;
 
-const resolution = 5; // height of each simulation grid
+const resolution = 1; // height of each simulation grid
 let heightCells; // number of cells that span the height of the screen
 let widthCells;
 
 let grid, gridVel;
-const c = 300; // wave speed
-const lengthScale = 5;
+const c = 800; // wave speed
+const lengthScale = 25;
 const initialSize = 5;
 let n, invnsq;
 
 const w = 2,
-  m = 30,
-  v = 9,
-  gamma = 0.1;
+  m = 40,
+  v = 30,
+  gamma = 0;
 let t = 0;
 let newGrid;
 
@@ -112,7 +112,7 @@ const invrl = Math.pow(1 / resolution / lengthScale, 2);
 let lastTime = Date.now();
 
 const update = () => {
-  const curstep = Math.min((Date.now() - lastTime) / 1000, 0.04);
+  const curstep = Math.min((Date.now() - lastTime) / 1000, 0.02);
   lastTime = Date.now();
   const ccstep = c * c * curstep * invrl;
   for (let s = 0; s < skip; s++) {
