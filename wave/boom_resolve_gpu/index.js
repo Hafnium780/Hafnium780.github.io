@@ -67,9 +67,9 @@ const createCanvas = () => {
   draw();
 };
 
-window.addEventListener("resize", (e) => {
-  createCanvas();
-});
+// window.addEventListener("resize", (e) => {
+//   createCanvas();
+// });
 
 const main = () => {
   update();
