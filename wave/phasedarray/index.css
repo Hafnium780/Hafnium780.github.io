@@ -1,0 +1,11 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+}
+
+#inst {
+  position: absolute;
+  bottom: 40px;
+  color: white;
+}
