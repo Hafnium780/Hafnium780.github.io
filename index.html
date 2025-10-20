@@ -20,7 +20,14 @@
       }
 
       body {
-        background-color: #b2b09b;
+        background-color: #b5b4a0;
+        background-image: linear-gradient(
+            rgba(0, 0, 0, 0.1),
+            rgba(0, 0, 0, 0.1)
+          ),
+          url("pfp-transparent-mono.svg");
+        /* background-repeat: no-repeat; */
+        background-size: 5%;
       }
 
       #main {
@@ -209,12 +216,20 @@
       </div>
     </div>
     <script defer>
+      // New files
+      const bottomLinks = [
+        { name: "Portfolio", image: "portfolio.png", href: "Portfolio.pdf" },
+        { name: "Resume", image: "resume.png", href: "Resume.pdf" },
+      ];
+
       // Defined constants
       const angleFromBottom = Math.PI / 12; // Angle between either side of tree and bottom
+      const angleFromTop = Math.PI / 3;
       const sideMargins = -30;
       const nodeRadius = 50;
+      const nodeRadiusBottom = 40;
       const edgeWidth = 2;
-      const animationSpeed = 100;
+      const animationSpeed = 50;
 
       const randomize = false; // randomize tree layout
 
@@ -222,16 +237,21 @@
 
       // Calculated constants
       const leftTreeBound = Math.PI - angleFromBottom; // Angle between left side of tree and bottom
+      const leftTreeBoundBottom = -angleFromTop; // Angle between left side of tree and bottom
       // const leftTreeBound = Math.PI * 2;
       const rightTreeBound = angleFromBottom; // Angle between right side of tree and bottom
+      const rightTreeBoundBottom = angleFromTop - Math.PI; // Angle between left side of tree and bottom
       // const rightTreeBound = 0;
       const treeAngle = Math.PI - 2 * angleFromBottom; // Angle available to use for tree
+      const treeAngleBottom = Math.PI - 2 * angleFromTop;
       // const treeAngle = Math.PI * 2;
       const treeRadius =
         // Math.min(main.offsetWidth / 2, main.offsetHeight) -
         Math.min(main.offsetWidth / 2, main.offsetHeight / 2) -
         sideMargins * 2 -
         nodeRadius / 2; // Radius of tree
+
+      const treeRadiusBottom = treeRadius / 5;
 
       const nodesToEdge = new Map();
       const allNodes = [];
@@ -284,9 +304,31 @@
 
       const root = document.getElementById("tree");
       const tree = crawl(root);
+      const bottomTree = [];
+
+      for (const b of bottomLinks) {
+        const node = {
+          name: b.name, // name of node
+          description: undefined, // description of node
+          image: b.image,
+          depth: 1, // depth of node from root
+          maxDepth: 1, // maximum depth of subtree
+          size: 1, // size of subtree
+          children: [], // subtree
+          leafCount: 0, // number of leaf nodes in subtree
+          parent: tree, // parent
+          isLink: true, // is it a link
+          href: b.href, // link
+          skip: true,
+        };
+        bottomTree.push(node);
+        tree.children.push(node);
+      }
+
       root.remove();
 
       const nodeAngle = treeAngle / tree.leafCount;
+      const nodeAngleBottom = treeAngleBottom / bottomTree.length;
 
       // Each node takes up (radius left over/(depth of subtree)) space radially, and (nodeAngle*leaf) space tangentially
       // Each path
@@ -342,9 +384,15 @@
         return { edge: edge, anim: anim };
       };
 
-      const drawTree = (node, leftBound, rightBound, radiusLeft) => {
+      const drawTree = (
+        node,
+        leftBound,
+        rightBound,
+        radiusLeft,
+        root = false
+      ) => {
         nodesToEdge.set(node, new Map());
-        const radial = radialSpace(node, radiusLeft);
+        const radial = root ? 0 : radialSpace(node, radiusLeft);
         const angle = angleSpace(node);
         let curLeftBound = leftBound;
         const nodeDiv = document.createElement(node.isLink ? "a" : "div");
@@ -391,6 +439,7 @@
         node.innerRadius = treeRadius - radiusLeft;
         node.outerRadius = treeRadius - radiusLeft + radial;
         for (const child of node.children) {
+          if (child.skip) continue;
           const rightBound = curLeftBound - angleSpace(child);
           const childPos = drawTree(
             child,
@@ -407,7 +456,89 @@
         return pos;
       };
 
-      drawTree(tree, leftTreeBound, rightTreeBound, treeRadius);
+      const centerPos = drawTree(
+        tree,
+        leftTreeBound,
+        rightTreeBound,
+        treeRadius
+      );
+
+      let leftBoundBottom =
+        rightTreeBoundBottom + treeAngleBottom / bottomTree.length;
+      let rightBoundBottom = rightTreeBoundBottom;
+      // let leftBoundBottom = Math.PI;
+      // let rightBoundBottom = 0;
+      for (const b of bottomTree) {
+        nodesToEdge.set(b, new Map());
+        const radial = treeRadiusBottom;
+        const angle = treeAngleBottom / bottomTree.length;
+        let curLeftBound = leftBoundBottom;
+        const nodeDiv = document.createElement(b.isLink ? "a" : "div");
+        const descDiv = document.createElement("div");
+        if (b.description) descDiv.innerText = b.description;
+        else descDiv.classList.add("no-description");
+        descDiv.classList.add("description");
+        if (b.isLink) nodeDiv.href = b.href;
+        nodeDiv.classList.add("node");
+        let scaledRadius = nodeRadiusBottom * 2; // - nodeRadius * (radiusLeft / treeRadiusBottom);
+        nodeDiv.style.height = nodeDiv.style.width = scaledRadius + "px";
+        nodeDiv.innerText = b.name;
+        nodeDiv.style.fontSize = 15 + "px"; // - 5 * (radiusLeft / treeRadiusBottom) + "px";
+        if (b.image)
+          nodeDiv.style.backgroundImage =
+            "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(images/" +
+            b.image +
+            ")";
+        let pos = polarToScreen(
+          radial / 2 + treeRadiusBottom,
+          (leftBoundBottom - rightBoundBottom) / 2 + rightBoundBottom
+        );
+        pos.y += centerPos.y - main.offsetHeight / 2;
+        // console.log((leftBound - rightBound) / 2 + rightBound, node.name);
+        main.appendChild(nodeDiv);
+        main.appendChild(descDiv);
+        moveDiv(nodeDiv, pos.x, pos.y, scaledRadius, scaledRadius);
+        // const diag =
+        // 	Math.sqrt(descDiv.offsetWidth ** 2 + descDiv.offsetHeight ** 2) *
+        // 	0.75;
+        const averageAngle = -(leftBoundBottom + rightBoundBottom) / 2;
+        moveDiv(
+          descDiv,
+          pos.x + 130 * Math.cos(averageAngle),
+          pos.y + 130 * Math.sin(averageAngle),
+          descDiv.offsetWidth,
+          descDiv.offsetHeight
+        );
+        b.div = nodeDiv;
+        b.desc = descDiv;
+        b.percentRadius = 0;
+        b.leftBound = leftBoundBottom;
+        b.rightBound = rightBoundBottom;
+        b.innerRadius = treeRadiusBottom;
+        b.outerRadius = treeRadiusBottom + radial;
+
+        // for (const child of node.children) {
+        //   const rightBound = curLeftBound - angleSpace(child);
+        //   const childPos = drawTree(
+        //     child,
+        //     curLeftBound,
+        //     rightBound,
+        //     radiusLeft - radial
+        //   );
+        //   const edge = drawEdge(pos.x, pos.y, childPos.x, childPos.y);
+        //   nodesToEdge.get(node).set(child, edge);
+        //   nodesToEdge.get(child).set(node, edge);
+        //   curLeftBound = rightBound;
+        // }
+
+        const edge = drawEdge(centerPos.x, centerPos.y, pos.x, pos.y);
+        // console.log(edge);
+        nodesToEdge.get(tree).set(b, edge);
+        nodesToEdge.get(b).set(tree, edge);
+
+        leftBoundBottom += treeAngleBottom / bottomTree.length;
+        rightBoundBottom += treeAngleBottom / bottomTree.length;
+      }
 
       const animateEdge = (anim, direction) => {
         return new Promise(async (res) => {
@@ -453,7 +584,11 @@
       };
 
       const tracePath = (from, to) => {
+        // console.log(from);
+        // console.log(to);
         const lca = findLCA(from, to);
+        // console.log(lca);
+        // console.log(backdown(lca, to));
         return backup(from, lca)
           .slice(0, -1)
           .concat(backdown(lca, to).reverse());
@@ -473,7 +608,7 @@
           x - main.offsetWidth / 2
         );
         if (angle < 0) angle += Math.PI * 2;
-        const radius = (x - main.offsetWidth / 2) / Math.cos(angle);
+        let radius = (x - main.offsetWidth / 2) / Math.cos(angle);
         for (const node of allNodes) {
           if (
             node.leftBound >= angle &&
@@ -482,6 +617,24 @@
             (node.outerRadius >= radius || node.children.length === 0)
           )
             return node;
+        }
+
+        y -= centerPos.y - main.offsetHeight / 2;
+        // cos(a)r = x - main.innerWidth/2;
+        // sin(a)r = main.innerHeight/2 - y;
+        angle = Math.atan2(main.offsetHeight / 2 - y, x - main.offsetWidth / 2);
+        if (angle > 0) angle -= Math.PI * 2;
+        radius = (x - main.offsetWidth / 2) / Math.cos(angle);
+        // console.log(y + " " + x + " " + radius + " " + (angle * 180) / Math.PI);
+        for (const b of bottomTree) {
+          if (
+            b.leftBound >= angle &&
+            b.rightBound <= angle &&
+            b.innerRadius <= radius &&
+            (b.outerRadius >= radius || b.children.length === 0)
+          ) {
+            return b;
+          }
         }
       };
 

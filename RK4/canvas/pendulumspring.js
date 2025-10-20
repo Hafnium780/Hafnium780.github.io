@@ -289,7 +289,9 @@ document.addEventListener("keypress", (e) => {
 
 for (const b of buttons) {
   const buttonDiv = document.createElement("button");
-  buttonDiv.addEventListener("click", b.run);
+  buttonDiv.addEventListener("click", () => {
+    b.run;
+  });
   buttonDiv.innerText = b.name;
   optionsDiv.appendChild(buttonDiv);
 }
