@@ -133,7 +133,7 @@
       }
 
       .spacer {
-        height: 80px;
+        height: 90px;
       }
 
       .node {
@@ -360,6 +360,7 @@
       if (mode == "list") {
         // ASSUMES leafs are the only projects
         const projects = [...bottomLinks];
+        let i = 0;
         const crawl = (node) => {
           // Convert html nodes to tree nodes
           const text = node.firstChild.nodeValue.trim().split("|");
@@ -375,12 +376,19 @@
               mobile: text[3] == "mobile",
               fromTree: true,
               href: node.href,
+              i: i++,
             });
           }
         };
         const root = document.getElementById("tree");
         crawl(root);
         root.remove();
+
+        projects.sort((a, b) => {
+          if (a.mobile && !b.mobile) return -1;
+          if (b.mobile && !a.mobile) return 1;
+          return a.i - b.i;
+        });
 
         document.body.style.overflow = "hidden";
 
