@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>hi</title>
+    <title>Hafnium780</title>
+    <link rel="icon" type="image/x-icon" href="/images/resume.png" />
     <meta
       name="google-site-verification"
       content="nwiDYewgmTc1xCpZ5-JJ0Zt6LDAwp5bOurIgnaaJAAM"
     />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       * {
         margin: 0px;
@@ -27,7 +29,28 @@
           ),
           url("pfp-transparent-mono.svg");
         /* background-repeat: no-repeat; */
-        background-size: 5%;
+        background-size: 90px;
+      }
+
+      #switch {
+        position: absolute;
+        bottom: 5px;
+        right: 13px;
+        z-index: 100;
+        color: black;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 3px;
+        background-color: rgba(0, 0, 0, 0.1);
+        -webkit-transition: background-color 200ms linear;
+        -ms-transition: background-color 200ms linear;
+        transition: background-color 200ms linear;
+        border: 1px solid rgba(0, 0, 0, 0.4);
+        border-radius: 3px;
+      }
+
+      #switch:hover {
+        background-color: rgb(0, 0, 0, 0.3);
       }
 
       #main {
@@ -38,6 +61,75 @@
         top: 0px;
         translate: 0px 0px;
         background: none;
+        scrollbar-color: black #656450;
+        scrollbar-width: thin;
+      }
+
+      #project-title {
+        margin: 10px;
+        font-family: "Futura", "Trebuchet MS", "Lucida Sans Unicode",
+          "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+        font-weight: 700;
+        font-size: 25px;
+        text-decoration: solid;
+      }
+
+      #project-info {
+        font-family: "Palantino", "Georgia", serif;
+        font-weight: 200;
+        font-size: 15px;
+        text-decoration: solid;
+      }
+
+      #project-top-div {
+        display: flex;
+      }
+
+      #project-top-div .project-div {
+        flex: 1 1 0;
+      }
+
+      .project-div {
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+        left: 0px;
+        right: 0px;
+        height: 70px;
+        margin: 10px;
+        padding: 5px;
+        max-width: 700px;
+        display: flex;
+        color: black;
+        text-decoration: none;
+        -webkit-transition: background-color 200ms linear;
+        -ms-transition: background-color 200ms linear;
+        transition: background-color 200ms linear;
+        border-radius: 5px;
+      }
+
+      .project-div:hover {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+
+      .project-image-div {
+        font-size: 15px;
+        flex: 0 0 70px;
+        width: 70px;
+        height: 70px;
+        background-repeat: no-repeat;
+        background-size: 100%;
+      }
+
+      .project-name-div {
+        padding: 10px;
+        flex: 0.4 0.4;
+        align-items: center;
+      }
+
+      .project-description-div {
+        font-size: 14px;
+        padding: 8px;
+        flex: 1 1;
       }
 
       .node {
@@ -140,7 +232,17 @@
         ...
       </layer of tree>
     -->
-    <div id="main"></div>
+    <a id="switch"></a>
+    <div id="main">
+      <div id="project-title">
+        Hafnium780
+        <div id="project-info">
+          Some of the online projects I've created. This home page (and a lot of
+          the projects) look better on a wider computer in the tree version
+          (bottom right) :)
+        </div>
+      </div>
+    </div>
     <div id="tree" style="display: none">
       Projects|
       <div>
@@ -195,7 +297,7 @@
         <div>
           Node.js|
           <a href="https://multiplayer-platformer.glitch.me/">
-            multiplayer platformer|Simple multiplayer
+            [broken] multiplayer platformer|Simple multiplayer
             platformer|multiplayer-platformer.png
           </a>
         </div>
@@ -216,502 +318,587 @@
       </div>
     </div>
     <script defer>
+      const url = URL.parse(window.location.href);
+      const forceVersion = url.searchParams.get("force-version");
+
       // New files
       const bottomLinks = [
         { name: "Portfolio", image: "portfolio.png", href: "Portfolio.pdf" },
         { name: "Resume", image: "resume.png", href: "Resume.pdf" },
       ];
 
-      // Defined constants
-      const angleFromBottom = Math.PI / 12; // Angle between either side of tree and bottom
-      const angleFromTop = Math.PI / 3;
-      const sideMargins = -30;
-      const nodeRadius = 50;
-      const nodeRadiusBottom = 40;
-      const edgeWidth = 2;
-      const animationSpeed = 50;
+      let mode;
+      if (forceVersion == "tree") mode = "tree";
+      else if (forceVersion == "list") mode = "list";
+      else if (window.innerWidth < window.innerHeight) mode = "list";
+      const oppositeMode = mode == "list" ? "tree" : "list";
 
-      const randomize = false; // randomize tree layout
+      url.searchParams.set("force-version", oppositeMode);
+      const switchLink = document.getElementById("switch");
+      //   switchLink.addEventListener("click", () => {
+      //     window.location.href = url.href;
+      //     console.log("asdf");
+      //   });
+      switchLink.href = "?force-version=" + oppositeMode;
+      switchLink.innerText = "Switch to " + oppositeMode + " version";
 
-      const main = document.getElementById("main");
+      if (mode == "list") {
+        // ASSUMES leafs are the only projects
+        const projects = [...bottomLinks];
+        const crawl = (node) => {
+          // Convert html nodes to tree nodes
+          const text = node.firstChild.nodeValue.trim().split("|");
+          for (const child of node.children) {
+            const childTree = crawl(child);
+          }
 
-      // Calculated constants
-      const leftTreeBound = Math.PI - angleFromBottom; // Angle between left side of tree and bottom
-      const leftTreeBoundBottom = -angleFromTop; // Angle between left side of tree and bottom
-      // const leftTreeBound = Math.PI * 2;
-      const rightTreeBound = angleFromBottom; // Angle between right side of tree and bottom
-      const rightTreeBoundBottom = angleFromTop - Math.PI; // Angle between left side of tree and bottom
-      // const rightTreeBound = 0;
-      const treeAngle = Math.PI - 2 * angleFromBottom; // Angle available to use for tree
-      const treeAngleBottom = Math.PI - 2 * angleFromTop;
-      // const treeAngle = Math.PI * 2;
-      const treeRadius =
-        // Math.min(main.offsetWidth / 2, main.offsetHeight) -
-        Math.min(main.offsetWidth / 2, main.offsetHeight / 2) -
-        sideMargins * 2 -
-        nodeRadius / 2; // Radius of tree
-
-      const treeRadiusBottom = treeRadius / 5;
-
-      const nodesToEdge = new Map();
-      const allNodes = [];
-
-      const crawl = (node, depth = 0) => {
-        // Convert html nodes to tree nodes
-        const text = node.firstChild.nodeValue.trim().split("|");
-        const tree = {
-          name: text[0], // name of node
-          description: text[1], // description of node
-          image: text[2],
-          depth: depth, // depth of node from root
-          maxDepth: depth, // maximum depth of subtree
-          size: 1, // size of subtree
-          children: [], // subtree
-          leafCount: 0, // number of leaf nodes in subtree
-          parent: null, // parent
-          isLink: node.nodeName === "A", // is it a link
-          href: node.href, // link
+          if (!node.children.length) {
+            projects.push({
+              name: text[0], // name of node
+              description: text[1], // description of node
+              image: text[2],
+              fromTree: true,
+              href: node.href,
+            });
+          }
         };
-        allNodes.push(tree);
-        for (const child of node.children) {
-          const childTree = crawl(child, depth + 1);
-          childTree.parent = tree;
-          tree.children.push(childTree);
-          tree.size += childTree.size;
-          tree.leafCount += childTree.leafCount;
-          tree.maxDepth = Math.max(tree.maxDepth, childTree.maxDepth);
-        }
+        const root = document.getElementById("tree");
+        crawl(root);
+        root.remove();
 
-        if (randomize) {
-          let current = tree.children.length,
-            random;
+        document.body.style.overflow = "hidden";
 
-          while (current > 0) {
-            random = Math.floor(Math.random() * current);
-            current--;
+        const main = document.getElementById("main");
+        main.style.width = "100vw";
+        main.style.height = "100vh";
+        main.style.overflowY = "auto";
+        main.style.overflowX = "hidden";
 
-            [tree.children[current], tree.children[random]] = [
-              tree.children[random],
-              tree.children[current],
-            ];
+        const topDiv = document.createElement("div");
+        topDiv.id = "project-top-div";
+        main.appendChild(topDiv);
+
+        for (p of projects) {
+          pDiv = document.createElement("a");
+          pDiv.classList.add("project-div");
+          pDiv.href = p.href;
+
+          pImageDiv = document.createElement("div");
+          pImageDiv.classList.add("project-image-div");
+          pImageDiv.style.backgroundImage = "url(images/" + p.image + ")";
+          pNameDiv = document.createElement("div");
+          pNameDiv.classList.add("project-name-div");
+          pNameDiv.innerText = p.name;
+          pDescriptionDiv = document.createElement("div");
+          pDescriptionDiv.classList.add("project-description-div");
+          pDescriptionDiv.innerText = p.description ? p.description : "";
+
+          pDiv.appendChild(pImageDiv);
+          pDiv.appendChild(pNameDiv);
+          pDiv.appendChild(pDescriptionDiv);
+          if (p.fromTree) {
+            main.appendChild(pDiv);
+          } else {
+            topDiv.appendChild(pDiv);
           }
         }
+      } else {
+        document.getElementById("project-title").remove();
 
-        if (!node.children.length) tree.leafCount = 1;
+        // Defined constants
+        const angleFromBottom = Math.PI / 12; // Angle between either side of tree and bottom
+        const angleFromTop = Math.PI / 3;
+        const sideMargins = -30;
+        const nodeRadius = 50;
+        const nodeRadiusBottom = 40;
+        const edgeWidth = 2;
+        const animationSpeed = 50;
 
-        return tree;
-      };
+        const randomize = false; // randomize tree layout
 
-      const root = document.getElementById("tree");
-      const tree = crawl(root);
-      const bottomTree = [];
+        const main = document.getElementById("main");
 
-      for (const b of bottomLinks) {
-        const node = {
-          name: b.name, // name of node
-          description: undefined, // description of node
-          image: b.image,
-          depth: 1, // depth of node from root
-          maxDepth: 1, // maximum depth of subtree
-          size: 1, // size of subtree
-          children: [], // subtree
-          leafCount: 0, // number of leaf nodes in subtree
-          parent: tree, // parent
-          isLink: true, // is it a link
-          href: b.href, // link
-          skip: true,
+        // Calculated constants
+        const leftTreeBound = Math.PI - angleFromBottom; // Angle between left side of tree and bottom
+        const leftTreeBoundBottom = -angleFromTop; // Angle between left side of tree and bottom
+        // const leftTreeBound = Math.PI * 2;
+        const rightTreeBound = angleFromBottom; // Angle between right side of tree and bottom
+        const rightTreeBoundBottom = angleFromTop - Math.PI; // Angle between left side of tree and bottom
+        // const rightTreeBound = 0;
+        const treeAngle = Math.PI - 2 * angleFromBottom; // Angle available to use for tree
+        const treeAngleBottom = Math.PI - 2 * angleFromTop;
+        // const treeAngle = Math.PI * 2;
+        const treeRadius =
+          // Math.min(main.offsetWidth / 2, main.offsetHeight) -
+          Math.min(main.offsetWidth / 2, main.offsetHeight / 2) -
+          sideMargins * 2 -
+          nodeRadius / 2; // Radius of tree
+
+        const treeRadiusBottom = treeRadius / 5;
+
+        const nodesToEdge = new Map();
+        const allNodes = [];
+
+        const crawl = (node, depth = 0) => {
+          // Convert html nodes to tree nodes
+          const text = node.firstChild.nodeValue.trim().split("|");
+          const tree = {
+            name: text[0], // name of node
+            description: text[1], // description of node
+            image: text[2],
+            depth: depth, // depth of node from root
+            maxDepth: depth, // maximum depth of subtree
+            size: 1, // size of subtree
+            children: [], // subtree
+            leafCount: 0, // number of leaf nodes in subtree
+            parent: null, // parent
+            isLink: node.nodeName === "A", // is it a link
+            href: node.href, // link
+          };
+          allNodes.push(tree);
+          for (const child of node.children) {
+            const childTree = crawl(child, depth + 1);
+            childTree.parent = tree;
+            tree.children.push(childTree);
+            tree.size += childTree.size;
+            tree.leafCount += childTree.leafCount;
+            tree.maxDepth = Math.max(tree.maxDepth, childTree.maxDepth);
+          }
+
+          if (randomize) {
+            let current = tree.children.length,
+              random;
+
+            while (current > 0) {
+              random = Math.floor(Math.random() * current);
+              current--;
+
+              [tree.children[current], tree.children[random]] = [
+                tree.children[random],
+                tree.children[current],
+              ];
+            }
+          }
+
+          if (!node.children.length) tree.leafCount = 1;
+
+          return tree;
         };
-        bottomTree.push(node);
-        tree.children.push(node);
-      }
 
-      root.remove();
+        const root = document.getElementById("tree");
+        const tree = crawl(root);
+        const bottomTree = [];
 
-      const nodeAngle = treeAngle / tree.leafCount;
-      const nodeAngleBottom = treeAngleBottom / bottomTree.length;
-
-      // Each node takes up (radius left over/(depth of subtree)) space radially, and (nodeAngle*leaf) space tangentially
-      // Each path
-      //   Goes through x nodes
-      //   -> radius is not treeRadius/x, but
-      //         x-- --x-- --x--
-      //          r/2  r     r
-      //       treeRadius/(x-1/2)
-
-      const radialSpace = (node, radiusLeft) => {
-        return radiusLeft / (node.maxDepth - node.depth + 0.5);
-      };
-
-      const angleSpace = (node) => {
-        return nodeAngle * node.leafCount;
-      };
-
-      const polarToScreen = (r, a) => {
-        // Polar coordinates to screen (board) coordinates
-        // Top left = 0, 0
-        // pos y goes down
-        // r = 0 at bottom center of tree
-        // a = 0 at right side of tree
-        return {
-          x: Math.cos(a) * r + main.offsetWidth / 2,
-          y: main.offsetHeight / 2 - Math.sin(a) * r,
-        };
-      };
-
-      const moveDiv = (div, x, y, width, height) => {
-        // Place center of div at x, y
-        div.style.left = Math.floor(x - width / 2) + "px";
-        div.style.top = Math.floor(y - height / 2) + "px";
-        // div.style.left = Math.floor(x) + "px";
-        // div.style.top = Math.floor(y) + "px";
-      };
-
-      const drawEdge = (x1, y1, x2, y2) => {
-        // Draw edge from x1, y1 to x2, y2
-        const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-        const edge = document.createElement("div");
-        edge.classList.add("edge");
-        edge.style.height = edgeWidth + "px";
-        edge.style.width = length + "px";
-        edge.style.rotate = Math.atan2(y2 - y1, x2 - x1) + "rad";
-        moveDiv(edge, (x1 + x2) / 2, (y1 + y2) / 2, length, edgeWidth);
-        const anim = document.createElement("div");
-        anim.classList.add("anim");
-        anim.style.height = edgeWidth + "px";
-        anim.style.width = length + "px";
-        main.appendChild(edge);
-        edge.appendChild(anim);
-        return { edge: edge, anim: anim };
-      };
-
-      const drawTree = (
-        node,
-        leftBound,
-        rightBound,
-        radiusLeft,
-        root = false
-      ) => {
-        nodesToEdge.set(node, new Map());
-        const radial = root ? 0 : radialSpace(node, radiusLeft);
-        const angle = angleSpace(node);
-        let curLeftBound = leftBound;
-        const nodeDiv = document.createElement(node.isLink ? "a" : "div");
-        const descDiv = document.createElement("div");
-        if (node.description) descDiv.innerText = node.description;
-        else descDiv.classList.add("no-description");
-        descDiv.classList.add("description");
-        if (node.isLink) nodeDiv.href = node.href;
-        nodeDiv.classList.add("node");
-        let scaledRadius =
-          nodeRadius * 2 - nodeRadius * (radiusLeft / treeRadius);
-        nodeDiv.style.height = nodeDiv.style.width = scaledRadius + "px";
-        nodeDiv.innerText = node.name;
-        nodeDiv.style.fontSize = 15 - 5 * (radiusLeft / treeRadius) + "px";
-        if (node.image)
-          nodeDiv.style.backgroundImage =
-            "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(images/" +
-            node.image +
-            ")";
-        const pos = polarToScreen(
-          radial / 2 + treeRadius - radiusLeft,
-          (leftBound - rightBound) / 2 + rightBound
-        );
-        // console.log((leftBound - rightBound) / 2 + rightBound, node.name);
-        main.appendChild(nodeDiv);
-        main.appendChild(descDiv);
-        moveDiv(nodeDiv, pos.x, pos.y, scaledRadius, scaledRadius);
-        // const diag =
-        // 	Math.sqrt(descDiv.offsetWidth ** 2 + descDiv.offsetHeight ** 2) *
-        // 	0.75;
-        const averageAngle = -(leftBound + rightBound) / 2;
-        moveDiv(
-          descDiv,
-          pos.x + 130 * Math.cos(averageAngle),
-          pos.y + 130 * Math.sin(averageAngle),
-          descDiv.offsetWidth,
-          descDiv.offsetHeight
-        );
-        node.div = nodeDiv;
-        node.desc = descDiv;
-        node.percentRadius = radiusLeft / treeRadius;
-        node.leftBound = leftBound;
-        node.rightBound = rightBound;
-        node.innerRadius = treeRadius - radiusLeft;
-        node.outerRadius = treeRadius - radiusLeft + radial;
-        for (const child of node.children) {
-          if (child.skip) continue;
-          const rightBound = curLeftBound - angleSpace(child);
-          const childPos = drawTree(
-            child,
-            curLeftBound,
-            rightBound,
-            radiusLeft - radial
-          );
-          const edge = drawEdge(pos.x, pos.y, childPos.x, childPos.y);
-          nodesToEdge.get(node).set(child, edge);
-          nodesToEdge.get(child).set(node, edge);
-          curLeftBound = rightBound;
+        for (const b of bottomLinks) {
+          const node = {
+            name: b.name, // name of node
+            description: undefined, // description of node
+            image: b.image,
+            depth: 1, // depth of node from root
+            maxDepth: 1, // maximum depth of subtree
+            size: 1, // size of subtree
+            children: [], // subtree
+            leafCount: 0, // number of leaf nodes in subtree
+            parent: tree, // parent
+            isLink: true, // is it a link
+            href: b.href, // link
+            skip: true,
+          };
+          bottomTree.push(node);
+          tree.children.push(node);
         }
 
-        return pos;
-      };
+        root.remove();
 
-      const centerPos = drawTree(
-        tree,
-        leftTreeBound,
-        rightTreeBound,
-        treeRadius
-      );
+        const nodeAngle = treeAngle / tree.leafCount;
+        const nodeAngleBottom = treeAngleBottom / bottomTree.length;
 
-      let leftBoundBottom =
-        rightTreeBoundBottom + treeAngleBottom / bottomTree.length;
-      let rightBoundBottom = rightTreeBoundBottom;
-      // let leftBoundBottom = Math.PI;
-      // let rightBoundBottom = 0;
-      for (const b of bottomTree) {
-        nodesToEdge.set(b, new Map());
-        const radial = treeRadiusBottom;
-        const angle = treeAngleBottom / bottomTree.length;
-        let curLeftBound = leftBoundBottom;
-        const nodeDiv = document.createElement(b.isLink ? "a" : "div");
-        const descDiv = document.createElement("div");
-        if (b.description) descDiv.innerText = b.description;
-        else descDiv.classList.add("no-description");
-        descDiv.classList.add("description");
-        if (b.isLink) nodeDiv.href = b.href;
-        nodeDiv.classList.add("node");
-        let scaledRadius = nodeRadiusBottom * 2; // - nodeRadius * (radiusLeft / treeRadiusBottom);
-        nodeDiv.style.height = nodeDiv.style.width = scaledRadius + "px";
-        nodeDiv.innerText = b.name;
-        nodeDiv.style.fontSize = 15 + "px"; // - 5 * (radiusLeft / treeRadiusBottom) + "px";
-        if (b.image)
-          nodeDiv.style.backgroundImage =
-            "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(images/" +
-            b.image +
-            ")";
-        let pos = polarToScreen(
-          radial / 2 + treeRadiusBottom,
-          (leftBoundBottom - rightBoundBottom) / 2 + rightBoundBottom
+        // Each node takes up (radius left over/(depth of subtree)) space radially, and (nodeAngle*leaf) space tangentially
+        // Each path
+        //   Goes through x nodes
+        //   -> radius is not treeRadius/x, but
+        //         x-- --x-- --x--
+        //          r/2  r     r
+        //       treeRadius/(x-1/2)
+
+        const radialSpace = (node, radiusLeft) => {
+          return radiusLeft / (node.maxDepth - node.depth + 0.5);
+        };
+
+        const angleSpace = (node) => {
+          return nodeAngle * node.leafCount;
+        };
+
+        const polarToScreen = (r, a) => {
+          // Polar coordinates to screen (board) coordinates
+          // Top left = 0, 0
+          // pos y goes down
+          // r = 0 at bottom center of tree
+          // a = 0 at right side of tree
+          return {
+            x: Math.cos(a) * r + main.offsetWidth / 2,
+            y: main.offsetHeight / 2 - Math.sin(a) * r,
+          };
+        };
+
+        const moveDiv = (div, x, y, width, height) => {
+          // Place center of div at x, y
+          div.style.left = Math.floor(x - width / 2) + "px";
+          div.style.top = Math.floor(y - height / 2) + "px";
+          // div.style.left = Math.floor(x) + "px";
+          // div.style.top = Math.floor(y) + "px";
+        };
+
+        const drawEdge = (x1, y1, x2, y2) => {
+          // Draw edge from x1, y1 to x2, y2
+          const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+          const edge = document.createElement("div");
+          edge.classList.add("edge");
+          edge.style.height = edgeWidth + "px";
+          edge.style.width = length + "px";
+          edge.style.rotate = Math.atan2(y2 - y1, x2 - x1) + "rad";
+          moveDiv(edge, (x1 + x2) / 2, (y1 + y2) / 2, length, edgeWidth);
+          const anim = document.createElement("div");
+          anim.classList.add("anim");
+          anim.style.height = edgeWidth + "px";
+          anim.style.width = length + "px";
+          main.appendChild(edge);
+          edge.appendChild(anim);
+          return { edge: edge, anim: anim };
+        };
+
+        const drawTree = (
+          node,
+          leftBound,
+          rightBound,
+          radiusLeft,
+          root = false
+        ) => {
+          nodesToEdge.set(node, new Map());
+          const radial = root ? 0 : radialSpace(node, radiusLeft);
+          const angle = angleSpace(node);
+          let curLeftBound = leftBound;
+          const nodeDiv = document.createElement(node.isLink ? "a" : "div");
+          const descDiv = document.createElement("div");
+          if (node.description) descDiv.innerText = node.description;
+          else descDiv.classList.add("no-description");
+          descDiv.classList.add("description");
+          if (node.isLink) nodeDiv.href = node.href;
+          nodeDiv.classList.add("node");
+          let scaledRadius =
+            nodeRadius * 2 - nodeRadius * (radiusLeft / treeRadius);
+          nodeDiv.style.height = nodeDiv.style.width = scaledRadius + "px";
+          nodeDiv.innerText = node.name;
+          nodeDiv.style.fontSize = 15 - 5 * (radiusLeft / treeRadius) + "px";
+          if (node.image)
+            nodeDiv.style.backgroundImage =
+              "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(images/" +
+              node.image +
+              ")";
+          const pos = polarToScreen(
+            radial / 2 + treeRadius - radiusLeft,
+            (leftBound - rightBound) / 2 + rightBound
+          );
+          // console.log((leftBound - rightBound) / 2 + rightBound, node.name);
+          main.appendChild(nodeDiv);
+          main.appendChild(descDiv);
+          moveDiv(nodeDiv, pos.x, pos.y, scaledRadius, scaledRadius);
+          // const diag =
+          // 	Math.sqrt(descDiv.offsetWidth ** 2 + descDiv.offsetHeight ** 2) *
+          // 	0.75;
+          const averageAngle = -(leftBound + rightBound) / 2;
+          moveDiv(
+            descDiv,
+            pos.x + 130 * Math.cos(averageAngle),
+            pos.y + 130 * Math.sin(averageAngle),
+            descDiv.offsetWidth,
+            descDiv.offsetHeight
+          );
+          node.div = nodeDiv;
+          node.desc = descDiv;
+          node.percentRadius = radiusLeft / treeRadius;
+          node.leftBound = leftBound;
+          node.rightBound = rightBound;
+          node.innerRadius = treeRadius - radiusLeft;
+          node.outerRadius = treeRadius - radiusLeft + radial;
+          for (const child of node.children) {
+            if (child.skip) continue;
+            const rightBound = curLeftBound - angleSpace(child);
+            const childPos = drawTree(
+              child,
+              curLeftBound,
+              rightBound,
+              radiusLeft - radial
+            );
+            const edge = drawEdge(pos.x, pos.y, childPos.x, childPos.y);
+            nodesToEdge.get(node).set(child, edge);
+            nodesToEdge.get(child).set(node, edge);
+            curLeftBound = rightBound;
+          }
+
+          return pos;
+        };
+
+        const centerPos = drawTree(
+          tree,
+          leftTreeBound,
+          rightTreeBound,
+          treeRadius
         );
-        pos.y += centerPos.y - main.offsetHeight / 2;
-        // console.log((leftBound - rightBound) / 2 + rightBound, node.name);
-        main.appendChild(nodeDiv);
-        main.appendChild(descDiv);
-        moveDiv(nodeDiv, pos.x, pos.y, scaledRadius, scaledRadius);
-        // const diag =
-        // 	Math.sqrt(descDiv.offsetWidth ** 2 + descDiv.offsetHeight ** 2) *
-        // 	0.75;
-        const averageAngle = -(leftBoundBottom + rightBoundBottom) / 2;
-        moveDiv(
-          descDiv,
-          pos.x + 130 * Math.cos(averageAngle),
-          pos.y + 130 * Math.sin(averageAngle),
-          descDiv.offsetWidth,
-          descDiv.offsetHeight
-        );
-        b.div = nodeDiv;
-        b.desc = descDiv;
-        b.percentRadius = 0;
-        b.leftBound = leftBoundBottom;
-        b.rightBound = rightBoundBottom;
-        b.innerRadius = treeRadiusBottom;
-        b.outerRadius = treeRadiusBottom + radial;
 
-        // for (const child of node.children) {
-        //   const rightBound = curLeftBound - angleSpace(child);
-        //   const childPos = drawTree(
-        //     child,
-        //     curLeftBound,
-        //     rightBound,
-        //     radiusLeft - radial
-        //   );
-        //   const edge = drawEdge(pos.x, pos.y, childPos.x, childPos.y);
-        //   nodesToEdge.get(node).set(child, edge);
-        //   nodesToEdge.get(child).set(node, edge);
-        //   curLeftBound = rightBound;
+        let leftBoundBottom =
+          rightTreeBoundBottom + treeAngleBottom / bottomTree.length;
+        let rightBoundBottom = rightTreeBoundBottom;
+        // let leftBoundBottom = Math.PI;
+        // let rightBoundBottom = 0;
+        for (const b of bottomTree) {
+          nodesToEdge.set(b, new Map());
+          const radial = treeRadiusBottom;
+          const angle = treeAngleBottom / bottomTree.length;
+          let curLeftBound = leftBoundBottom;
+          const nodeDiv = document.createElement(b.isLink ? "a" : "div");
+          const descDiv = document.createElement("div");
+          if (b.description) descDiv.innerText = b.description;
+          else descDiv.classList.add("no-description");
+          descDiv.classList.add("description");
+          if (b.isLink) nodeDiv.href = b.href;
+          nodeDiv.classList.add("node");
+          let scaledRadius = nodeRadiusBottom * 2; // - nodeRadius * (radiusLeft / treeRadiusBottom);
+          nodeDiv.style.height = nodeDiv.style.width = scaledRadius + "px";
+          nodeDiv.innerText = b.name;
+          nodeDiv.style.fontSize = 15 + "px"; // - 5 * (radiusLeft / treeRadiusBottom) + "px";
+          if (b.image)
+            nodeDiv.style.backgroundImage =
+              "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(images/" +
+              b.image +
+              ")";
+          let pos = polarToScreen(
+            radial / 2 + treeRadiusBottom,
+            (leftBoundBottom - rightBoundBottom) / 2 + rightBoundBottom
+          );
+          pos.y += centerPos.y - main.offsetHeight / 2;
+          // console.log((leftBound - rightBound) / 2 + rightBound, node.name);
+          main.appendChild(nodeDiv);
+          main.appendChild(descDiv);
+          moveDiv(nodeDiv, pos.x, pos.y, scaledRadius, scaledRadius);
+          // const diag =
+          // 	Math.sqrt(descDiv.offsetWidth ** 2 + descDiv.offsetHeight ** 2) *
+          // 	0.75;
+          const averageAngle = -(leftBoundBottom + rightBoundBottom) / 2;
+          moveDiv(
+            descDiv,
+            pos.x + 130 * Math.cos(averageAngle),
+            pos.y + 130 * Math.sin(averageAngle),
+            descDiv.offsetWidth,
+            descDiv.offsetHeight
+          );
+          b.div = nodeDiv;
+          b.desc = descDiv;
+          b.percentRadius = 0;
+          b.leftBound = leftBoundBottom;
+          b.rightBound = rightBoundBottom;
+          b.innerRadius = treeRadiusBottom;
+          b.outerRadius = treeRadiusBottom + radial;
+
+          // for (const child of node.children) {
+          //   const rightBound = curLeftBound - angleSpace(child);
+          //   const childPos = drawTree(
+          //     child,
+          //     curLeftBound,
+          //     rightBound,
+          //     radiusLeft - radial
+          //   );
+          //   const edge = drawEdge(pos.x, pos.y, childPos.x, childPos.y);
+          //   nodesToEdge.get(node).set(child, edge);
+          //   nodesToEdge.get(child).set(node, edge);
+          //   curLeftBound = rightBound;
+          // }
+
+          const edge = drawEdge(centerPos.x, centerPos.y, pos.x, pos.y);
+          // console.log(edge);
+          nodesToEdge.get(tree).set(b, edge);
+          nodesToEdge.get(b).set(tree, edge);
+
+          leftBoundBottom += treeAngleBottom / bottomTree.length;
+          rightBoundBottom += treeAngleBottom / bottomTree.length;
+        }
+
+        const animateEdge = (anim, direction) => {
+          return new Promise(async (res) => {
+            anim.animate(
+              { translate: direction ? "0% 0px" : "-100% 0px" },
+              { duration: animationSpeed, fill: "forwards" }
+            );
+            setTimeout(res, animationSpeed);
+          });
+        };
+
+        const backup = (from, to) => {
+          const path = [from];
+          while (from !== to) {
+            from = from.parent;
+            path.push(from);
+            // curNode = from;
+          }
+          return path;
+        };
+
+        const backdown = (from, to) => {
+          let path = undefined;
+          if (from === to) return [to];
+          for (const child of from.children) {
+            const ret = backdown(child, to);
+            if (ret) {
+              path = ret;
+              break;
+            }
+          }
+          if (!path) return undefined;
+          path.push(from);
+          return path;
+        };
+
+        const findLCA = (a, b) => {
+          while (a !== b) {
+            if (a.depth > b.depth) a = a.parent;
+            else b = b.parent;
+          }
+          return a;
+        };
+
+        const tracePath = (from, to) => {
+          // console.log(from);
+          // console.log(to);
+          const lca = findLCA(from, to);
+          // console.log(lca);
+          // console.log(backdown(lca, to));
+          return backup(from, lca)
+            .slice(0, -1)
+            .concat(backdown(lca, to).reverse());
+        };
+
+        let curPath = [];
+        let curNode = tree;
+
+        const screenToNode = (x, y) => {
+          const style = window.getComputedStyle(main);
+          x -= parseFloat(style.left.substring(0, style.left.length - 2));
+          y -= parseFloat(style.top.substring(0, style.top.length - 2));
+          // cos(a)r = x - main.innerWidth/2;
+          // sin(a)r = main.innerHeight/2 - y;
+          let angle = Math.atan2(
+            main.offsetHeight / 2 - y,
+            x - main.offsetWidth / 2
+          );
+          if (angle < 0) angle += Math.PI * 2;
+          let radius = (x - main.offsetWidth / 2) / Math.cos(angle);
+          for (const node of allNodes) {
+            if (
+              node.leftBound >= angle &&
+              node.rightBound <= angle &&
+              node.innerRadius <= radius &&
+              (node.outerRadius >= radius || node.children.length === 0)
+            )
+              return node;
+          }
+
+          y -= centerPos.y - main.offsetHeight / 2;
+          // cos(a)r = x - main.innerWidth/2;
+          // sin(a)r = main.innerHeight/2 - y;
+          angle = Math.atan2(
+            main.offsetHeight / 2 - y,
+            x - main.offsetWidth / 2
+          );
+          if (angle > 0) angle -= Math.PI * 2;
+          radius = (x - main.offsetWidth / 2) / Math.cos(angle);
+          // console.log(y + " " + x + " " + radius + " " + (angle * 180) / Math.PI);
+          for (const b of bottomTree) {
+            if (
+              b.leftBound >= angle &&
+              b.rightBound <= angle &&
+              b.innerRadius <= radius &&
+              (b.outerRadius >= radius || b.children.length === 0)
+            ) {
+              return b;
+            }
+          }
+        };
+
+        // for (const node of allNodes) {
+        // 	node.div.addEventListener("mouseenter", (e) => {
+        // 		curPath = tracePath(curNode, node);
+        // 	});
         // }
 
-        const edge = drawEdge(centerPos.x, centerPos.y, pos.x, pos.y);
-        // console.log(edge);
-        nodesToEdge.get(tree).set(b, edge);
-        nodesToEdge.get(b).set(tree, edge);
+        let showingDesc = undefined;
 
-        leftBoundBottom += treeAngleBottom / bottomTree.length;
-        rightBoundBottom += treeAngleBottom / bottomTree.length;
-      }
-
-      const animateEdge = (anim, direction) => {
-        return new Promise(async (res) => {
-          anim.animate(
-            { translate: direction ? "0% 0px" : "-100% 0px" },
-            { duration: animationSpeed, fill: "forwards" }
-          );
-          setTimeout(res, animationSpeed);
+        document.addEventListener("mousemove", (e) => {
+          const node = screenToNode(e.clientX, e.clientY);
+          if (node) {
+            if (showingDesc) showingDesc.classList.remove("show");
+            showingDesc = node.desc;
+            showingDesc.classList.add("show");
+            curPath = tracePath(curNode, node);
+          }
         });
-      };
 
-      const backup = (from, to) => {
-        const path = [from];
-        while (from !== to) {
-          from = from.parent;
-          path.push(from);
-          // curNode = from;
-        }
-        return path;
-      };
+        tree.div.classList.add("filled");
 
-      const backdown = (from, to) => {
-        let path = undefined;
-        if (from === to) return [to];
-        for (const child of from.children) {
-          const ret = backdown(child, to);
-          if (ret) {
-            path = ret;
-            break;
+        setInterval(() => {
+          if (curPath.length > 0) {
+            while (curPath[0] === curNode) curPath.shift();
+            if (curPath.length <= 0) return;
+            const prevNode = curNode;
+            curNode = curPath.shift();
+            const newNode = curNode;
+            const filling = curNode.parent === prevNode;
+            animateEdge(
+              nodesToEdge.get(prevNode).get(curNode).anim,
+              filling
+            ).then(() => {
+              if (filling) {
+                nodesToEdge
+                  .get(prevNode)
+                  .get(newNode)
+                  .edge.classList.add("filled");
+                newNode.div.classList.add("filled");
+                // newNode.div.style.scale = 140 - newNode.percentRadius * 40 + "%";
+              } else {
+                nodesToEdge
+                  .get(prevNode)
+                  .get(newNode)
+                  .edge.classList.remove("filled");
+                prevNode.div.classList.remove("filled");
+                // prevNode.div.style.scale = "100%";
+              }
+            });
           }
-        }
-        if (!path) return undefined;
-        path.push(from);
-        return path;
-      };
+        }, animationSpeed);
 
-      const findLCA = (a, b) => {
-        while (a !== b) {
-          if (a.depth > b.depth) a = a.parent;
-          else b = b.parent;
-        }
-        return a;
-      };
-
-      const tracePath = (from, to) => {
-        // console.log(from);
-        // console.log(to);
-        const lca = findLCA(from, to);
-        // console.log(lca);
-        // console.log(backdown(lca, to));
-        return backup(from, lca)
-          .slice(0, -1)
-          .concat(backdown(lca, to).reverse());
-      };
-
-      let curPath = [];
-      let curNode = tree;
-
-      const screenToNode = (x, y) => {
-        const style = window.getComputedStyle(main);
-        x -= parseFloat(style.left.substring(0, style.left.length - 2));
-        y -= parseFloat(style.top.substring(0, style.top.length - 2));
-        // cos(a)r = x - main.innerWidth/2;
-        // sin(a)r = main.innerHeight/2 - y;
-        let angle = Math.atan2(
-          main.offsetHeight / 2 - y,
-          x - main.offsetWidth / 2
-        );
-        if (angle < 0) angle += Math.PI * 2;
-        let radius = (x - main.offsetWidth / 2) / Math.cos(angle);
-        for (const node of allNodes) {
-          if (
-            node.leftBound >= angle &&
-            node.rightBound <= angle &&
-            node.innerRadius <= radius &&
-            (node.outerRadius >= radius || node.children.length === 0)
-          )
-            return node;
-        }
-
-        y -= centerPos.y - main.offsetHeight / 2;
-        // cos(a)r = x - main.innerWidth/2;
-        // sin(a)r = main.innerHeight/2 - y;
-        angle = Math.atan2(main.offsetHeight / 2 - y, x - main.offsetWidth / 2);
-        if (angle > 0) angle -= Math.PI * 2;
-        radius = (x - main.offsetWidth / 2) / Math.cos(angle);
-        // console.log(y + " " + x + " " + radius + " " + (angle * 180) / Math.PI);
-        for (const b of bottomTree) {
-          if (
-            b.leftBound >= angle &&
-            b.rightBound <= angle &&
-            b.innerRadius <= radius &&
-            (b.outerRadius >= radius || b.children.length === 0)
-          ) {
-            return b;
-          }
-        }
-      };
-
-      // for (const node of allNodes) {
-      // 	node.div.addEventListener("mouseenter", (e) => {
-      // 		curPath = tracePath(curNode, node);
-      // 	});
-      // }
-
-      let showingDesc = undefined;
-
-      document.addEventListener("mousemove", (e) => {
-        const node = screenToNode(e.clientX, e.clientY);
-        if (node) {
-          if (showingDesc) showingDesc.classList.remove("show");
-          showingDesc = node.desc;
-          showingDesc.classList.add("show");
-          curPath = tracePath(curNode, node);
-        }
-      });
-
-      tree.div.classList.add("filled");
-
-      setInterval(() => {
-        if (curPath.length > 0) {
-          while (curPath[0] === curNode) curPath.shift();
-          if (curPath.length <= 0) return;
-          const prevNode = curNode;
-          curNode = curPath.shift();
-          const newNode = curNode;
-          const filling = curNode.parent === prevNode;
-          animateEdge(
-            nodesToEdge.get(prevNode).get(curNode).anim,
-            filling
-          ).then(() => {
-            if (filling) {
-              nodesToEdge
-                .get(prevNode)
-                .get(newNode)
-                .edge.classList.add("filled");
-              newNode.div.classList.add("filled");
-              // newNode.div.style.scale = 140 - newNode.percentRadius * 40 + "%";
-            } else {
-              nodesToEdge
-                .get(prevNode)
-                .get(newNode)
-                .edge.classList.remove("filled");
-              prevNode.div.classList.remove("filled");
-              // prevNode.div.style.scale = "100%";
-            }
-          });
-        }
-      }, animationSpeed);
-
-      const moveWidth = main.offsetWidth - window.innerWidth;
-      const moveHeight = main.offsetHeight - window.innerHeight;
-
-      main.animate(
-        {
-          left: -0.5 * moveWidth + "px ",
-          top: -0.5 * moveHeight + main.offsetHeight / 4 + "px",
-        },
-        { duration: 0, fill: "forwards" }
-      );
-
-      document.addEventListener("mousemove", (e) => {
-        const px = -e.clientX / window.innerWidth;
-        const py = -e.clientY / window.innerHeight;
+        const moveWidth = main.offsetWidth - window.innerWidth;
+        const moveHeight = main.offsetHeight - window.innerHeight;
 
         main.animate(
           {
-            left: px * moveWidth + "px ",
-            top: py * moveHeight + main.offsetHeight / 4 + "px",
+            left: -0.5 * moveWidth + "px ",
+            top: -0.5 * moveHeight + main.offsetHeight / 4 + "px",
           },
-          { duration: 2000, fill: "forwards" }
+          { duration: 0, fill: "forwards" }
         );
-      });
+
+        document.addEventListener("mousemove", (e) => {
+          const px = -e.clientX / window.innerWidth;
+          const py = -e.clientY / window.innerHeight;
+
+          main.animate(
+            {
+              left: px * moveWidth + "px ",
+              top: py * moveHeight + main.offsetHeight / 4 + "px",
+            },
+            { duration: 2000, fill: "forwards" }
+          );
+        });
+      }
     </script>
   </body>
 </html>
