@@ -95,8 +95,8 @@
         left: 0px;
         right: 0px;
         height: 70px;
-        margin: 10px;
-        padding: 5px;
+        margin: 5px 11px;
+        padding: 10px 4px;
         max-width: 700px;
         display: flex;
         color: black;
@@ -112,7 +112,6 @@
       }
 
       .project-image-div {
-        font-size: 15px;
         flex: 0 0 70px;
         width: 70px;
         height: 70px;
@@ -121,15 +120,20 @@
       }
 
       .project-name-div {
-        padding: 10px;
+        font-size: 17px;
+        padding: 1px 15px;
         flex: 0.4 0.4;
         align-items: center;
       }
 
       .project-description-div {
-        font-size: 14px;
-        padding: 8px;
+        font-size: 13px;
+        padding: 1px 15px;
         flex: 1 1;
+      }
+
+      .spacer {
+        height: 80px;
       }
 
       .node {
@@ -249,39 +253,49 @@
         Mini Web Demos|
         <div>
           p5.js|
-          <a href="car"> car|Machine learning cars|car.png </a>
-          <a href="golf"> golf|2D golf heightmap simulator|golf.png </a>
-          <a href="circle"> circle|Cardiod-like shape drawer|circle.png </a>
-          <a href="verlet">
-            verlet|Cloth and string with verlet integration|verlet.png
+          <a href="car"> car|Machine learning cars|car.png|mobile </a>
+          <a href="golf">
+            golf|2D golf heightmap simulator|golf.png|nomobile
           </a>
-          <a href="gravity"> gravity|Simulation of gravity|gravity.png </a>
+          <a href="circle">
+            circle|Cardiod-like shape drawer|circle.png|mobile
+          </a>
+          <a href="verlet">
+            verlet|Cloth and string with verlet integration|verlet.png|mobile
+          </a>
+          <a href="gravity">
+            gravity|Simulation of gravity|gravity.png|nomobile
+          </a>
           <a href="minesweeper3d">
-            3d minesweeper|Minesweeper but 3D|3d-minesweeper.png
+            3d minesweeper|Minesweeper but 3D|3d-minesweeper.png|nomobile
           </a>
           <a href="raycasting">
-            raycasting|Half working raycaster|raycasting.png
+            raycasting|Half working raycaster|raycasting.png|nomobile
           </a>
-          <a href="perlin"> perlin|Demos of perlin noise|perlin.png </a>
+          <a href="perlin"> perlin|Demos of perlin noise|perlin.png|mobile </a>
         </div>
         <div>
           Vanilla JS|
           <a href="study">
-            study|Study Buddies scheduling program for MV|study.png
+            study|Study Buddies scheduling program for MV|study.png|mobile
           </a>
           <a href="gravity2">
-            gravity 2.0|Simulation of gravity but better|gravity2.png
+            gravity 2.0|Simulation of gravity but better|gravity2.png|nomobile
           </a>
           <a href="gravity-golf">
-            gravity golf|Golf on planets|gravity-golf.png
+            gravity golf|Golf on planets|gravity-golf.png|nomobile
           </a>
-          <a href="code"> code|Scioly Codebusters practice|code.png </a>
-          <a href="RK4/canvas"> RK4|RK4 Lagrangian Integrator|rk4.png </a>
-          <a href="wave"> wave|Discrete wave simulator|wave.png </a>
+          <a href="code">
+            code|Scioly Codebusters practice|code.png|nomobile
+          </a>
+          <a href="RK4/canvas">
+            RK4|RK4 Lagrangian Integrator|rk4.png|mobile
+          </a>
+          <a href="wave"> wave|Discrete wave simulator|wave.png|mobile </a>
           <a href="circuits/ohm">
-            circuits|Simulation of circuits|circuits.png
+            circuits|Simulation of circuits|circuits.png|mobile
           </a>
-          <a href="oly"> oly|Simulation of olympiad problems|oly.png </a>
+          <a href="oly"> oly|Simulation of olympiad problems|oly.png|mobile </a>
         </div>
       </div>
       <div>
@@ -291,20 +305,21 @@
           <a
             href="https://github.com/Hafnium780/Hafnium780.github.io/tree/main/game-pigeon"
           >
-            game pigeon|Various game pigeon bots|game-pigeon.png
+            game pigeon|Various game pigeon bots|game-pigeon.png|mobile
           </a>
         </div>
         <div>
           Node.js|
           <a href="https://multiplayer-platformer.glitch.me/">
             [broken] multiplayer platformer|Simple multiplayer
-            platformer|multiplayer-platformer.png
+            platformer|multiplayer-platformer.png|nomobile
           </a>
         </div>
         <div>
           React.js|
           <a href="graph-algorithms">
-            graph algorithms|Visualize algorithms on graphs|graph-algorithms.png
+            graph algorithms|Visualize algorithms on
+            graphs|graph-algorithms.png|nomobile
           </a>
         </div>
         <div>
@@ -312,7 +327,7 @@
           <a
             href="https://github.com/Hafnium780/Hafnium780.github.io/tree/main/bomb-party"
           >
-            bomb party|Bomb party bot|bomb-party.png
+            bomb party|Bomb party bot|bomb-party.png|nomobile
           </a>
         </div>
       </div>
@@ -357,6 +372,7 @@
               name: text[0], // name of node
               description: text[1], // description of node
               image: text[2],
+              mobile: text[3] == "mobile",
               fromTree: true,
               href: node.href,
             });
@@ -386,22 +402,35 @@
           pImageDiv = document.createElement("div");
           pImageDiv.classList.add("project-image-div");
           pImageDiv.style.backgroundImage = "url(images/" + p.image + ")";
+
+          pTextDiv = document.createElement("div");
+          pTextDiv.classList.add("project-text-div");
+
           pNameDiv = document.createElement("div");
           pNameDiv.classList.add("project-name-div");
           pNameDiv.innerText = p.name;
           pDescriptionDiv = document.createElement("div");
           pDescriptionDiv.classList.add("project-description-div");
-          pDescriptionDiv.innerText = p.description ? p.description : "";
+          pDescriptionDiv.innerHTML = p.description
+            ? p.description +
+              "<br><br>" +
+              (p.mobile ? "<b>Mobile compatible</b>" : "")
+            : "";
 
           pDiv.appendChild(pImageDiv);
-          pDiv.appendChild(pNameDiv);
-          pDiv.appendChild(pDescriptionDiv);
+          pTextDiv.appendChild(pNameDiv);
+          pTextDiv.appendChild(pDescriptionDiv);
+          pDiv.appendChild(pTextDiv);
           if (p.fromTree) {
             main.appendChild(pDiv);
           } else {
             topDiv.appendChild(pDiv);
           }
         }
+
+        const spacer = document.createElement("div");
+        spacer.classList.add("spacer");
+        main.appendChild(spacer);
       } else {
         document.getElementById("project-title").remove();
 
